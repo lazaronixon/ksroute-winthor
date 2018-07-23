@@ -17,7 +17,7 @@
         <addColumn tableName="pcpedc">
             <column name="ksr_id" type="bigint"/>
             <column name="ksr_etag" type="varchar(45)"/>
-            <column name="ksr_processed" type="boolean" defaultValueBoolean="false"/>
+            <column name="ksr_processed_at" type="datetime" />
         </addColumn>
     </changeSet> 
     
