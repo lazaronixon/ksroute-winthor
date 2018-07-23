@@ -3,7 +3,6 @@ package com.heuristica.ksroutewinthor.models;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,9 +32,13 @@ public class Pedido implements Serializable {
     private String ksrEtag;
     private OffsetDateTime ksrProcessedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "codcli")
     private Cliente cliente;
+    
+    @ManyToOne
+    @JoinColumn(name = "codfilial", referencedColumnName = "codigo")
+    private Filial filial;    
 
     @Consumed
     public void process() { ksrProcessedAt = OffsetDateTime.now(); }

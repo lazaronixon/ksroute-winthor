@@ -15,13 +15,15 @@ public class KsroutewinthorApplication {
 
     @Component
     class Backend extends RouteBuilder {
+
         @Override
         public void configure() {
             // Polls the DB for new orders and processes them
             from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
-                    + "?consumer.namedQuery=newOrders"
-                    + "&consumer.delay=5s"
-                    + "&consumeDelete=false")
+                    + "?consumer.delay=5s"
+                    + "&consumer.namedQuery=newOrders"
+                    + "&consumeDelete=false"
+                    + "&consumeLockEntity=false")
                     .log(LoggingLevel.OFF, "Pedido processado: #id ${body.numped}");
         }
     }

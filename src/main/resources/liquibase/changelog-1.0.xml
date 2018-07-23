@@ -40,6 +40,13 @@
             <column name="ksr_id" type="bigint"/>
             <column name="ksr_etag" type="varchar(45)"/>
         </addColumn>
-    </changeSet>                                                                                                            
+    </changeSet>  
+    
+    <changeSet id="6" author="Nixon">
+        <addColumn tableName="pcfilial">
+            <column name="ksr_id" type="bigint"/>
+            <column name="ksr_etag" type="varchar(45)"/>
+        </addColumn>
+    </changeSet>                                                                                                                                                                                                                         
                              
 </databaseChangeLog>
