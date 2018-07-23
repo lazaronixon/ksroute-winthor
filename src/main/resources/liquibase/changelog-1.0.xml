@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--https://github.com/liquibase/liquibase/tree/master/liquibase-core/src/main/java/liquibase/datatype/core -->
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    
+    <changeSet id="1" author="Nixon">
+        <addColumn tableName="pcclient">
+            <column name="ksrid" type="bigint"/>
+            <column name="ksretag" type="varchar(45)"/>
+        </addColumn>
+    </changeSet> 
+    
+    <changeSet id="2" author="Nixon">
+        <addColumn tableName="pcpedc">
+            <column name="ksrid" type="bigint"/>
+            <column name="ksretag" type="varchar(45)"/>
+            <column name="ksrprocessed" type="boolean" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet> 
+    
+    <changeSet id="3" author="Nixon">
+        <addColumn tableName="pcpraca">
+            <column name="ksrid" type="bigint"/>
+            <column name="ksretag" type="varchar(45)"/>
+        </addColumn>
+    </changeSet>  
+    
+    <changeSet id="4" author="Nixon">
+        <addColumn tableName="pcregiao">
+            <column name="ksrid" type="bigint"/>
+            <column name="ksretag" type="varchar(45)"/>
+        </addColumn>
+    </changeSet> 
+    
+    <changeSet id="5" author="Nixon">
+        <addColumn tableName="pcrotaexp">
+            <column name="ksrid" type="bigint"/>
+            <column name="ksretag" type="varchar(45)"/>
+        </addColumn>
+    </changeSet>                                                                                                            
+                             
+</databaseChangeLog>
