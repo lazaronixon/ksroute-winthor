@@ -1,4 +1,4 @@
-package com.heuristica.winthor;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcrotaexp")
-public class RotaExp implements Serializable {
+public class RotaExp implements Serializable {    
     
     @Id
-    private Long codRota;
+    private Long codrota;
     private String descricao;    
     private String situacao;
     private Long ksrId;

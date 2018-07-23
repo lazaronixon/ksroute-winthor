@@ -1,4 +1,4 @@
-package com.heuristica.winthor;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ import lombok.Data;
 public class Praca implements Serializable {
 
     @Id
-    private Long codPraca;
+    private Long codpraca;
     private String praca;
     private String situacao;
     private Long ksrId;
@@ -27,6 +27,6 @@ public class Praca implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
-    private RotaExp rotaExp;     
+    private RotaExp rotaexp;     
 
 }

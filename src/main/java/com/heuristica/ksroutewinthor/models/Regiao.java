@@ -1,4 +1,4 @@
-package com.heuristica.winthor;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.Data;
 public class Regiao implements Serializable {
 
     @Id
-    private Long numRegiao;
+    private Long numregiao;
     private String regiao;
     private String uf;
     private String status;

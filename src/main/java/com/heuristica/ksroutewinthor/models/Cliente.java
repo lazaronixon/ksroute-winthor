@@ -1,4 +1,4 @@
-package com.heuristica.winthor;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -15,14 +15,14 @@ import lombok.Data;
 public class Cliente implements Serializable {
 
     @Id
-    private Long codCli;
+    private Long codcli;
     private String cliente;
     private String fantasia;
-    private String ufEnt;
-    private String municEnt;
-    private String bairroEnt;
-    private String enderEnt;
-    private String cepEnt;
+    private String ufent;
+    private String municent;
+    private String bairroent;
+    private String enderent;
+    private String cepent;
     private Float latitude;
     private Float longitude;
     private String bloqueio;

@@ -1,4 +1,4 @@
-package com.heuristica.winthor;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,20 +14,20 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcpedc")
-@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessed = false AND p.posicao = 'L' AND p.freteDespacho = 'C'")
+@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessed = false AND p.posicao = 'L' AND p.fretedespacho = 'C'")
 public class Pedido implements Serializable {
 
     @Id
-    private Long numPed;
+    private Long numped;
     private LocalDate data;    
-    private Double vlAtend;
+    private Double vlatend;
     private String posicao;
-    private Double totPeso;
-    private Double totVolume;
-    private String freteDespacho;
-    private Integer numSeqMontagem;
-    private Integer numOrdemCarga;
-    private Long numSeqEntrega;    
+    private Double totpeso;
+    private Double totvolume;
+    private String fretedespacho;
+    private Integer numseqMontagem;
+    private Integer numordemCarga;
+    private Long numseqEntrega;    
     private Long ksrId;
     private String ksrEtag;
     private Boolean ksrProcessed;
