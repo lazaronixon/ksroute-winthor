@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor;
 
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,8 +22,7 @@ public class KsroutewinthorApplication {
                     + "?consumer.namedQuery=newOrders"
                     + "&consumer.delay=5s"
                     + "&consumeDelete=false")
-                    .routeId("process-order")
-                    .log("Pedido processado: #id ${body.numped}");
+                    .log(LoggingLevel.OFF, "Pedido processado: #id ${body.numped}");
         }
     }
 }

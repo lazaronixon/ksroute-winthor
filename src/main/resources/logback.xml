@@ -1,0 +1,4 @@
+<configuration>
+    <!-- Disable most stdout logging by default -->
+    <root level="OFF"></root>
+</configuration>
