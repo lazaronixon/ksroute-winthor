@@ -24,7 +24,7 @@ public class KsroutewinthorApplication {
                     + "&consumer.namedQuery=newOrders"
                     + "&consumeDelete=false"
                     + "&consumeLockEntity=false")
-                    .log(LoggingLevel.OFF, "Pedido processado: #id ${body.numped}");
+                    .log("Pedido processado: #id ${body.numped}");
         }
     }
 }
