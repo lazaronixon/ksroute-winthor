@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor;
 
-import com.heuristica.ksroutewinthor.services.OrderService;
+import com.heuristica.ksroutewinthor.processor.OrderProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,8 +25,8 @@ public class KsroutewinthorApplication {
                     + "&consumeDelete=false"
                     + "&consumeLockEntity=false")
                     .routeId("process-order")
-                    .bean(OrderService.class, "processPedido")
-                    .log("Pedido processado: #id ${body}");
+                    .bean(OrderProcessor.class, "processPedido")
+                    .log("Pedido processado: ${body.numped}");
         }
     }
 }
