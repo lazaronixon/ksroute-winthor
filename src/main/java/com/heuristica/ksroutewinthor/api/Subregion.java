@@ -10,7 +10,11 @@ public class Subregion {
     private String description;
     private String erpId;
     private Boolean active;
+    
+    private Long regionId;    
     private Region region;
+    
+    private Long lineId;    
     private Line line;
     
 }

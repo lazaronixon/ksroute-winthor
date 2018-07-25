@@ -16,7 +16,9 @@ public class Customer {
     private Float latitude;
     private Float longitude;
     private String erpId;  
-    private Boolean active;
+    private Boolean active;   
+    
+    private Long subregionId;
     private Subregion subregion;
     
 }

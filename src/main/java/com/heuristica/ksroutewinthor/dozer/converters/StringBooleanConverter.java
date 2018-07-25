@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.dozer;
+package com.heuristica.ksroutewinthor.dozer.converters;
 
 import org.dozer.DozerConverter;
 

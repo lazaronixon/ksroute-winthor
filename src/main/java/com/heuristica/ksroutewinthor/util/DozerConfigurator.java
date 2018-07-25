@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor.util;
 
-import com.heuristica.ksroutewinthor.dozer.OrderMapping;
+import com.heuristica.ksroutewinthor.dozer.mapping.OrderMapping;
 import org.dozer.DozerBeanMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
