@@ -1,5 +1,8 @@
-package com.heuristica.ksroutewinthor.apis;
+package com.heuristica.ksroutewinthor.api;
 
+import lombok.Data;
+
+@Data
 public class Region {
 
     private Long id;

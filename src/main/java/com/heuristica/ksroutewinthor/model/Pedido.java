@@ -1,8 +1,10 @@
-package com.heuristica.ksroutewinthor.models;
+package com.heuristica.ksroutewinthor.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,7 +21,7 @@ public class Pedido implements Serializable {
 
     @Id
     private Long numped;
-    private OffsetDateTime data;
+    private LocalDate data;
     private Double vlatend;
     private String posicao;
     private Double totpeso;
@@ -32,11 +34,11 @@ public class Pedido implements Serializable {
     private String ksrEtag;
     private OffsetDateTime ksrProcessedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codcli")
     private Cliente cliente;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codfilial", referencedColumnName = "codigo")
     private Filial filial;    
 

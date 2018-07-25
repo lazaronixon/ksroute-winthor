@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.models;
+package com.heuristica.ksroutewinthor.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;

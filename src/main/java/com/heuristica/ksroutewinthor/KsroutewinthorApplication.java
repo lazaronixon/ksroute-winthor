@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor;
 
-import org.apache.camel.LoggingLevel;
+import com.heuristica.ksroutewinthor.services.OrderService;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,12 +19,14 @@ public class KsroutewinthorApplication {
         @Override
         public void configure() {
             // Polls the DB for new orders and processes them
-            from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
+            from("jpa:com.heuristica.ksroutewinthor.model.Pedido"
                     + "?consumer.delay=5s"
                     + "&consumer.namedQuery=newOrders"
                     + "&consumeDelete=false"
                     + "&consumeLockEntity=false")
-                    .log("Pedido processado: #id ${body.numped}");
+                    .routeId("process-order")
+                    .bean(OrderService.class, "processPedido")
+                    .log("Pedido processado: #id ${body}");
         }
     }
 }
