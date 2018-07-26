@@ -8,8 +8,7 @@ class OrderRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        // Polls the DB for new orders and processes them
-        from("jpa:com.heuristica.ksroutewinthor.model.Pedido"
+        from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
                 + "?consumer.delay=5s"
                 + "&consumer.namedQuery=newOrders"
                 + "&consumeDelete=false"

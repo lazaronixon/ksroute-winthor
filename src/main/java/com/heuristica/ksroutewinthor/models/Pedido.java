@@ -43,5 +43,5 @@ public class Pedido implements Serializable {
     private Filial filial;    
 
     @Consumed
-    public void process() { ksrProcessedAt = OffsetDateTime.now(); }
+    public void setProcessed() { ksrProcessedAt = OffsetDateTime.now(); }
 }
