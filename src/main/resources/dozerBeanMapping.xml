@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping 
+                              http://dozermapper.github.io/schema/bean-mapping.xsd">
+          
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.Filial</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Branch</class-b>   
+        <field><a>codigo</a><b>erpId</b></field>
+        <field><a>razaosocial</a><b>description</b></field>
+        <field><a>ksrId</a><b>id</b></field>
+    </mapping>
+    
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.RotaExp</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Line</class-b>   
+        <field><a>codrota</a><b>erpId</b></field>
+        <field><a>descricao</a><b>description</b></field>
+        <field><a>ksrId</a><b>id</b></field>
+        <field custom-converter="com.heuristica.ksroutewinthor.dozer.converters.SituacaoBooleanConverter"><a>situacao</a><b>active</b></field>
+    </mapping>
+    
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.Regiao</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Region</class-b>   
+        <field><a>numregiao</a><b>erpId</b></field>
+        <field><a>regiao</a><b>description</b></field>
+        <field><a>uf</a><b>state</b></field>
+        <field><a>ksrId</a><b>id</b></field>
+        <field custom-converter="com.heuristica.ksroutewinthor.dozer.converters.SituacaoBooleanConverter"><a>status</a><b>active</b></field>
+    </mapping> 
+    
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.Praca</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Subregion</class-b>   
+        <field><a>codpraca</a><b>erpId</b></field>
+        <field><a>praca</a><b>description</b></field>
+        <field><a>regiao.ksrId</a><b>id</b></field>
+        <field><a>rotaExp.ksrId</a><b>lineId</b></field>
+        <field custom-converter="com.heuristica.ksroutewinthor.dozer.converters.SituacaoBooleanConverter"><a>situacao</a><b>active</b></field>
+    </mapping>
+    
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.Cliente</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Customer</class-b>   
+        <field><a>codcli</a><b>erpId</b></field>
+        <field><a>cliente</a><b>name</b></field>
+        <field><a>fantasia</a><b>trade</b></field>
+        <field><a>ufent</a><b>state</b></field>
+        <field><a>municent</a><b>city</b></field>
+        <field><a>bairroent</a><b>neighborhood</b></field>
+        <field><a>enderent</a><b>address</b></field>
+        <field><a>cepent</a><b>zipcode</b></field>
+        <field><a>ksrId</a><b>id</b></field>
+        <field><a>praca.ksrId</a><b>subregionId</b></field>
+        <field custom-converter="com.heuristica.ksroutewinthor.dozer.converters.StringBooleanConverter"><a>bloqueio</a><b>active</b></field>
+    </mapping>
+    
+    <mapping> 
+        <class-a>com.heuristica.ksroutewinthor.models.Pedido</class-a>
+        <class-b>com.heuristica.ksroutewinthor.apis.Order</class-b>   
+        <field><a>numped</a><b>erpId</b></field>
+        <field copy-by-reference="true"><a>data</a><b>issuedAt</b></field>        
+        <field><a>vlatend</a><b>amount</b></field>
+        <field><a>totpeso</a><b>weight</b></field>
+        <field><a>totvolume</a><b>volume</b></field>
+        <field><a>ksrId</a><b>id</b></field>        
+        <field><a>filial.ksrId</a><b>branchId</b></field>
+        <field><a>cliente.ksrId</a><b>customerId</b></field>
+        <field custom-converter="com.heuristica.ksroutewinthor.dozer.converters.PedidoPosicaoConverter"><a>posicao</a><b>status</b></field>
+    </mapping>                                                                                                  
+
+</mappings> 
