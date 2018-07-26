@@ -1,8 +1,8 @@
-package com.heuristica.ksroutewinthor.dozer.mapping;
+package com.heuristica.ksroutewinthor.dozer.mappings;
 
-import com.heuristica.ksroutewinthor.api.Subregion;
+import com.heuristica.ksroutewinthor.apis.Subregion;
 import com.heuristica.ksroutewinthor.dozer.converters.SituacaoBooleanConverter;
-import com.heuristica.ksroutewinthor.model.Praca;
+import com.heuristica.ksroutewinthor.models.Praca;
 import org.dozer.loader.api.BeanMappingBuilder;
 import static org.dozer.loader.api.FieldsMappingOptions.customConverter;
 

@@ -53,45 +53,24 @@
             <groupId>org.apache.camel</groupId> 
             <artifactId>camel-jpa</artifactId> 
             <version>${camel.version}</version>   
-        </dependency>        
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-dozer</artifactId>
+            <version>${camel.version}</version>
+        </dependency>                
                      
         <!-- MIGRATION -->                                                                                                                             
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>           
-        </dependency>
-        
-        <!-- JSON API -->
-        <dependency>
-            <groupId>javax.json.bind</groupId>
-            <artifactId>javax.json.bind-api</artifactId>
-        </dependency>                    
-        <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>yasson</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1</version>
-        </dependency>  
+        </dependency>         
         
         <!-- UTILS -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency> 
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>5.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.kevinsawicki</groupId>
-            <artifactId>http-request</artifactId>
-            <version>6.0</version>
         </dependency>
                                
     </dependencies>
@@ -112,7 +91,7 @@
         <repository>
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
-            <url>https://repo.spring.io/snapshot</url>
+            <url>https://repo.spring.io/snapshot</url>            
         </repository>
         <repository>
             <id>spring-milestones</id>

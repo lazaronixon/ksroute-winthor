@@ -1,8 +1,8 @@
-package com.heuristica.ksroutewinthor.dozer.mapping;
+package com.heuristica.ksroutewinthor.dozer.mappings;
 
-import com.heuristica.ksroutewinthor.api.Order;
+import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.dozer.converters.PedidoPosicaoConverter;
-import com.heuristica.ksroutewinthor.model.Pedido;
+import com.heuristica.ksroutewinthor.models.Pedido;
 import org.dozer.loader.api.BeanMappingBuilder;
 import static org.dozer.loader.api.FieldsMappingOptions.copyByReference;
 import static org.dozer.loader.api.FieldsMappingOptions.customConverter;

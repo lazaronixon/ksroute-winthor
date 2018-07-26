@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor.dozer.converters;
 
-import com.heuristica.ksroutewinthor.api.Order;
+import com.heuristica.ksroutewinthor.apis.Order;
 import org.dozer.DozerConverter;
 
 public class PedidoPosicaoConverter extends DozerConverter<String, Order.Status> {

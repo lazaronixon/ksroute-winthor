@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.processor;
+package com.heuristica.ksroutewinthor.camel.processors;
 
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;

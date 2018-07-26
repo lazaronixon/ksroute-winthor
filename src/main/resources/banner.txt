@@ -5,5 +5,5 @@
 | |\  \/\__/ / |\ \\ \_/ / |_| | | | | |___ 
 \_| \_/\____/\_| \_|\___/ \___/  \_/ \____/ 
 ============================================
-:: Ksroute Winthor ::      (v0.0.1-SNAPSHOT)
+:: ${application.title} ::      ${application.formatted-version}
 

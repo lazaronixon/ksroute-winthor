@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.api;
+package com.heuristica.ksroutewinthor.apis;
 
 import java.time.LocalDate;
 import lombok.Data;

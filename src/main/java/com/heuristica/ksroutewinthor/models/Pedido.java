@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.model;
+package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;

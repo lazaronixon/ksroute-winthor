@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.model;
+package com.heuristica.ksroutewinthor.models;
 
 import org.springframework.data.repository.CrudRepository;
 

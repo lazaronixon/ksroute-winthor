@@ -1,13 +1,12 @@
-package com.heuristica.ksroutewinthor.api;
+package com.heuristica.ksroutewinthor.apis;
 
 import lombok.Data;
 
 @Data
-public class Line {
+public class Branch {
     
     private Long id;
     private String description;
     private String erpId;
-    private Boolean active;
     
 }

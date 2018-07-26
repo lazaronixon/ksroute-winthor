@@ -1,7 +1,7 @@
-package com.heuristica.ksroutewinthor.dozer.mapping;
+package com.heuristica.ksroutewinthor.dozer.mappings;
 
-import com.heuristica.ksroutewinthor.api.Branch;
-import com.heuristica.ksroutewinthor.model.Filial;
+import com.heuristica.ksroutewinthor.apis.Branch;
+import com.heuristica.ksroutewinthor.models.Filial;
 import org.dozer.loader.api.BeanMappingBuilder;
 
 public class BranchMapping extends BeanMappingBuilder {
