@@ -11,7 +11,9 @@ class BranchRouteBuilder extends RouteBuilder {
         from("direct:process-filial")
                 .routeId("process-filial")
                 .split().simple("body.filial")
-                .to("dozer:transformFilial?targetModel=com.heuristica.ksroutewinthor.apis.Branch")
+                .to("dozer:transformFilial"
+                        + "?marshalId=defaultGson"
+                        + "&targetModel=com.heuristica.ksroutewinthor.apis.Branch")
                 .log("Filial processada: ${body}");
 
     }

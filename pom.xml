@@ -58,7 +58,12 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-dozer</artifactId>
             <version>${camel.version}</version>
-        </dependency>                
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-gson</artifactId>
+            <version>${camel.version}</version>
+        </dependency>                        
                      
         <!-- MIGRATION -->                                                                                                                             
         <dependency>
