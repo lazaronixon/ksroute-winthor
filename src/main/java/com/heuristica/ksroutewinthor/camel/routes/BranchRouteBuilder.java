@@ -1,7 +1,8 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
+import com.heuristica.ksroutewinthor.apis.Branch;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,12 +20,14 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:create-filial")
                 .routeId("create-filial")
-                .to("dozer:transformFilial?marshalId=defaultGson&targetModel=com.heuristica.ksroutewinthor.apis.Branch")
+                .to("dozer:transformFilial?targetModel=com.heuristica.ksroutewinthor.apis.Branch")
+                .marshal().json(JsonLibrary.Jackson)
                 .setHeader("CamelHttpMethod", constant("POST"))
                 .setHeader("X-User-Email", constant("{{ksroute.api.email}}"))
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))       
                 .to("https4://{{ksroute.api.url}}/branches.json")
-                .log("Created branch ${body}");
+                .unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .toD("jpa:com.heuristica.ksroutewinthor.models.Branch?query=UPDATE Filial p SET p.ksrId = ${body.id} WHERE p.codigo = ${body.erpId}");
         
         from("direct:update-filial")
                 .routeId("update-filial")
@@ -32,7 +35,6 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("X-User-Email", constant("{{ksroute.api.email}}"))
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}")) 
-                .to("http4://{{ksroute.api.url}}")
-                .log("Updated branch ${body}");
+                .to("http4://{{ksroute.api.url}}");
     }
 }
