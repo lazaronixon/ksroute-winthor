@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 class OrderRouteBuilder extends RouteBuilder {
 
     @Override
-    public void configure() {
-        from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
-                + "?delay=15s"
-                + "&namedQuery=newOrders"
-                + "&consumeDelete=false")
-                .routeId("process-order")
+    public void configure() {      
+        errorHandler(defaultErrorHandler().logExhausted(false));
+        
+        from("jpa:com.heuristica.ksroutewinthor.models.Pedido?delay=15s&namedQuery=newOrders&consumeDelete=false")
+                .routeId("process-pedido")
+                .log("Inicio pedido ${body.numped}")
                 .to("direct:process-filial")
-                .log("Pedido processado: ${body.numped}");
+                .log("Fim pedido ${body.numped}");
     }
 }
