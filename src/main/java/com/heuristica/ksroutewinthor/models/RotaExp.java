@@ -15,7 +15,6 @@ public class RotaExp implements Serializable {
     private Long codrota;
     private String descricao;    
     private String situacao;
-    private Long ksrId;
-    private String ksrEtag;     
+    private Long ksrId;  
 
 }

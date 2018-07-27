@@ -16,7 +16,6 @@ public class Regiao implements Serializable {
     private String regiao;
     private String uf;
     private String status;
-    private Long ksrId;
-    private String ksrEtag;      
+    private Long ksrId;     
 
 }

@@ -31,7 +31,6 @@ public class Pedido implements Serializable {
     private Integer numordemcarga;
     private Long numseqentrega;
     private Long ksrId;
-    private String ksrEtag;
     private OffsetDateTime ksrProcessedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

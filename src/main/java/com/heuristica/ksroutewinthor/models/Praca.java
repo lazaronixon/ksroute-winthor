@@ -18,8 +18,7 @@ public class Praca implements Serializable {
     private Long codpraca;
     private String praca;
     private String situacao;
-    private Long ksrId;
-    private String ksrEtag;      
+    private Long ksrId;     
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numregiao")
