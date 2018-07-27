@@ -11,8 +11,7 @@ class OrderRouteBuilder extends RouteBuilder {
         from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
                 + "?delay=15s"
                 + "&namedQuery=newOrders"
-                + "&consumeDelete=false"
-                + "&consumeLockEntity=false")
+                + "&consumeDelete=false")
                 .routeId("process-order")
                 .to("direct:process-filial")
                 .log("Pedido processado: ${body.numped}");

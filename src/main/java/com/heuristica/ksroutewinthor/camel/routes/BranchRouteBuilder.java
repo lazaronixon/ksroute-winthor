@@ -10,31 +10,28 @@ class BranchRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        
-        from("direct:process-filial")
-                .routeId("process-filial")
+
+        from("direct:process-filial").routeId("process-filial")
                 .split().simple("body.filial")
-                .choice()
-                .when().simple("${body.ksrId} == null").to("direct:create-filial")
-                .otherwise().to("direct:update-filial");
-        
-        from("direct:create-filial")
-                .routeId("create-filial")
                 .to("dozer:transformFilial?targetModel=com.heuristica.ksroutewinthor.apis.Branch")
-                .marshal().json(JsonLibrary.Jackson)
+                .choice().when().simple("${body.id} == null").to("direct:create-filial")
+                .otherwise().to("direct:update-filial");
+
+        from("direct:create-filial").routeId("create-filial")
                 .setHeader("CamelHttpMethod", constant("POST"))
                 .setHeader("X-User-Email", constant("{{ksroute.api.email}}"))
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
+                .marshal().json(JsonLibrary.Jackson)
                 .throttle(10).to("https4://{{ksroute.api.url}}/branches.json")
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .toD("jpa:?query=UPDATE Filial p SET p.ksrId = ${body.id} WHERE p.codigo = ${body.erpId}");
-        
-        from("direct:update-filial")
-                .routeId("update-filial")
-                .to("dozer:transformFilial?marshalId=defaultGson&targetModel=com.heuristica.ksroutewinthor.apis.Branch")
+                .toD("jpa?query=UPDATE Filial p SET p.ksrId = ${body.id} WHERE p.codigo = ${body.erpId}");
+
+        from("direct:update-filial").routeId("update-filial")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("X-User-Email", constant("{{ksroute.api.email}}"))
-                .setHeader("X-User-Token", constant("{{ksroute.api.token}}")) 
-                .to("http4://{{ksroute.api.url}}");
+                .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
+                .setHeader("id", simple("body.id"))
+                .marshal().json(JsonLibrary.Jackson)
+                .throttle(10).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.id}.json"));
     }
 }
