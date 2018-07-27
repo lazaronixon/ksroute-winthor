@@ -8,7 +8,8 @@ class OrderRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("jpa:com.heuristica.ksroutewinthor.models.Pedido?delay=5s"
+        from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
+                + "?delay=15s"
                 + "&namedQuery=newOrders"
                 + "&consumeDelete=false"
                 + "&consumeLockEntity=false")
