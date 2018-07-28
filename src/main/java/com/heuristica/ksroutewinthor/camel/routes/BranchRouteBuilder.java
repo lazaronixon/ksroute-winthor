@@ -14,7 +14,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-filial").routeId("process-filial")
                 .log("Processando filial ${body.filial.codigo}")
                 .split(simple("body.filial"))
-                .to("dozer:transformFilial?targetModel=com.heuristica.ksroutewinthor.apis.Branch")
+                .convertBodyTo(Branch.class)
                 .choice().when(simple("${body.id} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial");
         
