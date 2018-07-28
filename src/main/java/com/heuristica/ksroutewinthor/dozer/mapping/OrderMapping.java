@@ -1,0 +1,26 @@
+package com.heuristica.ksroutewinthor.dozer.mapping;
+
+import com.heuristica.ksroutewinthor.apis.Order;
+import com.heuristica.ksroutewinthor.dozer.converters.PedidoPosicaoConverter;
+import com.heuristica.ksroutewinthor.models.Pedido;
+import org.dozer.loader.api.BeanMappingBuilder;
+import static org.dozer.loader.api.FieldsMappingOptions.copyByReference;
+import static org.dozer.loader.api.FieldsMappingOptions.customConverter;
+
+public class OrderMapping extends BeanMappingBuilder {
+
+    @Override
+    protected void configure() {
+        mapping(Pedido.class, Order.class)
+                .fields("numped", "erpId")
+                .fields("data", "issuedAt", copyByReference())
+                .fields("vlatend", "amount")
+                .fields("totpeso", "weight")
+                .fields("totvolume", "volume")
+                .fields("ksrId", "id")
+                .fields("filial.ksrId", "branchId")
+                .fields("cliente.ksrId", "customerId")
+                .fields("posicao", "status", customConverter(PedidoPosicaoConverter.class));
+    }
+
+}
