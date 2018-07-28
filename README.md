@@ -12,8 +12,6 @@ Este aplicativo pode servir de exemplo para a construção da integração para 
 
 - SpringBoot: Facilita a criação de aplicativos autônomos baseados em spring que você pode só "clicar e executar".
 
-- SpringShell: Os usuários do projeto Spring Shell podem facilmente construir um aplicativo de shell completo (também conhecido como linha de comando). Criar uma aplicação de linha de comando pode ser útil para interagir com a API REST do seu projeto ou para trabalhar com conteúdo de arquivo local.
-
 - Liquibase: Permite que você desenvolva seu esquema de banco de dados ao longo do tempo. Em vez de escrever modificações de esquema em SQL puro, as migrações permitem que você use uma fácil DSL para descrever as alterações em suas tabelas.
 
 - Apache Camel: Torna a integração nos projetos de software bastante produtiva. Basicamente com pouco código podemos fazer muitas coisas que precisariam de muitos códigos, bibliotecas externas, controle interno, etc.
