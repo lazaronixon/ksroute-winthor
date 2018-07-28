@@ -1,28 +1,21 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Branch;
-import org.apache.camel.LoggingLevel;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 @Component
-class BranchRouteBuilder extends RouteBuilder {    
+class BranchRouteBuilder extends ApplicationRouteBuilder {    
     
     @Override
     public void configure() {
-        errorHandler(defaultErrorHandler().logExhausted(false));
-        
-        onException(HttpOperationFailedException.class)
-                .filter().simple("${exception.statusCode} == 422")
-                .log(LoggingLevel.WARN, "Erro de validação ${exception.responseBody}");
+        super.configure();
         
         from("direct:process-filial").routeId("process-filial")
                 .log("Processando filial ${body.filial.codigo}")
-                .split().simple("body.filial")
+                .split(simple("body.filial"))
                 .to("dozer:transformFilial?targetModel=com.heuristica.ksroutewinthor.apis.Branch")
-                .choice().when().simple("${body.id} == null").to("direct:create-filial")
+                .choice().when(simple("${body.id} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial");
         
         from("direct:create-filial").routeId("create-filial")

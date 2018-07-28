@@ -1,14 +1,13 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
-class OrderRouteBuilder extends RouteBuilder {
+class OrderRouteBuilder extends ApplicationRouteBuilder {
 
     @Override
-    public void configure() {      
-        errorHandler(defaultErrorHandler().logExhausted(false));
+    public void configure() { 
+        super.configure();
         
         from("jpa:com.heuristica.ksroutewinthor.models.Pedido?delay=15s&namedQuery=newOrders&consumeDelete=false")
                 .routeId("process-pedido")
