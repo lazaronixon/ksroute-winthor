@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.dozer.mapping;
+package com.heuristica.ksroutewinthor.dozer.mappings;
 
 import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.dozer.converters.PedidoPosicaoConverter;

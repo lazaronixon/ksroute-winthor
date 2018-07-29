@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.dozer.mapping;
+package com.heuristica.ksroutewinthor.dozer.mappings;
 
 import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.models.Filial;
