@@ -98,11 +98,6 @@
             <url>https://repo.spring.io/snapshot</url>            
         </repository>
         <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
             <id>git-lazaronixon</id>
             <url>https://github.com/lazaronixon/ojdbc7/raw/master/</url>
         </repository>        
@@ -113,11 +108,6 @@
             <id>spring-snapshots</id>
             <name>Spring Snapshots</name>
             <url>https://repo.spring.io/snapshot</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
         </pluginRepository>
     </pluginRepositories>
 
