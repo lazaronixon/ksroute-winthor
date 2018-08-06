@@ -18,7 +18,7 @@ public class Cliente implements Serializable {
     private Long codcli;
     private String cliente;
     private String fantasia;
-    private String ufent;
+    private String estent;
     private String municent;
     private String bairroent;
     private String enderent;

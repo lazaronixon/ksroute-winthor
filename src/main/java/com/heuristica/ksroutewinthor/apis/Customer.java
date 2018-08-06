@@ -19,6 +19,5 @@ public class Customer {
     private Boolean active;   
     
     private Long subregionId;
-    private Subregion subregion;
     
 }

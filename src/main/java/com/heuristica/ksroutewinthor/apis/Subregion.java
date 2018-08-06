@@ -12,9 +12,6 @@ public class Subregion {
     private Boolean active;
     
     private Long regionId;    
-    private Region region;
-    
-    private Long lineId;    
-    private Line line;
+    private Long lineId;
     
 }

@@ -16,9 +16,7 @@ public class Order {
     private String erpId;
     private LocalDate issuedAt;    
     
-    private Long branchId;    
-    private Branch branch;
+    private Long branchId;
 
-    private Long customerId;    
-    private Customer customer;    
+    private Long customerId;  
 }

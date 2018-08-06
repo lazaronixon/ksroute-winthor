@@ -14,7 +14,7 @@ public class CustomerMapping extends BeanMappingBuilder {
                 .fields("codcli", "erpId")
                 .fields("cliente", "name")
                 .fields("fantasia", "trade")
-                .fields("ufent", "state")
+                .fields("estent", "state")
                 .fields("municent", "city")
                 .fields("bairroent", "neighborhood")
                 .fields("enderent", "address")

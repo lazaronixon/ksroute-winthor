@@ -62,7 +62,12 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http4</artifactId>
             <version>${camel.version}</version>
-        </dependency>                               
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-ehcache-starter</artifactId>
+            <version>${camel.version}</version>
+        </dependency>                                        
                      
         <!-- MIGRATION -->                                                                                                                             
         <dependency>
