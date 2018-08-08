@@ -81,6 +81,6 @@ public class KsroutewinthorApplication {
                             new BasicHeader("X-User-Token", env.getProperty("ksroute.api.token"))));
         });
         return true;
-}    
+}
 
 }
