@@ -10,7 +10,6 @@ import com.heuristica.ksroutewinthor.dozer.mappings.LineMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.OrderMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.RegionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.SubregionMapping;
-import java.time.Duration;
 import java.util.Arrays;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.http4.HttpComponent;
@@ -18,11 +17,6 @@ import org.apache.camel.converter.dozer.DozerBeanMapperConfiguration;
 import org.apache.camel.converter.dozer.DozerTypeConverterLoader;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
-import org.ehcache.CacheManager;
-import org.ehcache.config.builders.CacheConfigurationBuilder;
-import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.config.builders.ExpiryPolicyBuilder;
-import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -57,16 +51,6 @@ public class KsroutewinthorApplication {
     @Bean
     public DozerTypeConverterLoader dozerConverterLoader(CamelContext camelContext, DozerBeanMapperConfiguration dozerConfig) {
         return new DozerTypeConverterLoader(camelContext, dozerConfig);
-    }
-
-    @Bean
-    public CacheManager cacheManager() {
-        return CacheManagerBuilder.newCacheManagerBuilder()
-                .withCache("idempotent-expirable-cache",
-                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                                String.class, Boolean.class, ResourcePoolsBuilder.heap(100))
-                                .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofMinutes(5))))
-                .build(true);
     }
     
     @Bean

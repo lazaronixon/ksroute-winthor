@@ -15,7 +15,7 @@ public class SubregionMapping extends BeanMappingBuilder {
                 .fields("praca", "description")
                 .fields("ksrId", "id")
                 .fields("regiao.ksrId", "regionId")
-                .fields("rotaExp.ksrId", "lineId")
+                .fields("rota.ksrId", "lineId")
                 .fields("situacao", "active", customConverter(SituacaoBooleanConverter.class));
     }
 

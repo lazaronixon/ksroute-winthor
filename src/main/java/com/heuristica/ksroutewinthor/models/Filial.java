@@ -14,6 +14,7 @@ public class Filial implements Serializable {
     @Id
     private Long codigo;
     private String razaosocial;
-    private Long ksrId; 
+    private Long ksrId;
+    private String oraRowscn;    
     
 }

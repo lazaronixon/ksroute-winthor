@@ -18,7 +18,8 @@ public class Praca implements Serializable {
     private Long codpraca;
     private String praca;
     private String situacao;
-    private Long ksrId;     
+    private Long ksrId;
+    private String oraRowscn;    
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numregiao")
@@ -26,6 +27,6 @@ public class Praca implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
-    private RotaExp rotaexp;     
+    private Rota rota;     
 
 }

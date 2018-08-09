@@ -27,6 +27,7 @@ public class Cliente implements Serializable {
     private Float longitude;
     private String bloqueio;
     private Long ksrId;
+    private String oraRowscn; 
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CODPRACA")

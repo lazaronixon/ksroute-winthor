@@ -9,12 +9,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcrotaexp")
-public class RotaExp implements Serializable {    
+public class Rota implements Serializable {    
     
     @Id
     private Long codrota;
     private String descricao;    
     private String situacao;
-    private Long ksrId;  
+    private Long ksrId;
+    private String oraRowscn;  
 
 }
