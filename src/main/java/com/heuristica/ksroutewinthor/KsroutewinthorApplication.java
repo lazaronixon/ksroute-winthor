@@ -15,6 +15,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.http4.HttpComponent;
 import org.apache.camel.converter.dozer.DozerBeanMapperConfiguration;
 import org.apache.camel.converter.dozer.DozerTypeConverterLoader;
+import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
 public class KsroutewinthorApplication {
@@ -52,7 +54,7 @@ public class KsroutewinthorApplication {
     public DozerTypeConverterLoader dozerConverterLoader(CamelContext camelContext, DozerBeanMapperConfiguration dozerConfig) {
         return new DozerTypeConverterLoader(camelContext, dozerConfig);
     }
-    
+
     @Bean
     public boolean httpClientConfigurer(@Autowired CamelContext camelContext, @Autowired Environment env) {
         HttpComponent httpComponent = camelContext.getComponent("http4", HttpComponent.class);
@@ -65,6 +67,13 @@ public class KsroutewinthorApplication {
                             new BasicHeader("X-User-Token", env.getProperty("ksroute.api.token"))));
         });
         return true;
-}
+    }
 
+    @Bean(name = "PROPAGATION_REQUIRES_NEW")
+    public SpringTransactionPolicy propagationRequiresNew(PlatformTransactionManager transactionManager) {
+        SpringTransactionPolicy policy = new SpringTransactionPolicy();
+        policy.setTransactionManager(transactionManager);
+        policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
+        return policy;
+    }
 }

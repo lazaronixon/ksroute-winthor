@@ -14,7 +14,6 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-filial").routeId("process-filial")
                 .toD("jpa?query=SELECT p FROM Filial p WHERE p.codigo = ${body.filial.codigo}").split(body())
-                .log("${body}")
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial").endChoice();
 
