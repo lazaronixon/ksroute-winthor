@@ -12,7 +12,7 @@ import lombok.Data;
 public class Filial implements Serializable {
     
     @Id
-    private Long codigo;
+    private String codigo;
     private String razaosocial;
     private Long ksrId;
     private String oraRowscn;    

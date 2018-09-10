@@ -1,10 +1,10 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.http.common.HttpOperationFailedException;
-import org.apache.camel.spring.SpringRouteBuilder;
 
-public class ApplicationRouteBuilder extends SpringRouteBuilder {
+public class ApplicationRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {

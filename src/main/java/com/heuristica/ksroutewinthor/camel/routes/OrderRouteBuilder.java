@@ -13,9 +13,12 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-        from("jpa:" + Pedido.class.getName() + "?delay=15s&namedQuery=newOrders&consumeDelete=false&consumeLockEntity=false").routeId("process-pedido")
+        from("jpa:com.heuristica.ksroutewinthor.models.pedido"
+                + "?delay=15s"
+                + "&namedQuery=newOrders"
+                + "&consumeLockEntity=false"
+                + "&consumeDelete=false").routeId("process-pedido")
                 .log("Processando pedido ${body.numped}")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"));
         //.enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"));
     }
