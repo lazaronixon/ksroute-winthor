@@ -1,11 +1,10 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
-import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.models.Praca;
+import com.heuristica.ksroutewinthor.services.ClienteService;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import static org.apache.camel.processor.idempotent.MemoryIdempotentRepository.memoryIdempotentRepository;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
@@ -17,17 +16,16 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-cliente").routeId("process-cliente")
-                .transform(simple("body.cliente"))
-                .idempotentConsumer(simple("cliente/${body.codcli}/${body.oraRowscn}"), memoryIdempotentRepository(5000))             
+                .bean(ClienteService.class, "findCliente(${body.cliente.codcli})")   
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
-                .otherwise().to("direct:update-cliente")
-                .unmarshal().json(JsonLibrary.Jackson, Cliente.class);
+                .otherwise().to("direct:update-cliente").end()
+                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .bean(ClienteService.class, "saveCliente(${body})");
 
         from("direct:create-cliente").routeId("create-cliente")
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/customers.json")
-                .unmarshal().json(JsonLibrary.Jackson, Customer.class).toD("jpa?query=UPDATE Customer p SET p.ksrId = ${body.id} WHERE p.codcli = ${body.erpId}").end(); 
+                .throttle(5).to("https4://{{ksroute.api.url}}/customers.json"); 
 
         from("direct:update-cliente").routeId("update-cliente")
                 .setHeader("CamelHttpMethod", constant("PUT"))

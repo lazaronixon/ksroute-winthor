@@ -4,8 +4,8 @@ import com.heuristica.ksroutewinthor.apis.Subregion;
 import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.models.Regiao;
 import com.heuristica.ksroutewinthor.models.Rota;
+import com.heuristica.ksroutewinthor.services.PracaService;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import static org.apache.camel.processor.idempotent.MemoryIdempotentRepository.memoryIdempotentRepository;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
@@ -17,19 +17,17 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-praca").routeId("process-praca")
-                .transform(simple("body.praca"))
-                .idempotentConsumer(simple("praca/${body.codpraca}/${body.oraRowscn}"), memoryIdempotentRepository(100))
+                .bean(PracaService.class, "findPraca(${body.praca.codpraca})") 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-praca")
-                .otherwise().to("direct:update-praca")
-                .unmarshal().json(JsonLibrary.Jackson, Subregion.class);
+                .otherwise().to("direct:update-praca").end()
+                .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .bean(PracaService.class, "savePraca(${body})");
 
         from("direct:create-praca").routeId("create-praca")
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/subregions.json")
-                .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .toD("jpa?query=UPDATE Praca p SET p.ksrId = ${body.id} WHERE p.codpraca = ${body.erpId}").end();
+                .throttle(5).to("https4://{{ksroute.api.url}}/subregions.json");
 
         from("direct:update-praca").routeId("update-praca")
                 .setHeader("CamelHttpMethod", constant("PUT"))

@@ -1,6 +1,5 @@
 package com.heuristica.ksroutewinthor.models;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
@@ -17,7 +16,7 @@ import org.apache.camel.component.jpa.Consumed;
 @Entity
 @Table(name = "pcpedc")
 @NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessedAt IS NULL AND p.posicao = 'L' AND p.fretedespacho = 'C'")
-public class Pedido implements Serializable {
+public class Pedido {
 
     @Id
     private Long numped;

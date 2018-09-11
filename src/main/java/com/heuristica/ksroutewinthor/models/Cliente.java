@@ -1,6 +1,5 @@
 package com.heuristica.ksroutewinthor.models;
 
-import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -12,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcclient")
-public class Cliente implements Serializable {
+public class Cliente {
 
     @Id
     private Long codcli;
@@ -27,7 +26,6 @@ public class Cliente implements Serializable {
     private Float longitude;
     private String bloqueio;
     private Long ksrId;
-    private String oraRowscn; 
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CODPRACA")
