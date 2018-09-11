@@ -14,7 +14,6 @@ public class Regiao {
     private Long numregiao;
     private String regiao;
     private String uf;
-    private String status;
     private Long ksrId;
 
 }

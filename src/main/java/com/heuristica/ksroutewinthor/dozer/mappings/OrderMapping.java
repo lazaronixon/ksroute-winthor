@@ -1,11 +1,9 @@
 package com.heuristica.ksroutewinthor.dozer.mappings;
 
 import com.heuristica.ksroutewinthor.apis.Order;
-import com.heuristica.ksroutewinthor.dozer.converters.PedidoPosicaoConverter;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import org.dozer.loader.api.BeanMappingBuilder;
 import static org.dozer.loader.api.FieldsMappingOptions.copyByReference;
-import static org.dozer.loader.api.FieldsMappingOptions.customConverter;
 
 public class OrderMapping extends BeanMappingBuilder {
 
@@ -19,8 +17,7 @@ public class OrderMapping extends BeanMappingBuilder {
                 .fields("totvolume", "volume")
                 .fields("ksrId", "id")
                 .fields("filial.ksrId", "branchId")
-                .fields("cliente.ksrId", "customerId")
-                .fields("posicao", "status", customConverter(PedidoPosicaoConverter.class));
+                .fields("cliente.ksrId", "customerId");
     }
 
 }

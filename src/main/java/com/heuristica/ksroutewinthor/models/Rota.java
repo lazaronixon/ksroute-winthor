@@ -12,8 +12,7 @@ public class Rota {
     
     @Id
     private Long codrota;
-    private String descricao;    
-    private String situacao;
+    private String descricao;
     private Long ksrId; 
 
 }

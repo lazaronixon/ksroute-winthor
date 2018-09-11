@@ -17,6 +17,5 @@ public class Order {
     private LocalDate issuedAt;    
     
     private Long branchId;
-
     private Long customerId;  
 }

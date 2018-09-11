@@ -16,7 +16,6 @@ public class Praca {
     @Id
     private Long codpraca;
     private String praca;
-    private String situacao;
     private Long ksrId;   
     
     @ManyToOne(fetch = FetchType.LAZY)
