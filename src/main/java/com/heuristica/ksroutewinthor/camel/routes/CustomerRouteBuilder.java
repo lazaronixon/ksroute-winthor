@@ -16,7 +16,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-cliente").routeId("process-cliente")
-                .bean(ClienteService.class, "findCliente(${body.cliente.codcli})")   
+                .bean(ClienteService.class, "findCliente(${body.cliente.codcli})")                
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
                 .otherwise().to("direct:update-cliente").end()

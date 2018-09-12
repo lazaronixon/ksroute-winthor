@@ -32,11 +32,11 @@ public class Pedido {
     private Long ksrId;
     private OffsetDateTime ksrProcessedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "codcli")
     private Cliente cliente;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "codfilial", referencedColumnName = "codigo")
     private Filial filial;    
 

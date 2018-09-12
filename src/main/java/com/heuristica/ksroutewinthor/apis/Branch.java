@@ -7,6 +7,6 @@ public class Branch {
     
     private Long id;
     private String description;
-    private String erpId;
+    private String erpId;    
     
 }

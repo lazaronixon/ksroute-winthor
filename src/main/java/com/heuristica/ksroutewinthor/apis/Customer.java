@@ -15,7 +15,8 @@ public class Customer {
     private String zipcode;
     private Float latitude;
     private Float longitude;
-    private String erpId;  
+    private String erpId;
+    private Boolean active = true;
     
     private Long subregionId;
     

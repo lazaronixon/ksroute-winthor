@@ -18,11 +18,11 @@ public class Praca {
     private String praca;
     private Long ksrId;   
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "numregiao")
     private Regiao regiao;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
     private Rota rota;     
 

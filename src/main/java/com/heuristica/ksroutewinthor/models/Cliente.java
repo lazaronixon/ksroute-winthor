@@ -27,7 +27,7 @@ public class Cliente {
     private String bloqueio;
     private Long ksrId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "CODPRACA")
     private Praca praca;
 

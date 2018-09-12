@@ -9,5 +9,6 @@ public class Region {
     private String description;
     private String state;
     private String erpId;
+    private Boolean active = true;
 
 }

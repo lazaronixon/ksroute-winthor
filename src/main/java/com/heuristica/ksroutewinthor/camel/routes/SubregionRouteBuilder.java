@@ -17,7 +17,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-praca").routeId("process-praca")
-                .bean(PracaService.class, "findPraca(${body.praca.codpraca})") 
+                .bean(PracaService.class, "findPraca(${body.praca.codpraca})")
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-praca")
@@ -32,7 +32,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
         from("direct:update-praca").routeId("update-praca")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
-                .convertBodyTo(Praca.class).marshal().json(JsonLibrary.Jackson)
+                .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/subregions/${header.ksrId}.json"));
     }
 
