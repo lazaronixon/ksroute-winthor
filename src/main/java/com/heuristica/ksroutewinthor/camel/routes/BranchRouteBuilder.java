@@ -17,7 +17,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial").end()
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveFilial(${body})");
+                .bean(FilialService.class, "saveBranch(${body})");
 
         from("direct:create-filial").routeId("create-filial")
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)

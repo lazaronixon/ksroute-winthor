@@ -19,11 +19,11 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-praca").routeId("process-praca")
                 .bean(PracaService.class, "findPraca(${body.praca.codpraca})")
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))
+                .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                               
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-praca")
                 .otherwise().to("direct:update-praca").end()
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .bean(PracaService.class, "savePraca(${body})");
+                .bean(PracaService.class, "saveSubregion(${body})");
 
         from("direct:create-praca").routeId("create-praca")
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)

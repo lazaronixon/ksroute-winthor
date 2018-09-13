@@ -15,9 +15,9 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-regiao").routeId("process-regiao")
                 .bean(RegiaoService.class, "findRegiao(${body.regiao.numregiao})")
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-regiao")
-                .otherwise().to("direct:update-regiao").end()               
+                .otherwise().to("direct:update-regiao").end()    
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegiao(${body})");
+                .bean(RegiaoService.class, "saveRegion(${body})");
 
         from("direct:create-regiao").routeId("create-regiao")
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)

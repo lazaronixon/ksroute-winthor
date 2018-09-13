@@ -7,11 +7,8 @@ import org.apache.camel.http.common.HttpOperationFailedException;
 public class ApplicationRouteBuilder extends RouteBuilder {
 
     @Override
-    public void configure() {
-        onException(HttpOperationFailedException.class)
-                .filter(simple("${exception.statusCode} == 422"))
-                .log(LoggingLevel.WARN, "Erro de validação: ${body}")
-                .log(LoggingLevel.WARN, "Detalhe: ${exception.responseBody}");
+    public void configure() {    
+        onException(HttpOperationFailedException.class).log(LoggingLevel.WARN, "Erro no servidor: ${body}");
     }
 
 }

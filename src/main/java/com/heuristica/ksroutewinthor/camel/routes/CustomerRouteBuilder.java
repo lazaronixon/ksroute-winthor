@@ -21,7 +21,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
                 .otherwise().to("direct:update-cliente").end()
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveCliente(${body})");
+                .bean(ClienteService.class, "saveCustomer(${body})");
 
         from("direct:create-cliente").routeId("create-cliente")
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)

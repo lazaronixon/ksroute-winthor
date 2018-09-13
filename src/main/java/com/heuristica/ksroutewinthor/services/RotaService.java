@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.services;
 
+import com.heuristica.ksroutewinthor.apis.Line;
 import com.heuristica.ksroutewinthor.models.Rota;
 import com.heuristica.ksroutewinthor.models.RotaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ public class RotaService {
         return rotas.findById(id).get();
     }
 
-    public Rota saveRota(Rota rota) {
+    public Rota saveLine(Line line) {
+        Rota rota = findRota(Long.parseLong(line.getErpId()));
+        rota.setKsrId(line.getId());
         return rotas.save(rota);
     }
 

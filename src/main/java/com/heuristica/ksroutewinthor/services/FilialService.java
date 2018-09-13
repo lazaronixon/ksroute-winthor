@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.services;
 
+import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.models.Filial;
 import com.heuristica.ksroutewinthor.models.FilialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ public class FilialService {
         return filiais.findById(id).get();
     }
 
-    public Filial saveFilial(Filial filial) {
+    public Filial saveBranch(Branch branch) {
+        Filial filial = findFilial(branch.getErpId());
+        filial.setKsrId(branch.getId());
         return filiais.save(filial);
     }
 

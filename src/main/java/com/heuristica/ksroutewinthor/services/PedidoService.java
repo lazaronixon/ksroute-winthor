@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.services;
 
+import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,7 +17,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-rota")
                 .otherwise().to("direct:update-rota").end()
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveRota(${body})");
+                .bean(RotaService.class, "saveLine(${body})");
 
         from("direct:create-rota").routeId("create-rota")
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
