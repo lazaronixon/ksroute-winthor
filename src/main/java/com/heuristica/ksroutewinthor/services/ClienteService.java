@@ -18,6 +18,7 @@ public class ClienteService {
 
     public Cliente saveCustomer(Customer customer) {
         Cliente cliente = findCliente(Long.parseLong(customer.getErpId()));
+        cliente.setKsrId(customer.getId());
         return clientes.save(cliente);
     }
 

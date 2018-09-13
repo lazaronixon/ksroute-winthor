@@ -1,9 +1,11 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
+import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Filial;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.services.PedidoService;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +23,12 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 .log("Processando pedido ${body.numped}")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
-                .bean(PedidoService.class, "savePedido(${body})");
+                .to("direct:create-pedido").bean(PedidoService.class, "savePedido(${body})");
+        
+        from("direct:create-pedido").routeId("create-pedido")
+                .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
+                .throttle(5).to("https4://{{ksroute.api.url}}/orders.json")
+                .unmarshal().json(JsonLibrary.Jackson, Order.class);              
     }
 
     public class OrderEnricher {
