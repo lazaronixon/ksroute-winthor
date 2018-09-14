@@ -15,7 +15,7 @@ import org.apache.camel.component.jpa.Consumed;
 @Data
 @Entity
 @Table(name = "pcpedc")
-@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessedAt IS NULL AND p.posicao = 'L' AND p.fretedespacho = 'C'")
+@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessedAt IS NULL AND p.posicao = 'L' AND p.fretedespacho = 'C' ORDER BY p.cliente.praca.codpraca, p.numped")
 public class Pedido {
 
     @Id

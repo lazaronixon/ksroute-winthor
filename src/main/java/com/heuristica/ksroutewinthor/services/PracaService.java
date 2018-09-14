@@ -14,7 +14,7 @@ public class PracaService {
     @Autowired
     private PracaRepository pracas;
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Praca findPraca(Long id) {
         Praca praca = pracas.findById(id).get();
         return praca;

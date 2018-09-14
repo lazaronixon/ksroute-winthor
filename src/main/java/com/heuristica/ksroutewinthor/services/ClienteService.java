@@ -14,7 +14,7 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clientes;
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED) 
     public Cliente findCliente(Long id) {
         return clientes.findById(id).get();
     }
