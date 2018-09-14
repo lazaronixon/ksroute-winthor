@@ -21,6 +21,8 @@ public class ClienteService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)    
     public Cliente saveCustomer(Customer customer) {
         Cliente cliente = findCliente(Long.parseLong(customer.getErpId()));
+        cliente.setLatitude(String.valueOf(customer.getLatitude()));
+        cliente.setLongitude(String.valueOf(customer.getLongitude()));
         cliente.setKsrId(customer.getId());
         return clientes.save(cliente);
     }

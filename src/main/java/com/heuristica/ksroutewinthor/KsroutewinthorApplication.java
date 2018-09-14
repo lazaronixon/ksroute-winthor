@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.heuristica.ksroutewinthor.dozer.mappings.BranchMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.CustomerMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.LineMapping;
@@ -33,8 +32,7 @@ public class KsroutewinthorApplication {
 
     @Bean
     public ObjectMapper jacksonFormat() {
-        return new ObjectMapper()
-                .registerModule(new JavaTimeModule())                
+        return new ObjectMapper()            
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

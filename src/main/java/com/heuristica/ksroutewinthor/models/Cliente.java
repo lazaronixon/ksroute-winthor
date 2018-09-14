@@ -1,7 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,8 +21,8 @@ public class Cliente {
     private String bairroent;
     private String enderent;
     private String cepent;
-    private Float latitude;
-    private Float longitude;
+    private String latitude;
+    private String longitude;
     private String bloqueio;
     private Long ksrId;
     

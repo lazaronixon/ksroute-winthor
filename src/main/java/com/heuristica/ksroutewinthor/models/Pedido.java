@@ -1,13 +1,14 @@
 package com.heuristica.ksroutewinthor.models;
 
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import lombok.Data;
 import org.apache.camel.component.jpa.Consumed;
 
@@ -19,7 +20,6 @@ public class Pedido {
 
     @Id
     private Long numped;
-    private LocalDate data;
     private Double vlatend;
     private String posicao;
     private Double totpeso;
@@ -29,7 +29,11 @@ public class Pedido {
     private Integer numordemcarga;
     private Long numseqentrega;
     private Long ksrId;
-    private OffsetDateTime ksrProcessedAt;
+    
+    @Temporal(TemporalType.DATE)
+    private Date data;    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date ksrProcessedAt;
 
     @ManyToOne
     @JoinColumn(name = "codcli")
@@ -40,5 +44,5 @@ public class Pedido {
     private Filial filial;    
 
     @Consumed
-    public void setProcessed() { ksrProcessedAt = OffsetDateTime.now(); }
+    public void setProcessed() { ksrProcessedAt = new Date(); }
 }

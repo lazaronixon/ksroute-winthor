@@ -17,7 +17,7 @@ public class PracaService {
     public Praca findPraca(Long id) {
         return pracas.findById(id).get();
     }
-
+      
     @Transactional(propagation = Propagation.REQUIRES_NEW)      
     public Praca saveSubregion(Subregion subregion) {
         Praca praca = findPraca(Long.parseLong(subregion.getErpId()));

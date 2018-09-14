@@ -17,7 +17,7 @@ public class RegiaoService {
     public Regiao findRegiao(Long id) {
         return regioes.findById(id).get();
     }
-
+   
     @Transactional(propagation = Propagation.REQUIRES_NEW)    
     public Regiao saveRegion(Region region) {
         Regiao regiao = findRegiao(Long.parseLong(region.getErpId()));
