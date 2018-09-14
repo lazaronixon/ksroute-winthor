@@ -20,7 +20,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-pedido")
-                .log("Processando pedido ${body.numped}")
+                .transacted().log("Processando pedido ${body.numped}")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .to("direct:create-pedido").bean(PedidoService.class, "savePedido(${body})");

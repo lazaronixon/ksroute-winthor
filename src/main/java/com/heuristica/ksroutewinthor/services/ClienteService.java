@@ -5,6 +5,8 @@ import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.models.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ClienteService {
@@ -15,7 +17,8 @@ public class ClienteService {
     public Cliente findCliente(Long id) {
         return clientes.findById(id).get();
     }
-
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW)    
     public Cliente saveCustomer(Customer customer) {
         Cliente cliente = findCliente(Long.parseLong(customer.getErpId()));
         cliente.setKsrId(customer.getId());
