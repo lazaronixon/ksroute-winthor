@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Cacheable(false)
 @Table(name = "pcpraca")
 public class Praca {
 

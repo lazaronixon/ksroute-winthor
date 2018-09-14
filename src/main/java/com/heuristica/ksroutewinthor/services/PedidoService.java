@@ -14,6 +14,7 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidos;
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
     public Pedido findPedido(Long id) {
         return pedidos.findById(id).get();
     }

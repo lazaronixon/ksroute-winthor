@@ -14,6 +14,7 @@ public class FilialService {
     @Autowired
     private FilialRepository filiais;
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
     public Filial findFilial(String id) {
         return filiais.findById(id).get();
     }

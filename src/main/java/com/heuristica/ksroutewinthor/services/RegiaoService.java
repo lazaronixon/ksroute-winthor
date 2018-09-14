@@ -14,6 +14,7 @@ public class RegiaoService {
     @Autowired
     private RegiaoRepository regioes;
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
     public Regiao findRegiao(Long id) {
         return regioes.findById(id).get();
     }

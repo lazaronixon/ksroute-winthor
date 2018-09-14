@@ -14,6 +14,7 @@ public class RotaService {
     @Autowired
     private RotaRepository rotas;
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
     public Rota findRota(Long id) {
         return rotas.findById(id).get();
     }

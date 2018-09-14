@@ -14,8 +14,10 @@ public class PracaService {
     @Autowired
     private PracaRepository pracas;
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW) 
     public Praca findPraca(Long id) {
-        return pracas.findById(id).get();
+        Praca praca = pracas.findById(id).get();
+        return praca;
     }
       
     @Transactional(propagation = Propagation.REQUIRES_NEW)      
