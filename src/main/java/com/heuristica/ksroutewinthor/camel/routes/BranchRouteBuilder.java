@@ -13,20 +13,22 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-filial").routeId("process-filial")
-                .bean(FilialService.class, "findFilial(${body.filial.codigo})")
+                .transform(simple("body.filial"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
-                .otherwise().to("direct:update-filial").end()
-                .unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveBranch(${body})");
+                .otherwise().to("direct:update-filial");
 
         from("direct:create-filial").routeId("create-filial")
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/branches.json");
+                .throttle(5).to("https4://{{ksroute.api.url}}/branches.json")
+                .unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .bean(FilialService.class, "saveBranch(${body})");
 
         from("direct:update-filial").routeId("update-filial")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.ksrId}.json"));
+                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.ksrId}.json"))
+                .unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .bean(FilialService.class, "saveBranch(${body})");
     }
 }

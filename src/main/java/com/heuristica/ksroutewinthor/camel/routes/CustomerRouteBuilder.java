@@ -16,22 +16,24 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-cliente").routeId("process-cliente")
-                .bean(ClienteService.class, "findCliente(${body.cliente.codcli})")                
+                .transform(simple("body.cliente"))            
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
-                .otherwise().to("direct:update-cliente").end()
-                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveCustomer(${body})");
+                .otherwise().to("direct:update-cliente");
 
         from("direct:create-cliente").routeId("create-cliente")
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/customers.json"); 
+                .throttle(5).to("https4://{{ksroute.api.url}}/customers.json")
+                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .bean(ClienteService.class, "saveCustomer(${body})"); 
 
         from("direct:update-cliente").routeId("update-cliente")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/customers/${header.ksrId}.json"));       
+                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/customers/${header.ksrId}.json"))
+                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .bean(ClienteService.class, "saveCustomer(${body})");       
     }
 
     public class CustomerEnricher {

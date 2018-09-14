@@ -13,15 +13,10 @@ public class RegiaoService {
 
     @Autowired
     private RegiaoRepository regioes;
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED) 
-    public Regiao findRegiao(Long id) {
-        return regioes.findById(id).get();
-    }
    
     @Transactional(propagation = Propagation.REQUIRES_NEW)    
     public Regiao saveRegion(Region region) {
-        Regiao regiao = findRegiao(Long.parseLong(region.getErpId()));
+        Regiao regiao = regioes.findById(Long.parseLong(region.getErpId())).get();
         regiao.setKsrId(region.getId());
         return regioes.save(regiao);
     }

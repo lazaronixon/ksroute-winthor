@@ -14,14 +14,9 @@ public class RotaService {
     @Autowired
     private RotaRepository rotas;
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED) 
-    public Rota findRota(Long id) {
-        return rotas.findById(id).get();
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW) 
     public Rota saveLine(Line line) {
-        Rota rota = findRota(Long.parseLong(line.getErpId()));
+        Rota rota = rotas.findById(Long.parseLong(line.getErpId())).get();
         rota.setKsrId(line.getId());
         return rotas.save(rota);
     }

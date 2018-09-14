@@ -13,16 +13,10 @@ public class PracaService {
 
     @Autowired
     private PracaRepository pracas;
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public Praca findPraca(Long id) {
-        Praca praca = pracas.findById(id).get();
-        return praca;
-    }
       
     @Transactional(propagation = Propagation.REQUIRES_NEW)      
     public Praca saveSubregion(Subregion subregion) {
-        Praca praca = findPraca(Long.parseLong(subregion.getErpId()));
+        Praca praca = pracas.findById(Long.parseLong(subregion.getErpId())).get();
         praca.setKsrId(subregion.getId());
         return pracas.save(praca);
     }

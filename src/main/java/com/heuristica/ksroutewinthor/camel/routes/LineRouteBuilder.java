@@ -13,21 +13,23 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-rota").routeId("process-rota")
-                .bean(RotaService.class, "findRota(${body.rota.codrota})")
+                .transform(simple("body.rota"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-rota")
-                .otherwise().to("direct:update-rota").end()
-                .unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveLine(${body})");
+                .otherwise().to("direct:update-rota");
 
         from("direct:create-rota").routeId("create-rota")
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/lines.json");
+                .throttle(5).to("https4://{{ksroute.api.url}}/lines.json")
+                .unmarshal().json(JsonLibrary.Jackson, Line.class)
+                .bean(RotaService.class, "saveLine(${body})");
 
         from("direct:update-rota").routeId("update-rota")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/lines/${header.ksrId}.json"));
+                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/lines/${header.ksrId}.json"))
+                .unmarshal().json(JsonLibrary.Jackson, Line.class)
+                .bean(RotaService.class, "saveLine(${body})");
     }
 
 }

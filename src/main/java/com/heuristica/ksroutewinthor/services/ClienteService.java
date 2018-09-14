@@ -13,15 +13,10 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clientes;
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED) 
-    public Cliente findCliente(Long id) {
-        return clientes.findById(id).get();
-    }
     
     @Transactional(propagation = Propagation.REQUIRES_NEW)    
     public Cliente saveCustomer(Customer customer) {
-        Cliente cliente = findCliente(Long.parseLong(customer.getErpId()));
+        Cliente cliente = clientes.findById(Long.parseLong(customer.getErpId())).get();
         cliente.setLatitude(customer.getLatitude() != null ? String.valueOf(customer.getLatitude()) : null);
         cliente.setLongitude(customer.getLongitude()!= null ? String.valueOf(customer.getLongitude()) : null);
         cliente.setKsrId(customer.getId());

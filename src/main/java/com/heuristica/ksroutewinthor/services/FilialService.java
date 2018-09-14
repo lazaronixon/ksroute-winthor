@@ -14,14 +14,9 @@ public class FilialService {
     @Autowired
     private FilialRepository filiais;
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public Filial findFilial(String id) {
-        return filiais.findById(id).get();
-    }
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Filial saveBranch(Branch branch) {
-        Filial filial = findFilial(branch.getErpId());
+        Filial filial = filiais.findById(branch.getErpId()).get();
         filial.setKsrId(branch.getId());
         return filiais.save(filial);
     }

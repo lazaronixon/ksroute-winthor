@@ -13,20 +13,22 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-regiao").routeId("process-regiao")
-                .bean(RegiaoService.class, "findRegiao(${body.regiao.numregiao})")                
+                .transform(simple("body.regiao"))               
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-regiao")
-                .otherwise().to("direct:update-regiao").end()    
-                .unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegion(${body})");
+                .otherwise().to("direct:update-regiao");
 
         from("direct:create-regiao").routeId("create-regiao")
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/regions.json");
+                .throttle(5).to("https4://{{ksroute.api.url}}/regions.json")
+                .unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .bean(RegiaoService.class, "saveRegion(${body})");
 
         from("direct:update-regiao").routeId("update-regiao")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/regions/${header.ksrId}.json"));
+                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/regions/${header.ksrId}.json"))
+                .unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .bean(RegiaoService.class, "saveRegion(${body})");
     }
 }

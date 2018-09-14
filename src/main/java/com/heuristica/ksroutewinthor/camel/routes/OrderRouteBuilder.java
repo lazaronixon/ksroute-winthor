@@ -21,15 +21,17 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-pedido")
                 .log("Processando pedido ${body.numped}")
+                .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
-                .to("direct:create-pedido").bean(PedidoService.class, "savePedido(${body})");
+                .to("direct:create-pedido");
         
         from("direct:create-pedido").routeId("create-pedido")
                 .filter(simple("${body.ksrId} == null"))             
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(5).to("https4://{{ksroute.api.url}}/orders.json")
-                .unmarshal().json(JsonLibrary.Jackson, Order.class);              
+                .unmarshal().json(JsonLibrary.Jackson, Order.class)
+                .bean(PedidoService.class, "savePedido(${body})");              
     }
 
     public class OrderEnricher {
