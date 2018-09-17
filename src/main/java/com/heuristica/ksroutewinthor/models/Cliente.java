@@ -24,7 +24,6 @@ public class Cliente {
     private String cepent;
     private String latitude;
     private String longitude;
-    private String bloqueio;
     private Long ksrId;
     
     @ManyToOne
