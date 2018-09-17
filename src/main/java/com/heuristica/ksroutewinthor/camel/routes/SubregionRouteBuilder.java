@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 class SubregionRouteBuilder extends ApplicationRouteBuilder {
+    
+    private static final String CACHE_KEY = "praca/${body.codpraca}/${body.oraRowscn}";
+    private static final String POST_URL = "https4://{{ksroute.api.url}}/subregions.json";
+    private static final String PUT_URL = "https4://{{ksroute.api.url}}/subregions/${header.ksrId}.json";      
 
     @Override
     public void configure() {
@@ -26,18 +30,18 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-praca");
 
         from("direct:create-praca").routeId("create-praca")
-                .idempotentConsumer(simple("praca/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/subregions.json")
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion(${body})");
 
         from("direct:update-praca").routeId("update-praca")
-                .idempotentConsumer(simple("praca/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/subregions/${header.ksrId}.json"))
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion(${body})");
     }

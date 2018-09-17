@@ -1,6 +1,7 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Region;
+import static com.heuristica.ksroutewinthor.camel.routes.ApplicationRouteBuilder.TIME_PERIOD_MILLIS;
 import com.heuristica.ksroutewinthor.services.RegiaoService;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
@@ -8,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 class RegionRouteBuilder extends ApplicationRouteBuilder {
+    
+    private static final String CACHE_KEY = "regiao/${body.numregiao}/${body.oraRowscn}";
+    private static final String POST_URL = "https4://{{ksroute.api.url}}/regions.json";
+    private static final String PUT_URL = "https4://{{ksroute.api.url}}/regions/${header.ksrId}.json";      
 
     @Override
     public void configure() {
@@ -20,18 +25,18 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-regiao");
 
         from("direct:create-regiao").routeId("create-regiao")
-                .idempotentConsumer(simple("regiao/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/regions.json")
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveRegion(${body})");
 
         from("direct:update-regiao").routeId("update-regiao")
-                .idempotentConsumer(simple("regiao/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/regions/${header.ksrId}.json"))
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveRegion(${body})");
     }

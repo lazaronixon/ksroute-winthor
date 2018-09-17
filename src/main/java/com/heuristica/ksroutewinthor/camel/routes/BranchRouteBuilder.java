@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 class BranchRouteBuilder extends ApplicationRouteBuilder {
+    
+    private static final String CACHE_KEY = "filial/${body.codigo}/${body.oraRowscn}";
+    private static final String POST_URL = "https4://{{ksroute.api.url}}/branches.json";
+    private static final String PUT_URL = "https4://{{ksroute.api.url}}/branches/${header.ksrId}.json";
 
     @Override
     public void configure() {
@@ -20,18 +24,18 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-filial");
 
         from("direct:create-filial").routeId("create-filial")
-                .idempotentConsumer(simple("filial/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/branches.json")
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch(${body})");
 
         from("direct:update-filial").routeId("update-filial")
-                .idempotentConsumer(simple("filial/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
+                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.ksrId}.json"))
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch(${body})");
     }
