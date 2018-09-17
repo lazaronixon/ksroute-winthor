@@ -1,6 +1,7 @@
 package com.heuristica.ksroutewinthor.models;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -26,6 +27,9 @@ public class Praca {
     
     @ManyToOne
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
-    private Rota rota;     
+    private Rota rota; 
+
+    @Column(insertable = false, updatable = false)
+    private String oraRowscn;
 
 }

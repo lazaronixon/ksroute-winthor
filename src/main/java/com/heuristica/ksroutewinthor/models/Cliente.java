@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,5 +30,8 @@ public class Cliente {
     @ManyToOne
     @JoinColumn(name = "CODPRACA")
     private Praca praca;
+    
+    @Column(insertable = false, updatable = false)
+    private String oraRowscn;    
 
 }

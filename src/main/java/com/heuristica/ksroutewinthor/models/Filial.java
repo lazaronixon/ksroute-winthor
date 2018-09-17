@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,5 +15,8 @@ public class Filial {
     private String codigo;
     private String razaosocial;
     private Long ksrId;
+    
+    @Column(insertable = false, updatable = false)
+    private String oraRowscn; 
     
 }
