@@ -15,13 +15,14 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-filial").routeId("process-filial")
                 .transform(simple("body.filial"))
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
+                .choice()
+                .when(simple("${body.ksrId} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial");
 
         from("direct:create-filial").routeId("create-filial")
                 .idempotentConsumer(simple("filial/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/branches.json")
+                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/branches.json")
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch(${body})");
 
@@ -30,7 +31,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.ksrId}.json"))
+                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/branches/${header.ksrId}.json"))
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch(${body})");
     }

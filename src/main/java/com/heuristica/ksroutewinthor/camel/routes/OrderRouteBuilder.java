@@ -29,7 +29,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
         from("direct:create-pedido").routeId("create-pedido")
                 .filter(simple("${body.ksrId} == null"))             
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/orders.json")
+                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/orders.json")
                 .unmarshal().json(JsonLibrary.Jackson, Order.class)
                 .bean(PedidoService.class, "savePedido(${body})");              
     }

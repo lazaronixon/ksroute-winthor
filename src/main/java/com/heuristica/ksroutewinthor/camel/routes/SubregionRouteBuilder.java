@@ -21,13 +21,14 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .transform(simple("body.praca")) 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-praca")
+                .choice()
+                .when(simple("${body.ksrId} == null")).to("direct:create-praca")
                 .otherwise().to("direct:update-praca");
 
         from("direct:create-praca").routeId("create-praca")
                 .idempotentConsumer(simple("praca/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/subregions.json")
+                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/subregions.json")
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion(${body})");
 
@@ -36,7 +37,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/subregions/${header.ksrId}.json"))
+                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/subregions/${header.ksrId}.json"))
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion(${body})");
     }

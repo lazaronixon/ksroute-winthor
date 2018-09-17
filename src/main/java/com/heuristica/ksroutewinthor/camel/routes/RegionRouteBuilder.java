@@ -15,13 +15,14 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-regiao").routeId("process-regiao")
                 .transform(simple("body.regiao"))                   
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-regiao")
+                .choice()
+                .when(simple("${body.ksrId} == null")).to("direct:create-regiao")
                 .otherwise().to("direct:update-regiao");
 
         from("direct:create-regiao").routeId("create-regiao")
                 .idempotentConsumer(simple("regiao/${body.oraRowscn}"), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).to("https4://{{ksroute.api.url}}/regions.json")
+                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/regions.json")
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveRegion(${body})");
 
@@ -30,7 +31,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(5).recipientList(simple("https4://{{ksroute.api.url}}/regions/${header.ksrId}.json"))
+                .throttle(50).timePeriodMillis(10000).recipientList(simple("https4://{{ksroute.api.url}}/regions/${header.ksrId}.json"))
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveRegion(${body})");
     }
