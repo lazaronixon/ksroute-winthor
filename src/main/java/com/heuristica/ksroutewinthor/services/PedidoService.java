@@ -3,6 +3,7 @@ package com.heuristica.ksroutewinthor.services;
 import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.PedidoRepository;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,6 +24,7 @@ public class PedidoService {
     public Pedido savePedido(Order order) {
         Pedido pedido = findPedido(Long.parseLong(order.getErpId()));
         pedido.setKsrId(order.getId());
+        pedido.setKsrProcessedAt(new Date());
         return pedidos.save(pedido);
     }
 

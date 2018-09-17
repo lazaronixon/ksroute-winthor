@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
-import org.apache.camel.component.jpa.Consumed;
 
 @Data
 @Entity
@@ -43,6 +42,4 @@ public class Pedido {
     @JoinColumn(name = "codfilial", referencedColumnName = "codigo")
     private Filial filial;    
 
-    @Consumed
-    public void setProcessed() { ksrProcessedAt = new Date(); }
 }
