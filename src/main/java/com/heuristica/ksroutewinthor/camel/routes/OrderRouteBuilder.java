@@ -26,14 +26,15 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
-                .to("direct:create-pedido")                
-                .bean(PedidoService.class, "savePedido(${body})");
+                .to("direct:create-pedido")
+                .bean(PedidoService.class, "processPedido(${body})");
         
         from("direct:create-pedido").routeId("create-pedido")
                 .filter(simple("${body.ksrId} == null"))             
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
-                .unmarshal().json(JsonLibrary.Jackson, Order.class);              
+                .unmarshal().json(JsonLibrary.Jackson, Order.class)
+                .bean(PedidoService.class, "savePedido(${body})");              
     }
 
     public class OrderEnricher {

@@ -24,8 +24,13 @@ public class PedidoService {
     public Pedido savePedido(Order order) {
         Pedido pedido = findPedido(Long.parseLong(order.getErpId()));
         pedido.setKsrId(order.getId());
-        pedido.setKsrProcessedAt(new Date());
         return pedidos.save(pedido);
     }
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Pedido processPedido(Pedido pedido) {
+        pedido.setKsrProcessedAt(new Date());
+        return pedidos.save(pedido);
+    }  
 
 }
