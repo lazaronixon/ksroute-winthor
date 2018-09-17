@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 class OrderRouteBuilder extends ApplicationRouteBuilder {
+    
+    private static final String POST_URL = "https4://{{ksroute.api.url}}/orders.json";
 
     @Override
     public void configure() {
@@ -29,7 +31,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
         from("direct:create-pedido").routeId("create-pedido")
                 .filter(simple("${body.ksrId} == null"))             
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(50).timePeriodMillis(10000).to("https4://{{ksroute.api.url}}/orders.json")
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Order.class)
                 .bean(PedidoService.class, "savePedido(${body})");              
     }
