@@ -10,6 +10,7 @@ import com.heuristica.ksroutewinthor.dozer.mappings.LineMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.OrderMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.RegionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.SubregionMapping;
+import com.heuristica.ksroutewinthor.dozer.mappings.VehicleMapping;
 import java.util.Arrays;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.http4.HttpComponent;
@@ -43,7 +44,8 @@ public class KsroutewinthorApplication {
         DozerBeanMapperConfiguration dozerConfig = new DozerBeanMapperConfiguration();
         dozerConfig.setBeanMappingBuilders(Arrays.asList(
                 new BranchMapping(), new CustomerMapping(), new LineMapping(),
-                new OrderMapping(), new RegionMapping(), new SubregionMapping()
+                new OrderMapping(), new RegionMapping(), new SubregionMapping(),
+                new VehicleMapping()
         ));
         return dozerConfig;
     }

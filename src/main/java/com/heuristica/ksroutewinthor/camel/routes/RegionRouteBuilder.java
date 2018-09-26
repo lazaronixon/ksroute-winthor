@@ -20,8 +20,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-regiao").routeId("process-regiao")
                 .transform(simple("body.regiao"))                   
-                .choice()
-                .when(simple("${body.ksrId} == null")).to("direct:create-regiao")
+                .choice().when(simple("${body.ksrId} == null")).to("direct:create-regiao")
                 .otherwise().to("direct:update-regiao");
 
         from("direct:create-regiao").routeId("create-regiao")

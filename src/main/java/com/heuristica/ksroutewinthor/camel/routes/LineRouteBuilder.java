@@ -21,8 +21,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-rota").routeId("process-rota")
                 .transform(simple("body.rota"))                
-                .choice()
-                .when(simple("${body.ksrId} == null")).to("direct:create-rota")
+                .choice().when(simple("${body.ksrId} == null")).to("direct:create-rota")
                 .otherwise().to("direct:update-rota");
 
         from("direct:create-rota").routeId("create-rota")

@@ -41,6 +41,13 @@
         <addColumn tableName="pcfilial">
             <column name="ksr_id" type="bigint"/>
         </addColumn>
-    </changeSet>                                                                                                                                                                                                                         
+    </changeSet>
+
+    <changeSet id="7" author="Nixon">
+        <addColumn tableName="pcveicul">
+            <column name="ksr_id" type="bigint"/>
+            <column name="ksr_processed_at" type="datetime" />
+        </addColumn>
+    </changeSet>                                                                                                                                                                                                                                                                                                                                                                                                                                                           
                              
 </databaseChangeLog>

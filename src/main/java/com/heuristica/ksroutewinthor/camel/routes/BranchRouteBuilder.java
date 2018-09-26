@@ -19,8 +19,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-filial").routeId("process-filial")
                 .transform(simple("body.filial"))
-                .choice()
-                .when(simple("${body.ksrId} == null")).to("direct:create-filial")
+                .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial");
 
         from("direct:create-filial").routeId("create-filial")

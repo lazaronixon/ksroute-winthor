@@ -25,8 +25,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .transform(simple("body.praca")) 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
-                .choice()
-                .when(simple("${body.ksrId} == null")).to("direct:create-praca")
+                .choice().when(simple("${body.ksrId} == null")).to("direct:create-praca")
                 .otherwise().to("direct:update-praca");
 
         from("direct:create-praca").routeId("create-praca")
