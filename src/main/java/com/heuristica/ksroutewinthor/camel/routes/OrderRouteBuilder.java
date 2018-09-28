@@ -23,7 +23,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-pedido")
                 .log("Processando pedido ${body.numped}")
-                .bean(PedidoService.class, "findPedido(${body.numped})")
+                .bean(PedidoService.class, "findPedidoWithoutTransaction(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .to("direct:create-pedido")

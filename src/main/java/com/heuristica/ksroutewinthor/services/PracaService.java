@@ -4,11 +4,11 @@ import com.heuristica.ksroutewinthor.apis.Subregion;
 import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.models.PracaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 public class PracaService {
 
     @Autowired

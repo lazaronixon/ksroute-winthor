@@ -5,20 +5,24 @@ import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.PedidoRepository;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Service
 public class PedidoService {
 
     @Autowired
     private PedidoRepository pedidos;
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED) 
+    
     public Pedido findPedido(Long id) {
         return pedidos.findById(id).get();
     }
+    
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    public Pedido findPedidoWithoutTransaction(Long id) {
+        return pedidos.findById(id).get();
+    }    
     
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Pedido savePedido(Order order) {

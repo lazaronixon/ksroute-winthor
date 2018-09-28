@@ -5,8 +5,7 @@ import lombok.Data;
 @Data
 public class Solution {
     
-    private Long id;
-    
+    private Long id;    
     private Planning planning;
     
 }

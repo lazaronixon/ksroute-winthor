@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ import lombok.Data;
 @Entity
 @Table(name = "pcveicul")
 @NamedQuery(name = "newVehicles", query = "SELECT p FROM Veiculo p WHERE p.ksrProcessedAt IS NULL AND p.situacao <> 'I' ORDER BY p.codveiculo")
-public class Veiculo {
+public class Veiculo implements Serializable {
     
     @Id
     private Long codveiculo;

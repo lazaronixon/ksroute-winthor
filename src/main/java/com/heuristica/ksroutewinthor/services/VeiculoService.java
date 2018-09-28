@@ -6,13 +6,17 @@ import com.heuristica.ksroutewinthor.models.VeiculoRepository;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+@Service
 public class VeiculoService {
     
     @Autowired private VeiculoRepository veiculos;
     @Autowired private Environment env;
 
+    @Transactional
     public Veiculo saveVeiculo(Vehicle vehicle) {
         Veiculo veiculo = veiculos.findById(Long.parseLong(vehicle.getErpId())).get();
         veiculo.setKsrId(vehicle.getId());

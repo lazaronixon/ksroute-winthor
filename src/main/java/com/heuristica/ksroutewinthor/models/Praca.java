@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
+import java.io.Serializable;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,18 +15,18 @@ import lombok.Data;
 @Entity
 @Cacheable(false)
 @Table(name = "pcpraca")
-public class Praca {
+public class Praca implements Serializable {
 
     @Id
     private Long codpraca;
     private String praca;
     private Long ksrId;   
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numregiao")
     private Regiao regiao;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
     private Rota rota; 
 

@@ -13,5 +13,5 @@ public class Order {
     private Date issuedAt;    
     
     private Long branchId;
-    private Long customerId;  
+    private Long customerId;
 }
