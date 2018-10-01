@@ -9,14 +9,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
+@Transactional
 public class VeiculoService {
     
     @Autowired private VeiculoRepository veiculos;
     @Autowired private Environment env;
 
-    @Transactional
     public Veiculo saveVeiculo(Vehicle vehicle) {
         Veiculo veiculo = veiculos.findById(Long.parseLong(vehicle.getErpId())).get();
         veiculo.setKsrId(vehicle.getId());
@@ -40,8 +39,7 @@ public class VeiculoService {
             default:
                 vehicleTypeId = env.getProperty("ksroute.veiculo.leve.vehicleTypeId");
         }    
-        veiculo.setVehicleTypeId(vehicleTypeId);
-        
+        veiculo.setVehicleTypeId(vehicleTypeId);        
         return veiculo;
     }
     

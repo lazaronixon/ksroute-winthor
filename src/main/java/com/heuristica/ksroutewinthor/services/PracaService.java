@@ -9,12 +9,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class PracaService {
 
-    @Autowired
-    private PracaRepository pracas;
+    @Autowired private PracaRepository pracas;
       
-    @Transactional(propagation = Propagation.REQUIRES_NEW)      
     public Praca saveSubregion(Subregion subregion) {
         Praca praca = pracas.findById(Long.parseLong(subregion.getErpId())).get();
         praca.setKsrId(subregion.getId());

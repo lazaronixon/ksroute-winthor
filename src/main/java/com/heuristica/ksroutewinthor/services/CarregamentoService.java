@@ -24,11 +24,11 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CarregamentoService {
     
     @PersistenceContext private EntityManager entityManager;    
@@ -37,8 +37,7 @@ public class CarregamentoService {
     @Autowired private ConsumService consumService; 
     @Autowired private PedidoService pedidoService;
     @Autowired private CarregamentoRepository carregamentos;     
-            
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+                
     public Route saveRoute(Route route) {
         Carregamento carregamento = new Carregamento();
         carregamento.setNumcar(consumService.getNextSequence("proxnumcar"));
@@ -94,7 +93,6 @@ public class CarregamentoService {
         return route;
     }
     
-    @Transactional(readOnly = true)
     private Rota findRodaPrinc(Carregamento carregamento) {
         TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT p.cliente.praca.rota.codrota "
@@ -107,7 +105,6 @@ public class CarregamentoService {
         return entityManager.find(Rota.class, query.getSingleResult());
     }    
     
-    @Transactional(readOnly = true)
     private CarregPedidoSum sumByCarreg(Carregamento carregamento) {
         TypedQuery<CarregPedidoSum> query = entityManager.createQuery(
                 "SELECT NEW com.roadnet.roadnetwinthor.model.dto.CarregPedidoSum( "
@@ -122,6 +119,6 @@ public class CarregamentoService {
                 + "WHERE o.carregamento = :carregamento ", CarregPedidoSum.class);
         query.setParameter("carregamento", carregamento);
         return query.getSingleResult();
-    }    
+    } 
     
 }

@@ -25,12 +25,14 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-vehicle");
         
         from("direct:create-vehicle").routeId("create-vehicle")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
                 .bean(VeiculoService.class, "saveVeiculo(${body})");
 
         from("direct:update-vehicle").routeId("update-vehicle")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))        
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)

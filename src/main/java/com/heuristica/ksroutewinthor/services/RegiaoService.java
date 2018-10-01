@@ -5,16 +5,14 @@ import com.heuristica.ksroutewinthor.models.Regiao;
 import com.heuristica.ksroutewinthor.models.RegiaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RegiaoService {
 
-    @Autowired
-    private RegiaoRepository regioes;
-   
-    @Transactional(propagation = Propagation.REQUIRES_NEW)    
+    @Autowired private RegiaoRepository regioes;
+    
     public Regiao saveRegion(Region region) {
         Regiao regiao = regioes.findById(Long.parseLong(region.getErpId())).get();
         regiao.setKsrId(region.getId());

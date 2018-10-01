@@ -29,6 +29,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-praca");
 
         from("direct:create-praca").routeId("create-praca")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
@@ -36,6 +37,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .bean(PracaService.class, "saveSubregion(${body})");
 
         from("direct:update-praca").routeId("update-praca")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                

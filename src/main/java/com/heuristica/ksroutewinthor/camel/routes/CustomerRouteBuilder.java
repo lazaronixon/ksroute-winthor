@@ -18,19 +18,21 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-        from("direct:process-cliente").routeId("process-cliente")
+        from("direct:process-cliente").routeId("process-cliente")                
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
                 .otherwise().to("direct:update-cliente");
 
         from("direct:create-cliente").routeId("create-cliente")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveCustomer(${body})"); 
 
-        from("direct:update-cliente").routeId("update-cliente")               
+        from("direct:update-cliente").routeId("update-cliente")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))              
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)

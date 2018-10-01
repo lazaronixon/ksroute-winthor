@@ -25,6 +25,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:update-rota");
 
         from("direct:create-rota").routeId("create-rota")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
@@ -32,6 +33,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .bean(RotaService.class, "saveLine(${body})");
 
         from("direct:update-rota").routeId("update-rota")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))        

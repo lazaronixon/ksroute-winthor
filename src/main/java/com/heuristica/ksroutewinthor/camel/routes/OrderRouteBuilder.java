@@ -21,15 +21,16 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "?delay=15s"
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-pedido")
-                .log("Processando pedido ${body.numped}")
-                .bean(PedidoService.class, "findPedidoWithoutTransaction(${body.numped})")
+                + "&consumeDelete=false").routeId("process-pedido")                                
+                .transacted("PROPAGATION_REQUIRES_NEW")
+                .log("Processando pedido ${body.numped}")                
+                .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
-                .to("direct:create-pedido")
-                .bean(PedidoService.class, "processPedido(${body})");
+                .to("direct:create-pedido");
         
         from("direct:create-pedido").routeId("create-pedido")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .filter(simple("${body.ksrId} == null"))             
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)

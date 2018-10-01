@@ -17,12 +17,13 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-        from("direct:process-filial").routeId("process-filial")
-                .transform(simple("body.filial"))
+        from("direct:process-filial").routeId("process-filial")                
+                .transform(simple("body.filial"))                
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-filial")
                 .otherwise().to("direct:update-filial");
 
         from("direct:create-filial").routeId("create-filial")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
@@ -30,6 +31,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .bean(FilialService.class, "saveBranch(${body})");
 
         from("direct:update-filial").routeId("update-filial")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
