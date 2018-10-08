@@ -30,7 +30,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveLine(${body})");
+                .bean(RotaService.class, "saveLine");
 
         from("direct:update-rota").routeId("update-rota")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -40,7 +40,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveLine(${body})");
+                .bean(RotaService.class, "saveLine");
     }
 
 }

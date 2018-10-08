@@ -28,7 +28,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveBranch(${body})");
+                .bean(FilialService.class, "saveBranch");
 
         from("direct:update-filial").routeId("update-filial")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -38,6 +38,6 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveBranch(${body})");
+                .bean(FilialService.class, "saveBranch");
     }
 }

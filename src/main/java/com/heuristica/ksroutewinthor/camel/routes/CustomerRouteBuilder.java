@@ -29,7 +29,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveCustomer(${body})"); 
+                .bean(ClienteService.class, "saveCustomer"); 
 
         from("direct:update-cliente").routeId("update-cliente")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -38,7 +38,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveCustomer(${body})");       
+                .bean(ClienteService.class, "saveCustomer");       
     }
 
     public class CustomerEnricher {

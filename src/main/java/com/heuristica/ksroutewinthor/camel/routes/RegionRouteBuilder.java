@@ -29,7 +29,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegion(${body})");
+                .bean(RegiaoService.class, "saveRegion");
 
         from("direct:update-regiao").routeId("update-regiao")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -39,6 +39,6 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegion(${body})");
+                .bean(RegiaoService.class, "saveRegion");
     }
 }

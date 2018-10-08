@@ -21,7 +21,7 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 + "&consumeDelete=false")
                 .routeId("process-vehicle").startupOrder(1)
                 .log("Processando veiculo ${body.codveiculo}")
-                .bean(VeiculoService.class, "setFromEnviromentValues(${body})")
+                .bean(VeiculoService.class, "setFromEnviromentValues")
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-vehicle")
                 .otherwise().to("direct:update-vehicle");
         
@@ -30,7 +30,7 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
-                .bean(VeiculoService.class, "saveVeiculo(${body})");
+                .bean(VeiculoService.class, "saveVeiculo");
 
         from("direct:update-vehicle").routeId("update-vehicle")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -39,7 +39,7 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
-                .bean(VeiculoService.class, "saveVeiculo(${body})");        
+                .bean(VeiculoService.class, "saveVeiculo");        
     }
     
 }

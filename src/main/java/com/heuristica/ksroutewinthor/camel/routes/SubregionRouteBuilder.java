@@ -34,7 +34,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .bean(PracaService.class, "saveSubregion(${body})");
+                .bean(PracaService.class, "saveSubregion");
 
         from("direct:update-praca").routeId("update-praca")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -44,7 +44,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
                 .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .bean(PracaService.class, "saveSubregion(${body})");
+                .bean(PracaService.class, "saveSubregion");
     }
 
     public class LineEnricher {
