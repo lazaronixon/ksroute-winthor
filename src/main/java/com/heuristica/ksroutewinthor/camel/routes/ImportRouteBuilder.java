@@ -15,11 +15,11 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-//        from("timer:fetch-route?fixedRate=true&period=15s")
-//                .routeId("import-route")
-//                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(GET_URL)
-//                .unmarshal().json(JsonLibrary.Jackson, Route[].class).split(body())
-//                .log("Processando rota ${body.id}").to("direct:process-route");
+        from("timer:fetch-route?fixedRate=true&period=15s")
+                .routeId("import-route")
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(GET_URL)
+                .unmarshal().json(JsonLibrary.Jackson, Route[].class).split(body())
+                .log("Processando rota ${body.id}").to("direct:process-route");
 
         from("direct:process-route").routeId("process-route")
                 .setHeader("CamelHttpMethod", constant("POST"))

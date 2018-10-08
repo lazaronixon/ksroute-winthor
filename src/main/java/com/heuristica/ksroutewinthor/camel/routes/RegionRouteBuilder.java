@@ -18,21 +18,18 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-        from("direct:process-regiao").routeId("process-regiao")                
+        from("direct:process-regiao").routeId("process-regiao")                                
                 .transform(simple("body.regiao"))                   
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-regiao")
                 .otherwise().to("direct:update-regiao");
 
-        from("direct:create-regiao").routeId("create-regiao")
-                .transacted("PROPAGATION_REQUIRES_NEW")
-                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
+        from("direct:create-regiao").routeId("create-regiao")             
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveRegion");
 
-        from("direct:update-regiao").routeId("update-regiao")
-                .transacted("PROPAGATION_REQUIRES_NEW")
+        from("direct:update-regiao").routeId("update-regiao")               
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                

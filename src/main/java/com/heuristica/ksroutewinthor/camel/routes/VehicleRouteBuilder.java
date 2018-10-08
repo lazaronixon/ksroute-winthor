@@ -18,12 +18,12 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 + "&namedQuery=newVehicles"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-vehicle")                
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando veiculo ${body.codveiculo}")
                 .bean(VeiculoService.class, "setFromEnviromentValues")
                 .to("direct:create-vehicle");
         
-        from("direct:create-vehicle").routeId("create-vehicle")
-                .transacted("PROPAGATION_REQUIRES_NEW")                      
+        from("direct:create-vehicle").routeId("create-vehicle")               
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)

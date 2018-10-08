@@ -19,21 +19,18 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
     public void configure() {
         super.configure();
 
-        from("direct:process-rota").routeId("process-rota")
+        from("direct:process-rota").routeId("process-rota")                
                 .transform(simple("body.rota"))                
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-rota")
                 .otherwise().to("direct:update-rota");
 
         from("direct:create-rota").routeId("create-rota")
-                .transacted("PROPAGATION_REQUIRES_NEW")
-                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveLine");
 
         from("direct:update-rota").routeId("update-rota")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))        
