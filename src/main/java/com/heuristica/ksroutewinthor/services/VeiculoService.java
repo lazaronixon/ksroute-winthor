@@ -23,7 +23,7 @@ public class VeiculoService {
         return veiculos.save(veiculo);
     }
     
-    public Veiculo setEnviromentValues(Veiculo veiculo) {
+    public Veiculo setFromEnviromentValues(Veiculo veiculo) {
         veiculo.setStartAddressId(env.getProperty("ksroute.veiculo.startAddressId"));
 
         String vehicleTypeId;

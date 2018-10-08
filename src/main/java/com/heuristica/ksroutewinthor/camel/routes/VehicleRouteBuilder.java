@@ -18,9 +18,10 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 + "?delay=15s"
                 + "&namedQuery=newVehicles"
                 + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-vehicle")
+                + "&consumeDelete=false")
+                .routeId("process-vehicle").startupOrder(1)
                 .log("Processando veiculo ${body.codveiculo}")
-                .bean(VeiculoService.class, "setEnviromentValues(${body})")
+                .bean(VeiculoService.class, "setFromEnviromentValues(${body})")
                 .choice().when(simple("${body.ksrId} == null")).to("direct:create-vehicle")
                 .otherwise().to("direct:update-vehicle");
         

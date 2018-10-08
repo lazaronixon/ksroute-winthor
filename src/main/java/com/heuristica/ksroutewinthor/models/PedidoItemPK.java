@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 public class PedidoItemPK implements Serializable {    
     private Long pedido;
-    private Long codprod;    
+    private Long codprod;
+    private Integer numseq;
 }

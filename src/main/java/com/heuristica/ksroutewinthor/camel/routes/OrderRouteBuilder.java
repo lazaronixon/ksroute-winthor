@@ -21,9 +21,9 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "?delay=15s"
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-pedido")                                
-                .transacted("PROPAGATION_REQUIRES_NEW")
-                .log("Processando pedido ${body.numped}")                
+                + "&consumeDelete=false")
+                .routeId("process-pedido").startupOrder(2)                                
+                .transacted("PROPAGATION_REQUIRES_NEW").log("Processando pedido ${body.numped}")                
                 .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))

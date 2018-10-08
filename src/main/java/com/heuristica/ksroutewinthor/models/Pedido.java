@@ -20,7 +20,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcpedc")
-@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessedAt IS NULL AND p.posicao = 'L' AND p.fretedespacho = 'C' ORDER BY p.cliente.praca.regiao.numregiao, p.cliente.praca.codpraca, p.numped")
+@NamedQuery(name = "newOrders", query = "SELECT p FROM Pedido p WHERE p.ksrProcessedAt IS NULL AND p.posicao = 'L' ORDER BY p.cliente.praca.regiao.numregiao, p.cliente.praca.codpraca, p.numped")
 public class Pedido implements Serializable {
 
     @Id

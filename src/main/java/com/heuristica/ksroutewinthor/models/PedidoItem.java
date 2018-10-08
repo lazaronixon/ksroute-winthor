@@ -22,7 +22,10 @@ public class PedidoItem implements Serializable {
     private Pedido pedido;
     
     @Id
-    private Long codprod;    
+    private Long codprod;
+
+    @Id
+    private Integer numseq;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numcar")
