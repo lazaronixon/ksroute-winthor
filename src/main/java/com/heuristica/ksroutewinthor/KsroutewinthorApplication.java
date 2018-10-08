@@ -85,5 +85,5 @@ public class KsroutewinthorApplication {
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return policy;
-    }    
+    } 
 }

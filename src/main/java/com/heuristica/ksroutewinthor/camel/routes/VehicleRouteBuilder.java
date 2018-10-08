@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class VehicleRouteBuilder extends ApplicationRouteBuilder {
     
-    private static final String POST_URL = "https4://{{ksroute.api.url}}/vehicles.json";
-    private static final String PUT_URL = "https4://{{ksroute.api.url}}/vehicles/${header.ksrId}.json";    
+    private static final String POST_URL = "https4://{{ksroute.api.url}}/vehicles.json";  
     
     @Override
     public void configure() {
@@ -18,28 +17,17 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 + "?delay=15s"
                 + "&namedQuery=newVehicles"
                 + "&consumeLockEntity=false"
-                + "&consumeDelete=false")
-                .routeId("process-vehicle").startupOrder(1)
+                + "&consumeDelete=false").routeId("process-vehicle")                
                 .log("Processando veiculo ${body.codveiculo}")
                 .bean(VeiculoService.class, "setFromEnviromentValues")
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-vehicle")
-                .otherwise().to("direct:update-vehicle");
+                .to("direct:create-vehicle");
         
         from("direct:create-vehicle").routeId("create-vehicle")
-                .transacted("PROPAGATION_REQUIRES_NEW")
+                .transacted("PROPAGATION_REQUIRES_NEW")                      
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
-                .bean(VeiculoService.class, "saveVeiculo");
-
-        from("direct:update-vehicle").routeId("update-vehicle")
-                .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("CamelHttpMethod", constant("PUT"))
-                .setHeader("ksrId", simple("body.ksrId"))        
-                .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
-                .unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
-                .bean(VeiculoService.class, "saveVeiculo");        
+                .bean(VeiculoService.class, "saveVeiculo");       
     }
     
 }
