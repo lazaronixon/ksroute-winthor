@@ -20,7 +20,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-filial").routeId("process-filial")                                
                 .transform(simple("body.filial"))               
                 .choice().when(simple("${body.ksrId} == null")).to("direct:post-branch")
-                .otherwise().to("direct:put-branch").end();
+                .otherwise().to("direct:put-branch");
 
         from("direct:post-branch").routeId("post-branch")
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)

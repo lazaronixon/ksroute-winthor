@@ -21,7 +21,7 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando veiculo ${body.codveiculo}")
                 .bean(VeiculoService.class, "setFromEnviromentValues")
-                .to("direct:post-vehicle").end();
+                .to("direct:post-vehicle");
         
         from("direct:post-vehicle").routeId("post-vehicle")               
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)

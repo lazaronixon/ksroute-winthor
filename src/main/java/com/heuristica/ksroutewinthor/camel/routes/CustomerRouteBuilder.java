@@ -22,7 +22,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(simple("${body.ksrId} == null")).to("direct:post-customer")
-                .otherwise().to("direct:put-customer").end();
+                .otherwise().to("direct:put-customer");
 
         from("direct:post-customer").routeId("post-customer")                
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)

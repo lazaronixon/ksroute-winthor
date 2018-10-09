@@ -22,7 +22,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-rota").routeId("process-rota")                
                 .transform(simple("body.rota"))                
                 .choice().when(simple("${body.ksrId} == null")).to("direct:post-line")
-                .otherwise().to("direct:put-line").end();
+                .otherwise().to("direct:put-line");
 
         from("direct:post-line").routeId("post-line")
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)

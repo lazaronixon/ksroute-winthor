@@ -21,7 +21,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-regiao").routeId("process-regiao")                                
                 .transform(simple("body.regiao"))                   
                 .choice().when(simple("${body.ksrId} == null")).to("direct:post-region")
-                .otherwise().to("direct:put-region").end();
+                .otherwise().to("direct:put-region");
 
         from("direct:post-region").routeId("post-region")             
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)

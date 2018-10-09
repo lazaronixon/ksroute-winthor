@@ -26,7 +26,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
                 .choice().when(simple("${body.ksrId} == null")).to("direct:post-subregion")
-                .otherwise().to("direct:put-subregion").end();
+                .otherwise().to("direct:put-subregion");
 
         from("direct:post-subregion").routeId("post-subregion")              
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)

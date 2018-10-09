@@ -26,6 +26,7 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
                 .setHeader("solutionId", simple("body.solution.id"))
                 .setHeader("planningId", simple("body.solution.planning.id"))
                 .setBody(constant(null)).throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(POST_URL)
+                .unmarshal().json(JsonLibrary.Jackson, Route.class)
                 .bean(CarregamentoService.class, "saveRoute");
     }
 
