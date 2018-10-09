@@ -25,7 +25,6 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:put-branch");
 
         from("direct:post-branch").routeId("post-branch")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Branch.class)

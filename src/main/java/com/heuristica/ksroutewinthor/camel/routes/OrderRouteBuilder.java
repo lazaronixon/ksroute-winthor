@@ -23,6 +23,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-pedido")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando pedido ${body.numped}")               
                 .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
@@ -30,7 +31,6 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 .to("direct:post-order");
         
         from("direct:post-order").routeId("post-order")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Order.class)

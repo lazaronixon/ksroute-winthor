@@ -27,7 +27,6 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:put-customer");
 
         from("direct:post-customer").routeId("post-customer")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
