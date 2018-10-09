@@ -10,7 +10,7 @@ public class ApplicationRouteBuilder extends RouteBuilder {
     protected static final Integer TIME_PERIOD_MILLIS = 10000; 
 
     @Override
-    public void configure() {                
+    public void configure() {   
         onException(HttpOperationFailedException.class).log(LoggingLevel.WARN, "Erro no servidor: ${body}");
     }
 
