@@ -2,6 +2,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Route;
 import com.heuristica.ksroutewinthor.services.CarregamentoService;
+import org.apache.camel.Exchange;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
                 .log("Processando rota ${body.id}").to("direct:post-route");
 
         from("direct:post-route").routeId("post-route")
-                .setHeader("CamelHttpMethod", constant("POST"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("id", simple("body.id"))
                 .setHeader("solutionId", simple("body.solution.id"))
                 .setHeader("planningId", simple("body.solution.planning.id"))

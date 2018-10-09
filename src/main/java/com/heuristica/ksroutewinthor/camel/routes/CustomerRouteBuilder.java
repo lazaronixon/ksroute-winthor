@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.services.ClienteService;
+import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -32,7 +33,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .bean(ClienteService.class, "saveCustomer"); 
 
         from("direct:put-customer").routeId("put-customer")               
-                .setHeader("CamelHttpMethod", constant("PUT"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))              
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)

@@ -5,6 +5,7 @@ import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.models.Regiao;
 import com.heuristica.ksroutewinthor.models.Rota;
 import com.heuristica.ksroutewinthor.services.PracaService;
+import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
@@ -37,7 +38,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:put-subregion").routeId("put-subregion")             
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
-                .setHeader("CamelHttpMethod", constant("PUT"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))               
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)

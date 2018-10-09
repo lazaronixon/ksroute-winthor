@@ -3,6 +3,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 import com.heuristica.ksroutewinthor.apis.Region;
 import static com.heuristica.ksroutewinthor.camel.routes.ApplicationRouteBuilder.TIME_PERIOD_MILLIS;
 import com.heuristica.ksroutewinthor.services.RegiaoService;
+import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
@@ -32,7 +33,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:put-region").routeId("put-region")               
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
-                .setHeader("CamelHttpMethod", constant("PUT"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)

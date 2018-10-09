@@ -2,6 +2,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
+import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
@@ -31,7 +32,7 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:put-branch").routeId("put-branch")              
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
-                .setHeader("CamelHttpMethod", constant("PUT"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)
