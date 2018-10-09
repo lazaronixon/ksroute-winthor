@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 class LineRouteBuilder extends ApplicationRouteBuilder {
     
-    private static final String CACHE_KEY = "rota/${body.codrota}/${body.oraRowscn}";
     private static final String POST_URL = "https4:{{ksroute.api.url}}/lines.json";
-    private static final String PUT_URL = "https4:{{ksroute.api.url}}/lines/${header.ksrId}.json";    
+    private static final String PUT_URL = "https4:{{ksroute.api.url}}/lines/${header.ksrId}.json";
+    private static final String CACHE_KEY = "rota/${body.codrota}/${body.oraRowscn}";    
 
     @Override
     public void configure() {
@@ -21,16 +21,16 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-rota").routeId("process-rota")                
                 .transform(simple("body.rota"))                
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-rota")
-                .otherwise().to("direct:update-rota");
+                .choice().when(simple("${body.ksrId} == null")).to("direct:post-line")
+                .otherwise().to("direct:put-line").end();
 
-        from("direct:create-rota").routeId("create-rota")
+        from("direct:post-line").routeId("post-line")
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveLine");
 
-        from("direct:update-rota").routeId("update-rota")
+        from("direct:put-line").routeId("put-line")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))        

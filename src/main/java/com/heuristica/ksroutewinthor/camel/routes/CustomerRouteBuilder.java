@@ -21,22 +21,23 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-cliente").routeId("process-cliente")
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
-                .choice().when(simple("${body.ksrId} == null")).to("direct:create-cliente")
-                .otherwise().to("direct:update-cliente");
+                .choice().when(simple("${body.ksrId} == null")).to("direct:post-customer")
+                .otherwise().to("direct:put-customer").end();
 
-        from("direct:create-cliente").routeId("create-cliente")                
+        from("direct:post-customer").routeId("post-customer")                
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveCustomer"); 
 
-        from("direct:update-cliente").routeId("update-cliente")               
+        from("direct:put-customer").routeId("put-customer")               
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))              
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveCustomer");       
+                .bean(ClienteService.class, "saveCustomer"); 
+                        
     }
 
     public class CustomerEnricher {
