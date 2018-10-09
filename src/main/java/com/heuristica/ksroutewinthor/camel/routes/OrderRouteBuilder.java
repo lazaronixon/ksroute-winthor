@@ -30,7 +30,7 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .to("direct:post-order");
         
-        from("direct:post-order").routeId("post-order")
+        from("direct:post-order").routeId("post-order")               
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Order.class)

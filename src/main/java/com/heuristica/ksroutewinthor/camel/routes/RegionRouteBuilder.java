@@ -25,7 +25,8 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
 
-        from("direct:post-region").routeId("post-region")                
+        from("direct:post-region").routeId("post-region")
+                .transacted("PROPAGATION_REQUIRES_NEW")                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Region.class)
