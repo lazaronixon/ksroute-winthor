@@ -3,6 +3,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 import com.heuristica.ksroutewinthor.apis.Region;
 import static com.heuristica.ksroutewinthor.camel.routes.ApplicationRouteBuilder.TIME_PERIOD_MILLIS;
 import com.heuristica.ksroutewinthor.services.RegiaoService;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-regiao").routeId("process-regiao")                                
                 .transform(simple("body.regiao"))                   
-                .choice().when(simple("${body.ksrId} == null")).to("direct:post-region")
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
 
         from("direct:post-region").routeId("post-region")             

@@ -2,6 +2,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,8 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
         super.configure();
 
         from("direct:process-filial").routeId("process-filial")                                
-                .transform(simple("body.filial"))               
-                .choice().when(simple("${body.ksrId} == null")).to("direct:post-branch")
+                .transform(simple("body.filial"))           
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
 
         from("direct:post-branch").routeId("post-branch")

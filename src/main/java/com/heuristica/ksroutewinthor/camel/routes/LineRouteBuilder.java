@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Line;
 import static com.heuristica.ksroutewinthor.camel.routes.ApplicationRouteBuilder.MAXIMUM_REQUEST_COUNT;
 import static com.heuristica.ksroutewinthor.camel.routes.ApplicationRouteBuilder.TIME_PERIOD_MILLIS;
 import com.heuristica.ksroutewinthor.services.RotaService;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:process-rota").routeId("process-rota")                
                 .transform(simple("body.rota"))                
-                .choice().when(simple("${body.ksrId} == null")).to("direct:post-line")
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
 
         from("direct:post-line").routeId("post-line")

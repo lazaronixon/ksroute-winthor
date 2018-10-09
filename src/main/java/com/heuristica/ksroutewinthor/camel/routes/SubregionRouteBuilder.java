@@ -5,6 +5,7 @@ import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.models.Regiao;
 import com.heuristica.ksroutewinthor.models.Rota;
 import com.heuristica.ksroutewinthor.services.PracaService;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -25,7 +26,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .transform(simple("body.praca")) 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
-                .choice().when(simple("${body.ksrId} == null")).to("direct:post-subregion")
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
                 .otherwise().to("direct:put-subregion");
 
         from("direct:post-subregion").routeId("post-subregion")              

@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.services.ClienteService;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         from("direct:process-cliente").routeId("process-cliente")
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
-                .choice().when(simple("${body.ksrId} == null")).to("direct:post-customer")
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
                 .otherwise().to("direct:put-customer");
 
         from("direct:post-customer").routeId("post-customer")                
