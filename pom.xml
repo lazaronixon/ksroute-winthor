@@ -25,7 +25,15 @@
         <camel.version>2.22.1</camel.version>
     </properties>       
 
-    <dependencies>                     
+    <dependencies>
+       
+        <!-- SPRING SHELL --> 
+       <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-starter</artifactId>
+            <version>2.0.1.RELEASE</version>
+        </dependency>        
+                             
         <!-- PERSISTENCE -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,7 +70,7 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http4-starter</artifactId>
             <version>${camel.version}</version>
-        </dependency>                                      
+        </dependency>                                              
                      
         <!-- MIGRATION -->                                                                                                                             
         <dependency>

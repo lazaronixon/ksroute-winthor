@@ -69,7 +69,7 @@ public class KsroutewinthorApplication {
                             new BasicHeader("X-User-Token", env.getProperty("ksroute.api.token"))));
         });
         return true;
-    } 
+    }
         
     @Bean(name = "PROPAGATION_REQUIRED")
     public SpringTransactionPolicy propagationRequired(PlatformTransactionManager transactionManager) {
@@ -77,7 +77,7 @@ public class KsroutewinthorApplication {
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return policy;
-    }      
+}
     
     @Bean(name = "PROPAGATION_REQUIRES_NEW")
     public SpringTransactionPolicy propagationRequiresNew(PlatformTransactionManager transactionManager) {

@@ -17,19 +17,20 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
     @Override
     public void configure() {
         super.configure();
+        
         from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
                 + "?delay=15s"
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-pedido")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando pedido ${body.numped}")               
                 .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .to("direct:post-order");
         
-        from("direct:post-order").routeId("post-order")          
+        from("direct:post-order").routeId("post-order")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Order.class)
