@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 class OrderRouteBuilder extends ApplicationRouteBuilder {
     
-    private static final String POST_URL = "https4://{{ksroute.api.url}}/orders.json";
+    private static final String POST_URL = "https4:{{ksroute.api.url}}/orders.json";
 
     @Override
     public void configure() {

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 class LineRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String CACHE_KEY = "rota/${body.codrota}/${body.oraRowscn}";
-    private static final String POST_URL = "https4://{{ksroute.api.url}}/lines.json";
-    private static final String PUT_URL = "https4://{{ksroute.api.url}}/lines/${header.ksrId}.json";    
+    private static final String POST_URL = "https4:{{ksroute.api.url}}/lines.json";
+    private static final String PUT_URL = "https4:{{ksroute.api.url}}/lines/${header.ksrId}.json";    
 
     @Override
     public void configure() {
@@ -35,7 +35,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .setHeader("CamelHttpMethod", constant("PUT"))
                 .setHeader("ksrId", simple("body.ksrId"))        
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).recipientList(simple(PUT_URL))
+                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveLine");
     }

@@ -15,8 +15,6 @@ public class ClienteService {
     
     public Cliente saveCustomer(Customer customer) {
         Cliente cliente = clientes.findById(Long.parseLong(customer.getErpId())).get();
-        cliente.setLatitude(customer.getLatitude() != null ? String.valueOf(customer.getLatitude()) : null);
-        cliente.setLongitude(customer.getLongitude()!= null ? String.valueOf(customer.getLongitude()) : null);
         cliente.setKsrId(customer.getId());
         return clientes.save(cliente);
     }

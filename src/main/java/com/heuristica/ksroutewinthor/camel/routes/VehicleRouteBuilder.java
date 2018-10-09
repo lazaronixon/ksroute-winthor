@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class VehicleRouteBuilder extends ApplicationRouteBuilder {
     
-    private static final String POST_URL = "https4://{{ksroute.api.url}}/vehicles.json";  
+    private static final String POST_URL = "https4:{{ksroute.api.url}}/vehicles.json";  
     
     @Override
     public void configure() {
