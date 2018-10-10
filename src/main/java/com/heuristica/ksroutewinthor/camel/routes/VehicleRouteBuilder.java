@@ -19,6 +19,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 + "&namedQuery=newVehicles"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-vehicle")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando veiculo ${body.codveiculo}")
                 .bean(VeiculoService.class, "setFromEnviromentValues")
                 .to("direct:post-vehicle");

@@ -22,15 +22,16 @@ class OrderRouteBuilder extends RouteBuilder {
                 + "?delay=15s"
                 + "&namedQuery=newOrders"
                 + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-pedido")
+                + "&consumeDelete=false").routeId("process-pedido")              
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .log("Processando pedido ${body.numped}")               
+                .log("Processando pedido ${body.numped}")                
                 .bean(PedidoService.class, "findPedido(${body.numped})")
                 .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .to("direct:post-order");
         
         from("direct:post-order").routeId("post-order")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
