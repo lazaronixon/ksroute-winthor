@@ -6,20 +6,19 @@ import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.services.ClienteService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
-class CustomerRouteBuilder extends ApplicationRouteBuilder {
+class CustomerRouteBuilder extends RouteBuilder {
     
-    private static final String POST_URL = "https4:{{ksroute.api.url}}/customers.json";
-    private static final String PUT_URL = "https4:{{ksroute.api.url}}/customers/${header.ksrId}.json";    
+    private static final String POST_URL = "https://{{ksroute.api.url}}/customers.json";
+    private static final String PUT_URL = "https://{{ksroute.api.url}}/customers/${body.ksrId}.json";    
 
     @Override
     public void configure() {
-        super.configure();
-
         from("direct:process-cliente").routeId("process-cliente")
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
@@ -27,17 +26,16 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:put-customer");
 
         from("direct:post-customer").routeId("post-customer")
+                .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
-                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveCustomer"); 
 
         from("direct:put-customer").routeId("put-customer")               
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader("ksrId", simple("body.ksrId"))              
+                .setHeader(Exchange.HTTP_URI, simple(PUT_URL))         
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)
-                .unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveCustomer"); 
                         
     }

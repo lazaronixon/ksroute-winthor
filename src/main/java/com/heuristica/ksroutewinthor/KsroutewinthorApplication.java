@@ -13,17 +13,12 @@ import com.heuristica.ksroutewinthor.dozer.mappings.SubregionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.VehicleMapping;
 import java.util.Arrays;
 import org.apache.camel.CamelContext;
-import org.apache.camel.component.http4.HttpComponent;
 import org.apache.camel.converter.dozer.DozerBeanMapperConfiguration;
 import org.apache.camel.converter.dozer.DozerTypeConverterLoader;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicHeader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
@@ -55,21 +50,7 @@ public class KsroutewinthorApplication {
     @Bean
     public DozerTypeConverterLoader dozerConverterLoader(CamelContext camelContext, DozerBeanMapperConfiguration dozerConfig) {
         return new DozerTypeConverterLoader(camelContext, dozerConfig);
-    }
-
-    @Bean
-    public boolean httpClientConfigurer(@Autowired CamelContext camelContext, @Autowired Environment env) {
-        HttpComponent httpComponent = camelContext.getComponent("http4", HttpComponent.class);
-        httpComponent.setClientConnectionManager(new PoolingHttpClientConnectionManager());
-        httpComponent.setHttpClientConfigurer(httpClientBuilder -> {
-            httpClientBuilder
-                    .disableCookieManagement()
-                    .setDefaultHeaders(Arrays.asList(
-                            new BasicHeader("X-User-Email", env.getProperty("ksroute.api.email")),
-                            new BasicHeader("X-User-Token", env.getProperty("ksroute.api.token"))));
-        });
-        return true;
-    }
+    }        
         
     @Bean(name = "PROPAGATION_REQUIRED")
     public SpringTransactionPolicy propagationRequired(PlatformTransactionManager transactionManager) {

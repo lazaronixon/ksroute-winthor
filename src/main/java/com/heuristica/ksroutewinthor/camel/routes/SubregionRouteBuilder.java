@@ -7,22 +7,21 @@ import com.heuristica.ksroutewinthor.models.Rota;
 import com.heuristica.ksroutewinthor.services.PracaService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
-class SubregionRouteBuilder extends ApplicationRouteBuilder {
+class SubregionRouteBuilder extends RouteBuilder {
     
-    private static final String POST_URL = "https4:{{ksroute.api.url}}/subregions.json";
-    private static final String PUT_URL = "https4:{{ksroute.api.url}}/subregions/${header.ksrId}.json";
+    private static final String POST_URL = "https://{{ksroute.api.url}}/subregions.json";
+    private static final String PUT_URL = "https://{{ksroute.api.url}}/subregions/${body.ksrId}.json";
     private static final String CACHE_KEY = "praca/${body.codpraca}/${body.oraRowscn}";    
 
     @Override
     public void configure() {
-        super.configure();
-
         from("direct:process-praca").routeId("process-praca")
                 .transform(simple("body.praca")) 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
@@ -31,18 +30,17 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:put-subregion");
 
         from("direct:post-subregion").routeId("post-subregion")
+                .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
-                .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion");
 
         from("direct:put-subregion").routeId("put-subregion")             
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader("ksrId", simple("body.ksrId"))               
+                .setHeader(Exchange.HTTP_URI, simple(PUT_URL))               
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).toD(PUT_URL)
-                .unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveSubregion");
     }
 
