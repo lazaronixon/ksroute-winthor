@@ -27,7 +27,6 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
                 .otherwise().to("direct:put-line");
 
         from("direct:post-line").routeId("post-line")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to(POST_URL)
                 .unmarshal().json(JsonLibrary.Jackson, Line.class)

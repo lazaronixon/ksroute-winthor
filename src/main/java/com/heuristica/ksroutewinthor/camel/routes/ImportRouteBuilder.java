@@ -22,7 +22,7 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
                 .log("Processando rota ${body.id}").to("direct:post-route");
 
         from("direct:post-route").routeId("post-route")
-                .transacted("PROPAGATION_REQUIRES_NEW")
+                .transacted("PROPAGATION_REQUIRED")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader("id", simple("body.id"))
                 .setHeader("solutionId", simple("body.solution.id"))
