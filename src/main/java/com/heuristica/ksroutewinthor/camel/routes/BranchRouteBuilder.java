@@ -27,7 +27,7 @@ class BranchRouteBuilder extends RouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch");
 
         from("direct:put-branch").routeId("put-branch")
@@ -35,7 +35,7 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch");
                 
     }

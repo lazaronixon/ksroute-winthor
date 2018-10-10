@@ -15,7 +15,7 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
     public void configure() {        
         onException(HttpOperationFailedException.class).log(LoggingLevel.WARN, "Erro no servidor: ${body}");
 
-        from("direct:ksroute-api").routeId("ksroute-api")
+        from("seda:ksroute-api").routeId("ksroute-api").threads(5)
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to("https4:ksroute-api");
     }

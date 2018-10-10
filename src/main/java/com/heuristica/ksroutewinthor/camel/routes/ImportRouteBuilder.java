@@ -25,7 +25,7 @@ public class ImportRouteBuilder extends RouteBuilder {
                 .setHeader("solutionId", simple("body.solution.id"))
                 .setHeader("planningId", simple("body.solution.planning.id"))
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
-                .to("direct:ksroute-api").bean(CarregamentoService.class, "saveRoute");
+                .to("seda:ksroute-api").bean(CarregamentoService.class, "saveRoute");
     }
 
 }
