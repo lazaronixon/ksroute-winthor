@@ -18,18 +18,19 @@ class LineRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:process-rota").routeId("process-rota")                
+        from("direct:process-rota").routeId("process-rota")                                
                 .transform(simple("body.rota"))                
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
 
         from("direct:post-line").routeId("post-line")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveLine");
 
-        from("direct:put-line").routeId("put-line")
+        from("direct:put-line").routeId("put-line")             
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))        

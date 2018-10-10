@@ -22,7 +22,7 @@ class SubregionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:process-praca").routeId("process-praca")
+        from("direct:process-praca").routeId("process-praca")                
                 .transform(simple("body.praca")) 
                 .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
@@ -30,6 +30,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-subregion");
 
         from("direct:post-subregion").routeId("post-subregion")
+                .transacted("PROPAGATION_REQUIRES_NEW")                
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)

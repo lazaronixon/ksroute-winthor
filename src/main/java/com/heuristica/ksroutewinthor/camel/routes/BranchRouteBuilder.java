@@ -18,18 +18,19 @@ class BranchRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:process-filial").routeId("process-filial")                                
+        from("direct:process-filial").routeId("process-filial")                                                                
                 .transform(simple("body.filial"))           
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
 
         from("direct:post-branch").routeId("post-branch")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveBranch");
 
-        from("direct:put-branch").routeId("put-branch")              
+        from("direct:put-branch").routeId("put-branch")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))

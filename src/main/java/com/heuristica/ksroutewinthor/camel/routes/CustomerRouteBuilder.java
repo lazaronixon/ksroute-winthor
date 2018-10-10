@@ -19,19 +19,20 @@ class CustomerRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:process-cliente").routeId("process-cliente")
+        from("direct:process-cliente").routeId("process-cliente")                                
                 .transform(simple("body.cliente"))
                 .enrich("direct:process-praca", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
                 .otherwise().to("direct:put-customer");
 
         from("direct:post-customer").routeId("post-customer")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveCustomer"); 
 
-        from("direct:put-customer").routeId("put-customer")               
+        from("direct:put-customer").routeId("put-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))         
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
