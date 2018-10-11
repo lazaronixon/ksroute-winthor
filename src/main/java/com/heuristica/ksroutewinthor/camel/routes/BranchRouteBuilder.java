@@ -28,15 +28,14 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveBranch");
+                .bean(FilialService.class, "saveApiResponse");
 
         from("direct:put-branch").routeId("put-branch")
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveBranch");
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class);
                 
     }
 }

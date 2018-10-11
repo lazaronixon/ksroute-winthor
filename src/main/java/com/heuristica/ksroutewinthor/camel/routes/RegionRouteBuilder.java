@@ -28,14 +28,13 @@ class RegionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegion");
+                .bean(RegiaoService.class, "saveApiResponse");
 
         from("direct:put-region").routeId("put-region")                
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
-                .bean(RegiaoService.class, "saveRegion");
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class);
     }
 }

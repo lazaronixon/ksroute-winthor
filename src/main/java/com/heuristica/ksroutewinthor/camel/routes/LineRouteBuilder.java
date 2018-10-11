@@ -28,15 +28,14 @@ class LineRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveLine");
+                .bean(RotaService.class, "saveApiResponse");
 
         from("direct:put-line").routeId("put-line")             
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))        
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
-                .bean(RotaService.class, "saveLine");
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class);
     }
 
 }

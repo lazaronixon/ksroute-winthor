@@ -13,7 +13,7 @@ public class ClienteService {
 
     @Autowired private ClienteRepository clientes;
     
-    public Cliente saveCustomer(Customer customer) {
+    public Cliente saveApiResponse(Customer customer) {
         Cliente cliente = clientes.findById(Long.parseLong(customer.getErpId())).get();
         cliente.setKsrId(customer.getId());
         return clientes.save(cliente);

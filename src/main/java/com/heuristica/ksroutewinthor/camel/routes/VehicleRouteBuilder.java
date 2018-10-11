@@ -29,7 +29,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
-                .bean(VeiculoService.class, "saveVeiculo");       
+                .bean(VeiculoService.class, "saveApiResponse");       
     }
     
 }

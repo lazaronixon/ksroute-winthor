@@ -35,7 +35,7 @@ class OrderRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
-                .bean(PedidoService.class, "savePedido");              
+                .bean(PedidoService.class, "saveApiResponse");              
     }
 
     public class OrderEnricher {

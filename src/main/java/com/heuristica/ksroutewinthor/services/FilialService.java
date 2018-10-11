@@ -13,7 +13,7 @@ public class FilialService {
 
     @Autowired private FilialRepository filiais;
 
-    public Filial saveBranch(Branch branch) {
+    public Filial saveApiResponse(Branch branch) {
         Filial filial = filiais.findById(branch.getErpId()).get();
         filial.setKsrId(branch.getId());
         return filiais.save(filial);

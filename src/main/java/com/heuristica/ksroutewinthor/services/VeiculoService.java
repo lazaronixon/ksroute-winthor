@@ -16,10 +16,9 @@ public class VeiculoService {
     @Autowired private VeiculoRepository veiculos;
     @Autowired private Environment env;
 
-    public Veiculo saveVeiculo(Vehicle vehicle) {
+    public Veiculo saveApiResponse(Vehicle vehicle) {
         Veiculo veiculo = veiculos.findById(Long.parseLong(vehicle.getErpId())).get();
         veiculo.setKsrId(vehicle.getId());
-        veiculo.setKsrProcessedAt(new Date());
         return veiculos.save(veiculo);
     }
     

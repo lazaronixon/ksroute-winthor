@@ -13,7 +13,7 @@ public class RegiaoService {
 
     @Autowired private RegiaoRepository regioes;
     
-    public Regiao saveRegion(Region region) {
+    public Regiao saveApiResponse(Region region) {
         Regiao regiao = regioes.findById(Long.parseLong(region.getErpId())).get();
         regiao.setKsrId(region.getId());
         return regioes.save(regiao);

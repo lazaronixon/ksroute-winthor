@@ -34,15 +34,14 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .bean(PracaService.class, "saveSubregion");
+                .bean(PracaService.class, "saveApiResponse");
 
         from("direct:put-subregion").routeId("put-subregion")             
                 .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))               
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                .bean(PracaService.class, "saveSubregion");
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class);
     }
 
     public class LineEnricher {

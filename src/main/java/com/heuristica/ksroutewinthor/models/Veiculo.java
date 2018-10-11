@@ -10,6 +10,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import lombok.Data;
+import org.apache.camel.component.jpa.Consumed;
 
 @Data
 @Entity
@@ -32,5 +33,8 @@ public class Veiculo implements Serializable {
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date ksrProcessedAt;
+    
+    @Consumed
+    public void setProcessed() { ksrProcessedAt = new Date(); }     
     
 }

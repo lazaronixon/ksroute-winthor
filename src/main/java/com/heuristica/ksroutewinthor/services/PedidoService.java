@@ -18,10 +18,9 @@ public class PedidoService {
         return pedidos.findById(id).get();
     }    
     
-    public Pedido savePedido(Order order) {
+    public Pedido saveApiResponse(Order order) {
         Pedido pedido = findPedido(Long.parseLong(order.getErpId()));
         pedido.setKsrId(order.getId());
-        pedido.setKsrProcessedAt(new Date());
         return pedidos.save(pedido);
     }
 

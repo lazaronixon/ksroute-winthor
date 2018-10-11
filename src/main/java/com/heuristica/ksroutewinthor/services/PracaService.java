@@ -14,7 +14,7 @@ public class PracaService {
 
     @Autowired private PracaRepository pracas;
       
-    public Praca saveSubregion(Subregion subregion) {
+    public Praca saveApiResponse(Subregion subregion) {
         Praca praca = pracas.findById(Long.parseLong(subregion.getErpId())).get();
         praca.setKsrId(subregion.getId());
         return pracas.save(praca);
