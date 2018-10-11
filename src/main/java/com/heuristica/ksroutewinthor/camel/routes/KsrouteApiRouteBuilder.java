@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 class KsrouteApiRouteBuilder extends RouteBuilder {  
     
-    protected static final Integer MAXIMUM_REQUEST_COUNT = 50;     
+    protected static final Integer MAXIMUM_REQUEST_COUNT = 45;     
     protected static final Integer TIME_PERIOD_MILLIS = 10000;
 
     @Override
