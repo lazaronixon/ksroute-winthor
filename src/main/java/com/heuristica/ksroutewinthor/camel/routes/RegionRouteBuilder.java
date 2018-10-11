@@ -27,7 +27,7 @@ class RegionRouteBuilder extends RouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")                
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveApiResponse");
 
         from("direct:put-region").routeId("put-region")                
@@ -35,6 +35,6 @@ class RegionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))                
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class);
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class);
     }
 }

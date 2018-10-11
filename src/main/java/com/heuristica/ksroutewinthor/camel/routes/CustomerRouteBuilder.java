@@ -29,14 +29,14 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveApiResponse"); 
 
         from("direct:put-customer").routeId("put-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(PUT_URL))         
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class); 
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class); 
                         
     }
 

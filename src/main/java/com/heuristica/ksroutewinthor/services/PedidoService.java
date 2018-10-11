@@ -3,6 +3,7 @@ package com.heuristica.ksroutewinthor.services;
 import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.PedidoRepository;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class PedidoService {
     
     public Pedido findPedido(Long id) {
         return pedidos.findById(id).get();
+    }
+
+    public Optional<Pedido> findPedidoById(Long id) {
+        return pedidos.findById(id);
     }    
     
     public Pedido fetchPedido(Long id) {

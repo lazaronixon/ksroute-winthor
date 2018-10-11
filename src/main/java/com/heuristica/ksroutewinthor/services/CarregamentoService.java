@@ -6,7 +6,6 @@ import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.apis.Route;
 import com.heuristica.ksroutewinthor.models.Carregamento;
 import com.heuristica.ksroutewinthor.models.CarregamentoRepository;
-import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.models.Rota;
 import com.roadnet.roadnetwinthor.model.dto.CarregPedidoSum;
 import java.time.LocalDate;
@@ -38,7 +37,7 @@ public class CarregamentoService {
     @Autowired private PedidoService pedidoService;
     @Autowired private CarregamentoRepository carregamentos;     
                 
-    public Route saveRoute(Route route) {
+    public void saveRoute(Route route) {
         Carregamento carregamento = new Carregamento();
         carregamento.setNumcar(consumService.getNextSequence("proxnumcar"));
         carregamento.setCodfuncmon(Long.parseLong(env.getProperty("ksroute.codfuncmon")));
@@ -59,38 +58,36 @@ public class CarregamentoService {
         
         orders.forEach(order -> {
             try {
-                Pedido pedido = pedidoService.findPedido(Long.parseLong(order.getErpId()));
+                pedidoService.findPedidoById(Long.parseLong(order.getErpId())).ifPresent(pedido -> {
+                    int index = seqIndex.getAndIncrement();
+                    pedido.setNumseqmontagem(index + 1);
+                    pedido.setNumseqentrega(Long.valueOf(index + 1));
+                    pedido.setNumordemcarga(orders.size() - index);                
+                    pedido.setPosicao("M");
                 
-                int index = seqIndex.getAndIncrement();
-                pedido.setNumseqmontagem(index + 1);
-                pedido.setNumseqentrega(Long.valueOf(index + 1));
-                pedido.setNumordemcarga(orders.size() - index);                
-                pedido.setPosicao("M");
-                
-                carregamento.addToPedidoList(pedido);
+                    carregamento.addToPedidoList(pedido);                    
+                });                
             } catch (NoSuchElementException ex) {
                 String msg = String.format("Pedido %s nao encontrado", order.getErpId());
                 Logger.getLogger(CarregamentoService.class.getName()).log(Level.SEVERE, msg, ex);
             }
         });
+        
+        if (carregamento.getPedidoList().isEmpty() == false) {
+            carregamentos.save(carregamento);
+            carregamento.setRotaPrinc(findRodaPrinc(carregamento));            
+            carregamento.setDestino(Ascii.truncate(carregamento.getRotaPrinc().getDescricao(), 19, ""));
 
-        carregamentos.save(carregamento);
-        
-        carregamento.setRotaPrinc(findRodaPrinc(carregamento));
-        
-        carregamento.setDestino(Ascii.truncate(carregamento.getRotaPrinc().getDescricao(), 19, ""));
-        
-        CarregPedidoSum pedidoSum = sumByCarreg(carregamento);
-        carregamento.setVltotal(pedidoSum.getVltotal()); 
-        carregamento.setTotpeso(pedidoSum.getTotpeso());
-        carregamento.setTotvolume(pedidoSum.getTotvolume());
-        carregamento.setNumnotas(pedidoSum.getNumnotas());
-        carregamento.setNument(pedidoSum.getNument());
-        carregamento.setNumcid(pedidoSum.getNumcid());
-        carregamento.setQtitens(pedidoSum.getQtitens());
-        carregamentos.save(carregamento);  
-        
-        return route;
+            CarregPedidoSum pedidoSum = sumByCarreg(carregamento);
+            carregamento.setVltotal(pedidoSum.getVltotal()); 
+            carregamento.setTotpeso(pedidoSum.getTotpeso());
+            carregamento.setTotvolume(pedidoSum.getTotvolume());
+            carregamento.setNumnotas(pedidoSum.getNumnotas());
+            carregamento.setNument(pedidoSum.getNument());
+            carregamento.setNumcid(pedidoSum.getNumcid());
+            carregamento.setQtitens(pedidoSum.getQtitens());
+            carregamentos.save(carregamento);  
+        }
     }
     
     private Rota findRodaPrinc(Carregamento carregamento) {
