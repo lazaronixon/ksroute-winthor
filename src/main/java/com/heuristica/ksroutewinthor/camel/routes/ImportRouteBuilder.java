@@ -2,6 +2,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Route;
 import com.heuristica.ksroutewinthor.services.CarregamentoService;
+import java.util.ArrayList;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -16,20 +17,18 @@ public class ImportRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("timer:fetch-route?fixedRate=true&period=15s").routeId("fetch-route")
-                .setHeader(Exchange.HTTP_METHOD, constant("GET"))
+        from("timer:get-routes?fixedRate=true&period=30s").routeId("get-routes")
                 .setHeader(Exchange.HTTP_URI, simple(GET_URL))
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Route[].class)
-                .split(body())
-                .log("Processando rota ${body.id}")
+                .split(body()).log("Processando rota ${body.id}")
                 .to("direct:import-route");
         
         from("direct:import-route").routeId("import-route")
-                .transacted("PROPAGATION_REQUIRED")
+                .transacted("PROPAGATION_REQUIRES_NEW")
                 .bean(CarregamentoService.class, "saveRoute")
                 .enrich("direct:post-route", AggregationStrategies.useOriginal());        
 
-        from("direct:post-route").routeId("post-route")                                        
+        from("direct:post-route").routeId("post-route")                                       
                 .setHeader("id", simple("body.id"))
                 .setHeader("solutionId", simple("body.solution.id"))
                 .setHeader("planningId", simple("body.solution.planning.id"))               
