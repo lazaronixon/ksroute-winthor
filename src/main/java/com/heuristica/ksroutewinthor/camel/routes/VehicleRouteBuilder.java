@@ -3,6 +3,7 @@ package com.heuristica.ksroutewinthor.camel.routes;
 import com.heuristica.ksroutewinthor.apis.Vehicle;
 import com.heuristica.ksroutewinthor.services.VeiculoService;
 import org.apache.camel.Exchange;
+import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,9 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 + "&namedQuery=newVehicles"
                 + "&consumeLockEntity=false"
                 + "&consumeDelete=false").routeId("process-vehicle")
-                .transacted("PROPAGATION_REQUIRES_NEW")
                 .log("Processando veiculo ${body.codveiculo}")
                 .bean(VeiculoService.class, "setFromEnviromentValues")
-                .to("direct:post-vehicle");
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-vehicle");
         
         from("direct:post-vehicle").routeId("post-vehicle")
                 .transacted("PROPAGATION_REQUIRES_NEW")
