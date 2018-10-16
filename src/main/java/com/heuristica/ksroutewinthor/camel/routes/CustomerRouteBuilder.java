@@ -25,6 +25,11 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
                 .otherwise().to("direct:put-customer");
         
+        from("direct:enrich-customer").routeId("enrich-customer")
+                .transform(simple("body.cliente"))
+                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-customer");            
+        
         from("direct:post-customer").routeId("post-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -37,18 +42,12 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-customer").routeId("delete-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");
-        
-        from("direct:enrich-customer").routeId("enrich-customer")
-                .transform(simple("body.cliente"))
-                .filter(isNull(simple("body.ksrId")))
-                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
-                .to("direct:post-customer");          
+                .setBody(constant(null)).to("direct:ksroute-api");      
     }
 
     public class CustomerEnricher {

@@ -21,6 +21,10 @@ class BranchRouteBuilder extends RouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         
+        from("direct:enrich-branch").routeId("enrich-branch")
+                .transform(simple("body.filial"))
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-branch");         
+        
         from("direct:post-branch").routeId("post-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -33,17 +37,11 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-branch").routeId("delete-branch")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .setBody(constant(null)).to("direct:ksroute-api");
-        
-        from("direct:enrich-branch").routeId("enrich-branch")
-                .transform(simple("body.filial"))
-                .filter(isNull(simple("body.ksrId")))
-                .to("direct:post-branch");        
-
     }
 }

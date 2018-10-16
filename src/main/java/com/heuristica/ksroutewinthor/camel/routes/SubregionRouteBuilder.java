@@ -27,6 +27,12 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
                 .otherwise().to("direct:put-subregion");
         
+        from("direct:enrich-subregion").routeId("enrich-subregion")
+                .transform(simple("body.praca"))
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-subregion");             
+        
         from("direct:post-subregion").routeId("post-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -39,19 +45,12 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-subregion").routeId("delete-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");
-        
-        from("direct:enrich-subregion").routeId("enrich-subregion")
-                .transform(simple("body.praca"))
-                .filter(isNull(simple("body.ksrId")))
-                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
-                .to("direct:post-subregion");        
+                .setBody(constant(null)).to("direct:ksroute-api");   
     }
 
     public class LineEnricher {

@@ -26,23 +26,20 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(VEHICLES_URL))                
-                .bean(VeiculoService.class, "getEventable")                
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
                 .bean(VeiculoService.class, "saveApiResponse");       
         
         from("direct:put-vehicle").routeId("put-vehicle")                     
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))            
-                .bean(VeiculoService.class, "getEventable")                
+                .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))                            
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class);
+                .to("direct:ksroute-api");
         
         from("direct:delete-vehicle").routeId("delete-vehicle")                                       
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))                   
-                .setBody(constant(null)).to("direct:ksroute-api");        
-        
+                .setBody(constant(null)).to("direct:ksroute-api");
     }
     
 }

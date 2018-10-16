@@ -39,7 +39,7 @@ class OrderRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-order").routeId("delete-order")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))

@@ -21,6 +21,10 @@ class LineRouteBuilder extends RouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
         
+        from("direct:enrich-line").routeId("enrich-line")
+                .transform(simple("body.rota"))
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-line");        
+        
         from("direct:post-line").routeId("post-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -33,17 +37,12 @@ class LineRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-line").routeId("delete-line")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .setBody(constant(null)).to("direct:ksroute-api");
-        
-        from("direct:enrich-line").routeId("enrich-line")
-                .transform(simple("body.rota"))
-                .filter(isNull(simple("body.ksrId")))
-                .to("direct:post-line");
     }
 
 }

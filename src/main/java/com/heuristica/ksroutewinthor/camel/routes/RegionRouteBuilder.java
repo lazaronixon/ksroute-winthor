@@ -21,6 +21,10 @@ class RegionRouteBuilder extends RouteBuilder {
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
         
+        from("direct:enrich-region").routeId("enrich-region")
+                .transform(simple("body.regiao"))
+                .filter(isNull(simple("body.ksrId"))).to("direct:post-region");        
+        
         from("direct:post-region").routeId("post-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -33,17 +37,11 @@ class RegionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class);
+                .to("direct:ksroute-api");
 
         from("direct:delete-region").routeId("delete-region")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");
-        
-        from("direct:enrich-region").routeId("enrich-region")
-                .transform(simple("body.regiao"))
-                .filter(isNull(simple("body.ksrId")))
-                .to("direct:post-region");
-                
+                .setBody(constant(null)).to("direct:ksroute-api");               
     }
 }
