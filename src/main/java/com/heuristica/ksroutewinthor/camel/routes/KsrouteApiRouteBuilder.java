@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.http.common.HttpOperationFailedException;
@@ -13,7 +14,11 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {        
-        onException(HttpOperationFailedException.class).log(LoggingLevel.WARN, "Erro no servidor: ${body}");
+        onException(HttpOperationFailedException.class).handled(true)                
+            .log(LoggingLevel.WARN, "Erro no servidor: ${exception.message}")
+            .log(LoggingLevel.WARN, "Menssagem: ${body}")
+            .filter(header(Exchange.HTTP_METHOD).isEqualTo(constant("POST")))
+            .throwException(new RuntimeException("Erro ao criar recurso"));
 
         from("direct:ksroute-api").routeId("ksroute-api").threads(5)
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
