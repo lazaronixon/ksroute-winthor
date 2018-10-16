@@ -17,14 +17,12 @@ class RegionRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:save-region").routeId("save-region")
-                .bean(RegiaoService.class, "getEventable")
-                .filter(body().isNotNull())
+                .bean(RegiaoService.class, "getEventable").filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
         
         from("direct:enrich-region").routeId("enrich-region")
-                .transform(simple("body.regiao"))
-                .filter(body().isNotNull())
+                .transform(simple("body.regiao")).filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-region");        
         
         from("direct:post-region").routeId("post-region")

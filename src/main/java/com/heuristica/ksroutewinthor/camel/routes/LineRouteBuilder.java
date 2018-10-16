@@ -17,14 +17,12 @@ class LineRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:save-line").routeId("save-line")
-                .bean(RotaService.class, "getEventable")
-                .filter(body().isNotNull())
+                .bean(RotaService.class, "getEventable").filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
         
         from("direct:enrich-line").routeId("enrich-line")
-                .transform(simple("body.rota"))
-                .filter(body().isNotNull())
+                .transform(simple("body.rota")).filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-line");        
         
         from("direct:post-line").routeId("post-line")

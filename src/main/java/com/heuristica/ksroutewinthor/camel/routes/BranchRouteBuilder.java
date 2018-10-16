@@ -17,14 +17,12 @@ class BranchRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:save-branch").routeId("save-branch")
-                .bean(FilialService.class, "getEventable")
-                .filter(body().isNotNull())
+                .bean(FilialService.class, "getEventable").filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         
         from("direct:enrich-branch").routeId("enrich-branch")
-                .transform(simple("body.filial"))
-                .filter(body().isNotNull())
+                .transform(simple("body.filial")).filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-branch");         
         
         from("direct:post-branch").routeId("post-branch")

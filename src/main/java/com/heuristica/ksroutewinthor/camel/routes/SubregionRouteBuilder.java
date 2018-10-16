@@ -21,16 +21,14 @@ class SubregionRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:save-subregion").routeId("save-subregion")
-                .bean(PracaService.class, "getEventable")
-                .filter(body().isNotNull())
+                .bean(PracaService.class, "getEventable").filter(body().isNotNull())
                 .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
                 .otherwise().to("direct:put-subregion");
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
-                .transform(simple("body.praca"))
-                .filter(body().isNotNull())
+                .transform(simple("body.praca")).filter(body().isNotNull())
                 .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-subregion");             

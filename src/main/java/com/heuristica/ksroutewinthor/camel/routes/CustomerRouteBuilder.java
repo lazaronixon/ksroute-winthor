@@ -20,15 +20,13 @@ class CustomerRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:save-customer").routeId("save-customer")
-                .bean(ClienteService.class, "getEventable")
-                .filter(body().isNotNull())
+                .bean(ClienteService.class, "getEventable").filter(body().isNotNull())
                 .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
                 .otherwise().to("direct:put-customer");
         
         from("direct:enrich-customer").routeId("enrich-customer")
-                .transform(simple("body.cliente"))
-                .filter(body().isNotNull())
+                .transform(simple("body.cliente")).filter(body().isNotNull())
                 .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-customer");            
         
