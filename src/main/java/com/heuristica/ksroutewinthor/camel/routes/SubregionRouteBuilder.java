@@ -9,39 +9,49 @@ import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
 class SubregionRouteBuilder extends RouteBuilder {
     
-    private static final String POST_URL = "https://{{ksroute.api.url}}/subregions.json";
-    private static final String PUT_URL = "https://{{ksroute.api.url}}/subregions/${body.ksrId}.json";
-    private static final String CACHE_KEY = "praca/${body.codpraca}/${body.oraRowscn}";    
+    private static final String SUBREGIONS_URL = "https://{{ksroute.api.url}}/subregions.json";
+    private static final String SUBREGION_URL = "https://{{ksroute.api.url}}/subregions/${body.ksrId}.json"; 
 
     @Override
     public void configure() {
-        from("direct:process-praca").routeId("process-praca")                
-                .transform(simple("body.praca")) 
-                .enrich("direct:process-regiao", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:process-rota", AggregationStrategies.bean(LineEnricher.class, "setRota"))                                
+        from("direct:save-subregion").routeId("save-subregion")
+                .bean(PracaService.class, "getEventable")
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
                 .otherwise().to("direct:put-subregion");
-
+        
         from("direct:post-subregion").routeId("post-subregion")
-                .transacted("PROPAGATION_REQUIRES_NEW")                
-                .setHeader(Exchange.HTTP_URI, simple(POST_URL))
+                .transacted("PROPAGATION_REQUIRES_NEW")
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.HTTP_URI, simple(SUBREGIONS_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveApiResponse");
 
-        from("direct:put-subregion").routeId("put-subregion")             
-                .idempotentConsumer(simple(CACHE_KEY), MemoryIdempotentRepository.memoryIdempotentRepository())
+        from("direct:put-subregion").routeId("put-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader(Exchange.HTTP_URI, simple(PUT_URL))               
+                .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class);
+
+        from("direct:delete-subregion").routeId("delete-subregion")
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
+                .setBody(constant(null)).to("direct:ksroute-api");
+        
+        from("direct:enrich-subregion").routeId("enrich-subregion")
+                .transform(simple("body.praca"))
+                .filter(isNull(simple("body.ksrId")))
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
+                .to("direct:post-subregion");        
     }
 
     public class LineEnricher {

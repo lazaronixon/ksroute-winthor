@@ -11,25 +11,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class VehicleRouteBuilder extends RouteBuilder {
     
-    private static final String POST_URL = "https://{{ksroute.api.url}}/vehicles.json";  
+    private static final String VEHICLES_URL = "https://{{ksroute.api.url}}/vehicles.json";
+    private static final String VEHICLE_URL = "https://{{ksroute.api.url}}/vehicles/${body.ksrId}.json";  
     
     @Override
     public void configure() {
-        from("jpa:com.heuristica.ksroutewinthor.models.Vehicle"
-                + "?delay=15s"
-                + "&namedQuery=newVehicles"
-                + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-vehicle")
-                .log("Processando veiculo ${body.codveiculo}")
-                .bean(VeiculoService.class, "setFromEnviromentValues")
-                .filter(isNull(simple("body.ksrId"))).to("direct:post-vehicle");
+        
+        from("direct:save-vehicle").routeId("save-vehicle")
+                .bean(VeiculoService.class, "getEventable")
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-vehicle")
+                .otherwise().to("direct:put-vehicle");        
         
         from("direct:post-vehicle").routeId("post-vehicle")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader(Exchange.HTTP_URI, simple(POST_URL))
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.HTTP_URI, simple(VEHICLES_URL))                
+                .bean(VeiculoService.class, "getEventable")                
                 .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
                 .bean(VeiculoService.class, "saveApiResponse");       
+        
+        from("direct:put-vehicle").routeId("put-vehicle")                     
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))            
+                .bean(VeiculoService.class, "getEventable")                
+                .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class);
+        
+        from("direct:delete-vehicle").routeId("delete-vehicle")                                       
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))                   
+                .setBody(constant(null)).to("direct:ksroute-api");        
+        
     }
     
 }

@@ -1,6 +1,7 @@
 package com.heuristica.ksroutewinthor.services;
 
 import com.heuristica.ksroutewinthor.apis.Region;
+import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Regiao;
 import com.heuristica.ksroutewinthor.models.RegiaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +19,9 @@ public class RegiaoService {
         regiao.setKsrId(region.getId());
         return regioes.save(regiao);
     }
+    
+    public Regiao getEventable(Event event) {
+        return regioes.findById(Long.parseLong(event.getEventableId())).orElse(null);
+    }    
 
 }

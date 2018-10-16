@@ -15,27 +15,36 @@ import org.springframework.stereotype.Component;
 @Component
 class OrderRouteBuilder extends RouteBuilder {
     
-    private static final String POST_URL = "https://{{ksroute.api.url}}/orders.json";
+    private static final String ORDERS_URL = "https://{{ksroute.api.url}}/orders.json";
+    private static final String ORDER_URL = "https://{{ksroute.api.url}}/orders/${body.ksrId}.json";
 
     @Override
     public void configure() {        
-        from("jpa:com.heuristica.ksroutewinthor.models.Pedido"
-                + "?delay=15s"
-                + "&namedQuery=newOrders"
-                + "&consumeLockEntity=false"
-                + "&consumeDelete=false").routeId("process-pedido")
-                .log("Processando pedido ${body.numped}")                
-                .bean(PedidoService.class, "fetchPedido(${body.numped})")
-                .enrich("direct:process-filial", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
-                .enrich("direct:process-cliente", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
-                .filter(isNull(simple("body.ksrId"))).to("direct:post-order");
+        from("direct:save-order").routeId("save-order")
+                .bean(PedidoService.class, "getEventable")
+                .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
+                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
+                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-order")
+                .otherwise().to("direct:put-order");
         
         from("direct:post-order").routeId("post-order")
-                .transacted("PROPAGATION_REQUIRES_NEW")                
-                .setHeader(Exchange.HTTP_URI, simple(POST_URL))
+                .transacted("PROPAGATION_REQUIRES_NEW")
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDERS_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
-                .bean(PedidoService.class, "saveApiResponse");              
+                .bean(PedidoService.class, "saveApiResponse");
+
+        from("direct:put-order").routeId("put-order")
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
+                .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class);
+
+        from("direct:delete-order").routeId("delete-order")
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
+                .setBody(constant(null)).to("direct:ksroute-api");            
     }
 
     public class OrderEnricher {

@@ -48,6 +48,18 @@
             <column name="ksr_id" type="bigint"/>
             <column name="ksr_processed_at" type="datetime" />
         </addColumn>
-    </changeSet>                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    </changeSet>
+    
+    <changeSet id="8" author="Nixon">
+        <createTable tableName="ksr_event">
+            <column name="id" type="bigint"/>            
+            <column name="ksr_id" type="bigint"/>            
+            <column name="eventable_id" type="varchar(255)" />
+            <column name="eventable_type" type="varchar(80)" />
+            <column name="persist_action" type="varchar(80)" />
+            <column name="created_at" type="datetime" />
+        </createTable>
+        <createSequence sequenceName="ksr_event_seq" startValue="1" incrementBy="1" ordered="true" />
+    </changeSet>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
                              
 </databaseChangeLog>

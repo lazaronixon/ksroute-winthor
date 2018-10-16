@@ -13,7 +13,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@Cacheable(false)
 @Table(name = "pcpraca")
 public class Praca implements Serializable {
 
