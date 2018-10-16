@@ -18,6 +18,7 @@ class RegionRouteBuilder extends RouteBuilder {
     public void configure() {
         from("direct:save-region").routeId("save-region")
                 .bean(RegiaoService.class, "getEventable")
+                .filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
         

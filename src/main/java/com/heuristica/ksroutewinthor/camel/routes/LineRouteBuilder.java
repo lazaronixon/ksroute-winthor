@@ -18,6 +18,7 @@ class LineRouteBuilder extends RouteBuilder {
     public void configure() {
         from("direct:save-line").routeId("save-line")
                 .bean(RotaService.class, "getEventable")
+                .filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
         

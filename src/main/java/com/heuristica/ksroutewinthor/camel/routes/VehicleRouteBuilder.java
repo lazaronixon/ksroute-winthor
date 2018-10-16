@@ -19,6 +19,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
         
         from("direct:save-vehicle").routeId("save-vehicle")
                 .bean(VeiculoService.class, "getEventable")
+                .filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-vehicle")
                 .otherwise().to("direct:put-vehicle");        
         

@@ -18,6 +18,7 @@ class BranchRouteBuilder extends RouteBuilder {
     public void configure() {
         from("direct:save-branch").routeId("save-branch")
                 .bean(FilialService.class, "getEventable")
+                .filter(body().isNotNull())
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         

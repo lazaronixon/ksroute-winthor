@@ -22,6 +22,7 @@ class OrderRouteBuilder extends RouteBuilder {
     public void configure() {        
         from("direct:save-order").routeId("save-order")
                 .bean(PedidoService.class, "getEventable")
+                .filter(body().isNotNull())
                 .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
                 .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
                 .choice().when(isNull(simple("body.ksrId"))).to("direct:post-order")
