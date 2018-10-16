@@ -24,6 +24,7 @@ class RegionRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-region").routeId("enrich-region")
                 .transform(simple("body.regiao"))
+                .filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-region");        
         
         from("direct:post-region").routeId("post-region")

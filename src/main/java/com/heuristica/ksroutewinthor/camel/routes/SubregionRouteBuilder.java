@@ -30,6 +30,7 @@ class SubregionRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
                 .transform(simple("body.praca"))
+                .filter(body().isNotNull())
                 .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-subregion");             

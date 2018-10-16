@@ -24,6 +24,7 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-branch").routeId("enrich-branch")
                 .transform(simple("body.filial"))
+                .filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-branch");         
         
         from("direct:post-branch").routeId("post-branch")

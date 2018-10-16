@@ -24,6 +24,7 @@ class LineRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-line").routeId("enrich-line")
                 .transform(simple("body.rota"))
+                .filter(body().isNotNull())
                 .filter(isNull(simple("body.ksrId"))).to("direct:post-line");        
         
         from("direct:post-line").routeId("post-line")
