@@ -30,18 +30,18 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCHES_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
                 .bean(FilialService.class, "saveApiResponse");
 
         from("direct:put-branch").routeId("put-branch")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-branch").routeId("delete-branch")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");
+                .setBody(constant(null)).to("seda:ksroute-api");
     }
 }

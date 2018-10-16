@@ -17,11 +17,13 @@ public class ImportRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("timer:get-routes?fixedRate=true&period=30s").routeId("get-routes")
-                .setHeader(Exchange.HTTP_URI, simple(GET_URL))
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Route[].class)
-                .split(body()).log("Processando rota ${body.id}")
-                .to("direct:import-route");
+//        from("timer:get-routes?fixedRate=true&period=30s").routeId("get-routes")
+//                .transacted("PROPAGATION_REQUIRED")
+//                .setHeader(Exchange.HTTP_METHOD, constant("GET"))
+//                .setHeader(Exchange.HTTP_URI, simple(GET_URL))
+//                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Route[].class)
+//                .split(body()).log("Processando rota ${body.id}")
+//                .to("direct:import-route");
         
         from("direct:import-route").routeId("import-route")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -34,7 +36,7 @@ public class ImportRouteBuilder extends RouteBuilder {
                 .setHeader("planningId", simple("body.solution.planning.id"))               
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))               
-                .setBody(constant(null)).to("direct:ksroute-api");       
+                .setBody(constant(null)).to("seda:ksroute-api");       
     }
 
 }

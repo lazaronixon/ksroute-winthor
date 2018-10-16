@@ -30,19 +30,19 @@ class LineRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(LINES_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveApiResponse");
 
         from("direct:put-line").routeId("put-line")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-line").routeId("delete-line")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");
+                .setBody(constant(null)).to("seda:ksroute-api");
     }
 
 }

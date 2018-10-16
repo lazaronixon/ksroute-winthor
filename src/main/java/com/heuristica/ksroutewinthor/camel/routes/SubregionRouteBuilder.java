@@ -38,19 +38,19 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGIONS_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveApiResponse");
 
         from("direct:put-subregion").routeId("put-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-subregion").routeId("delete-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");   
+                .setBody(constant(null)).to("seda:ksroute-api");   
     }
 
     public class LineEnricher {

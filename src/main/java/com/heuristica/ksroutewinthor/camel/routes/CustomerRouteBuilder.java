@@ -35,19 +35,19 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMERS_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveApiResponse");
 
         from("direct:put-customer").routeId("put-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-customer").routeId("delete-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");      
+                .setBody(constant(null)).to("seda:ksroute-api");      
     }
 
     public class CustomerEnricher {

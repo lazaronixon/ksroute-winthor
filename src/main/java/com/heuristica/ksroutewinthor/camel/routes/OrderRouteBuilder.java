@@ -32,19 +32,19 @@ class OrderRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDERS_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
                 .bean(PedidoService.class, "saveApiResponse");
 
         from("direct:put-order").routeId("put-order")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-order").routeId("delete-order")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");            
+                .setBody(constant(null)).to("seda:ksroute-api");            
     }
 
     public class OrderEnricher {

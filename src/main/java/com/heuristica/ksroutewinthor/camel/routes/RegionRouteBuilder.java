@@ -30,18 +30,18 @@ class RegionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(REGIONS_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveApiResponse");
 
         from("direct:put-region").routeId("put-region")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api");
+                .to("seda:ksroute-api");
 
         from("direct:delete-region").routeId("delete-region")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
-                .setBody(constant(null)).to("direct:ksroute-api");               
+                .setBody(constant(null)).to("seda:ksroute-api");               
     }
 }
