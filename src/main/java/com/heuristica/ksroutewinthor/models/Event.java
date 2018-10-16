@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "ksr_event")
-@NamedQuery(name = "newEvents", query = "SELECT p FROM Event p ORDER BY p.createdAt")
+@NamedQuery(name = "newEvents", query = "SELECT p FROM Event p ORDER BY p.id")
 public class Event implements Serializable {
     
     @Id
