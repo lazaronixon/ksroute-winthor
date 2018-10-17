@@ -15,12 +15,12 @@ public class RecordService {
 
     @Autowired private RecordRepository records;    
     
-    public Optional<Record> fetchFromEvent(Event event) {
-        return fetch(event.getEventableId(), event.getEventableType());
+    public Record findByEvent(Event event) {
+        return findByRecordable(event.getEventableId(), event.getEventableType()).orElse(null);
     }   
     
     public Record saveRecordableApi(RecordableApi recordableApi) {
-        Optional<Record> optionalRecord = fetch(recordableApi.getErpId(), recordableApi.getTableName());
+        Optional<Record> optionalRecord = findByRecordable(recordableApi.getErpId(), recordableApi.getTableName());
         
         Record record = optionalRecord.orElse(new Record());
         record.setRecordableId(recordableApi.getErpId());
@@ -29,7 +29,7 @@ public class RecordService {
         return records.save(record);
     }
     
-    private Optional<Record> fetch(String recordableId, String recordableType) {
+    private Optional<Record> findByRecordable(String recordableId, String recordableType) {
         return records.findOptionalByRecordableIdAndRecordableType(recordableId, recordableType);
     }       
 }

@@ -16,8 +16,8 @@ public class FilialService {
     @Autowired private FilialRepository filiais;
     @Autowired private RecordService recordService;
     
-    public Filial fetchEventable(Event event) {
-        Record record = recordService.fetchFromEvent(event).orElse(null);        
+    public Filial findByEvent(Event event) {
+        Record record = recordService.findByEvent(event);        
         return findByIdAndSetRecord(event.getEventableId(), record);
     }
     

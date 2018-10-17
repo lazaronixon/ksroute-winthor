@@ -13,19 +13,20 @@ import org.springframework.stereotype.Component;
 class BranchRouteBuilder extends RouteBuilder {
 
     private static final String BRANCHES_URL = "https://{{ksroute.api.url}}/branches.json";
-    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${body.record.remoteId}.json";
+    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${body.record.remoteId}.json";    
+    private static final String DELETE_BRANCH_URL = "https://{{ksroute.api.url}}/branches/${body.remoteId}.json";
 
     @Override
     public void configure() {
         from("direct:EVENT-SAVE-PCFILIAL").routeId("save-branch")
-                .bean(FilialService.class, "fetchEventable")  
+                .bean(FilialService.class, "findByEvent")
                 .choice().when(isNull(simple("body.record"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         
         from("direct:EVENT-DELETE-PCFILIAL").routeId("delete-branch")
-                .bean(RecordService.class, "fetchFromEvent")
+                .bean(RecordService.class, "findByEvent")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                .setHeader(Exchange.HTTP_URI, simple(DELETE_BRANCH_URL))
                 .setBody(constant(null)).to("direct:ksroute-api");        
         
         from("direct:enrich-branch").routeId("enrich-branch")
