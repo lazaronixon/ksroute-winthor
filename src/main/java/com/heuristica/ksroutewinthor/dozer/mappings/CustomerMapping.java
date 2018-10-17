@@ -18,8 +18,8 @@ public class CustomerMapping extends BeanMappingBuilder {
                 .fields("bairroent", "neighborhood")
                 .fields("enderent", "address")
                 .fields("cepent", "zipcode")
-                .fields("ksrId", "id")
-                .fields("praca.ksrId", "subregionId");
+                .fields("record.remoteId", "id")
+                .fields("praca.record.remoteId", "subregionId");
     }
 
 }

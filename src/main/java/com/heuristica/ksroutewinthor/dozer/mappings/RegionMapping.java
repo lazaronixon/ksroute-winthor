@@ -12,7 +12,7 @@ public class RegionMapping extends BeanMappingBuilder {
                 .fields("numregiao", "erpId")
                 .fields("regiao", "description")
                 .fields("uf", "state")
-                .fields("ksrId", "id");
+                .fields("record.remoteId", "id");
     }
 
 }

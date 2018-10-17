@@ -20,7 +20,7 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
             .filter(header(Exchange.HTTP_METHOD).isEqualTo(constant("POST")))
             .throwException(new RuntimeException("Erro ao criar recurso"));
 
-        from("seda:ksroute-api?concurrentConsumers=5").routeId("ksroute-api")
+        from("direct:ksroute-api").routeId("ksroute-api")
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS).to("https4:ksroute-api");
     }

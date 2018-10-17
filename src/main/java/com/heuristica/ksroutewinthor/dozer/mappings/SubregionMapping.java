@@ -11,9 +11,9 @@ public class SubregionMapping extends BeanMappingBuilder {
         mapping(Praca.class, Subregion.class)
                 .fields("codpraca", "erpId")
                 .fields("praca", "description")
-                .fields("ksrId", "id")
-                .fields("regiao.ksrId", "regionId")
-                .fields("rota.ksrId", "lineId");
+                .fields("record.remoteId", "id")
+                .fields("regiao.record.remoteId", "regionId")
+                .fields("rota.record.remoteId", "lineId");
     }
 
 }

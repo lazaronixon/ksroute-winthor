@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -26,13 +27,12 @@ public class Cliente implements Serializable {
     private String cepent;
     private String latitude;
     private String longitude;
-    private Long ksrId;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codpraca")
     private Praca praca;
     
-    @Column(insertable = false, updatable = false)
-    private String oraRowscn;    
+    @Transient
+    private Record record;    
 
 }

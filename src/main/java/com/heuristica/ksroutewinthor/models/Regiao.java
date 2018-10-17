@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -15,10 +16,9 @@ public class Regiao implements Serializable {
     @Id
     private Long numregiao;
     private String regiao;
-    private String uf;
-    private Long ksrId;
-
-    @Column(insertable = false, updatable = false)
-    private String oraRowscn;    
+    private String uf; 
+    
+    @Transient
+    private Record record;    
     
 }

@@ -52,14 +52,29 @@
     
     <changeSet id="8" author="Nixon">
         <createTable tableName="ksr_event">
-            <column name="id" type="bigint"/>            
-            <column name="ksr_id" type="bigint"/>            
-            <column name="eventable_id" type="varchar(255)" />
-            <column name="eventable_type" type="varchar(80)" />
-            <column name="persist_action" type="varchar(80)" />
-            <column name="created_at" type="datetime" />
+            <column name="id" type="bigint"/>         
+            <column name="eventable_id" type="varchar(10)" />
+            <column name="eventable_type" type="varchar(45)" />
+            <column name="persist_action" type="varchar(45)" />
+            <column name="created_at" type="datetime" />                        
         </createTable>
         <createSequence sequenceName="ksr_event_seq" startValue="1" incrementBy="1" ordered="true" />
-    </changeSet>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    </changeSet> 
+    
+    <changeSet id="9" author="Nixon">
+        <createTable tableName="ksr_record">
+            <column name="id" type="bigint"/>                        
+            <column name="recordable_id" type="varchar(10)" />
+            <column name="recordable_type" type="varchar(45)" />
+            <column name="remote_id" type="bigint"/>
+            <column name="created_at" type="datetime" />
+            <column name="updated_at" type="datetime" />
+        </createTable>
+        <createIndex tableName="ksr_record" indexName="index_ksr_record_uniqueness" unique="true">
+            <column name="recordable_id" />
+            <column name="recordable_type" />
+        </createIndex>        
+        <createSequence sequenceName="ksr_record_seq" startValue="1" incrementBy="1" ordered="true" />
+    </changeSet>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                              
 </databaseChangeLog>

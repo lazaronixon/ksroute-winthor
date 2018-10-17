@@ -18,8 +18,7 @@ import lombok.Data;
 public class Event implements Serializable {
     
     @Id
-    private Long id;
-    private Long ksrId;    
+    private Long id; 
     private String eventableId;
     private String eventableType;   
     private String persistAction;

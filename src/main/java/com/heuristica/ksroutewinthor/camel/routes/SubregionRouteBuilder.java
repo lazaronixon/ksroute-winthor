@@ -20,12 +20,12 @@ class SubregionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:save-subregion").routeId("save-subregion")
-                .bean(PracaService.class, "getEventable").filter(body().isNotNull())
-                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
-                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
-                .otherwise().to("direct:put-subregion");
+//        from("direct:save-subregion").routeId("save-subregion")
+//                .bean(PracaService.class, "getEventable").filter(body().isNotNull())
+//                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+//                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
+//                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-subregion")
+//                .otherwise().to("direct:put-subregion");
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
                 .transform(simple("body.praca")).filter(body().isNotNull())
@@ -38,19 +38,19 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGIONS_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveApiResponse");
 
         from("direct:put-subregion").routeId("put-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api");
+                .to("direct:ksroute-api");
 
         from("direct:delete-subregion").routeId("delete-subregion")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                .setBody(constant(null)).to("seda:ksroute-api");   
+                .setBody(constant(null)).to("direct:ksroute-api");   
     }
 
     public class LineEnricher {

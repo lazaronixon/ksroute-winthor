@@ -16,13 +16,15 @@ public class Veiculo implements Serializable {
     private Long codveiculo;
     private String descricao;
     private String tipoveiculo;
-    private String situacao;
-    private Long ksrId;     
+    private String situacao;   
     
     @Transient
     private String startAddressId;
     
     @Transient
     private String vehicleTypeId;
+    
+    @Transient
+    private Record record;    
     
 }

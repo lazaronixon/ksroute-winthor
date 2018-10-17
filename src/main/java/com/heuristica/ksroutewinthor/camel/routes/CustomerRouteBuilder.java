@@ -19,11 +19,11 @@ class CustomerRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:save-customer").routeId("save-customer")
-                .bean(ClienteService.class, "getEventable").filter(body().isNotNull())
-                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
-                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
-                .otherwise().to("direct:put-customer");
+//        from("direct:save-customer").routeId("save-customer")
+//                .bean(ClienteService.class, "getEventable").filter(body().isNotNull())
+//                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
+//                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-customer")
+//                .otherwise().to("direct:put-customer");
         
         from("direct:enrich-customer").routeId("enrich-customer")
                 .transform(simple("body.cliente")).filter(body().isNotNull())
@@ -35,19 +35,19 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMERS_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveApiResponse");
 
         from("direct:put-customer").routeId("put-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api");
+                .to("direct:ksroute-api");
 
         from("direct:delete-customer").routeId("delete-customer")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .setBody(constant(null)).to("seda:ksroute-api");      
+                .setBody(constant(null)).to("direct:ksroute-api");      
     }
 
     public class CustomerEnricher {

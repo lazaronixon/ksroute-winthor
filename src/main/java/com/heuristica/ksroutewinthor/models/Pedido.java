@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -35,8 +36,6 @@ public class Pedido implements Serializable {
     private Integer numordemcarga;    
     private Long numseqentrega;
     
-    private Long ksrId;
-    
     @Temporal(TemporalType.DATE)
     private Date data;  
     
@@ -53,6 +52,9 @@ public class Pedido implements Serializable {
     private Cliente cliente;    
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PedidoItem> pedidoItemList = new ArrayList();   
-
+    private List<PedidoItem> pedidoItemList = new ArrayList(); 
+    
+    @Transient
+    private Record record;
+    
 }

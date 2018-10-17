@@ -16,7 +16,7 @@ public class ClienteService {
     
     public Cliente saveApiResponse(Customer customer) {
         Cliente cliente = clientes.findById(Long.parseLong(customer.getErpId())).get();
-        cliente.setKsrId(customer.getId());
+        //cliente.setKsrId(customer.getId());
         return clientes.save(cliente);
     }
     

@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Filial;
 import com.heuristica.ksroutewinthor.models.FilialRepository;
+import com.heuristica.ksroutewinthor.models.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,14 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class FilialService {
 
     @Autowired private FilialRepository filiais;
-
-    public Filial saveApiResponse(Branch branch) {
-        Filial filial = filiais.findById(branch.getErpId()).get();
-        filial.setKsrId(branch.getId());
-        return filiais.save(filial);
+    @Autowired private RecordService recordService;
+    
+    public Filial fetchEventable(Event event) {
+        Record record = recordService.fetchFromEvent(event).orElse(null);        
+        return findByIdAndSetRecord(event.getEventableId(), record);
     }
     
-    public Filial getEventable(Event event) {
-        return filiais.findById(event.getEventableId()).orElse(null);
+    public Filial saveResponseApi(Branch branch) {
+        Record record = recordService.saveRecordableApi(branch);        
+        return findByIdAndSetRecord(branch.getErpId(), record);
+    }
+    
+    private Filial findByIdAndSetRecord(String id, Record record) {
+        Filial filial = filiais.findById(id).get();
+        filial.setRecord(record);
+        return filial;        
     }
 }

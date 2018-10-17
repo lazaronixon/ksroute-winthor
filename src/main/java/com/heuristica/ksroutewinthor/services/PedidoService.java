@@ -29,7 +29,7 @@ public class PedidoService {
     
     public Pedido saveApiResponse(Order order) {
         Pedido pedido = findPedido(Long.parseLong(order.getErpId()));
-        pedido.setKsrId(order.getId());
+        //pedido.setKsrId(order.getId());
         return pedidos.save(pedido);
     }
 

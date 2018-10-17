@@ -16,7 +16,7 @@ public class PracaService {
       
     public Praca saveApiResponse(Subregion subregion) {
         Praca praca = pracas.findById(Long.parseLong(subregion.getErpId())).get();
-        praca.setKsrId(subregion.getId());
+        //praca.setKsrId(subregion.getId());
         return pracas.save(praca);
     }
     

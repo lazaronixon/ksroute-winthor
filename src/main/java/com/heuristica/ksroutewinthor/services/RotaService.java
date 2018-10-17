@@ -16,7 +16,7 @@ public class RotaService {
 
     public Rota saveApiResponse(Line line) {
         Rota rota = rotas.findById(Long.parseLong(line.getErpId())).get();
-        rota.setKsrId(line.getId());
+        //rota.setKsrId(line.getId());
         return rotas.save(rota);
     }
     

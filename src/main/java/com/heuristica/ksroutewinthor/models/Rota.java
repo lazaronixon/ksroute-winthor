@@ -1,10 +1,10 @@
 package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -15,9 +15,8 @@ public class Rota implements Serializable {
     @Id
     private Long codrota;
     private String descricao;
-    private Long ksrId; 
     
-    @Column(insertable = false, updatable = false)
-    private String oraRowscn;  
+    @Transient
+    private Record record;    
 
 }

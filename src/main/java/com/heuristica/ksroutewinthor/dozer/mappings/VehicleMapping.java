@@ -11,7 +11,7 @@ public class VehicleMapping  extends BeanMappingBuilder{
         mapping(Veiculo.class, Vehicle.class)
                 .fields("codveiculo", "erpId")
                 .fields("descricao", "description")
-                .fields("ksrId", "id");
+                .fields("record.remoteId", "id");
     }
     
 }

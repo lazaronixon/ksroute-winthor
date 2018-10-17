@@ -16,10 +16,10 @@ class RegionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:save-region").routeId("save-region")
-                .bean(RegiaoService.class, "getEventable").filter(body().isNotNull())
-                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
-                .otherwise().to("direct:put-region");
+//        from("direct:save-region").routeId("save-region")
+//                .bean(RegiaoService.class, "getEventable").filter(body().isNotNull())
+//                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-region")
+//                .otherwise().to("direct:put-region");
         
         from("direct:enrich-region").routeId("enrich-region")
                 .transform(simple("body.regiao")).filter(body().isNotNull())
@@ -30,18 +30,18 @@ class RegionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(REGIONS_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
                 .bean(RegiaoService.class, "saveApiResponse");
 
         from("direct:put-region").routeId("put-region")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api");
+                .to("direct:ksroute-api");
 
         from("direct:delete-region").routeId("delete-region")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
-                .setBody(constant(null)).to("seda:ksroute-api");               
+                .setBody(constant(null)).to("direct:ksroute-api");               
     }
 }

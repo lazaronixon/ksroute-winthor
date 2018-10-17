@@ -11,7 +11,7 @@ public class LineMapping extends BeanMappingBuilder {
         mapping(Rota.class, Line.class)
                 .fields("codrota", "erpId")
                 .fields("descricao", "description")
-                .fields("ksrId", "id");
+                .fields("record.remoteId", "id");
     }
 
 }

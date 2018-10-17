@@ -19,9 +19,11 @@ import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class KsroutewinthorApplication {
 
     public static void main(String[] args) {

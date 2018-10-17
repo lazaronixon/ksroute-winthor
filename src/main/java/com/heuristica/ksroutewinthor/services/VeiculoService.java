@@ -18,7 +18,7 @@ public class VeiculoService {
 
     public Veiculo saveApiResponse(Vehicle vehicle) {
         Veiculo veiculo = veiculos.findById(Long.parseLong(vehicle.getErpId())).get();
-        veiculo.setKsrId(vehicle.getId());
+       //veiculo.setKsrId(vehicle.getId());
         return veiculos.save(veiculo);
     }
     

@@ -16,10 +16,10 @@ class LineRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:save-line").routeId("save-line")
-                .bean(RotaService.class, "getEventable").filter(body().isNotNull())
-                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
-                .otherwise().to("direct:put-line");
+//        from("direct:save-line").routeId("save-line")
+//                .bean(RotaService.class, "getEventable").filter(body().isNotNull())
+//                .choice().when(isNull(simple("body.ksrId"))).to("direct:post-line")
+//                .otherwise().to("direct:put-line");
         
         from("direct:enrich-line").routeId("enrich-line")
                 .transform(simple("body.rota")).filter(body().isNotNull())
@@ -30,19 +30,19 @@ class LineRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(LINES_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
                 .bean(RotaService.class, "saveApiResponse");
 
         from("direct:put-line").routeId("put-line")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
-                .to("seda:ksroute-api");
+                .to("direct:ksroute-api");
 
         from("direct:delete-line").routeId("delete-line")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
-                .setBody(constant(null)).to("seda:ksroute-api");
+                .setBody(constant(null)).to("direct:ksroute-api");
     }
 
 }

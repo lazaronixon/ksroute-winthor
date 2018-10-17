@@ -16,7 +16,7 @@ public class RegiaoService {
     
     public Regiao saveApiResponse(Region region) {
         Regiao regiao = regioes.findById(Long.parseLong(region.getErpId())).get();
-        regiao.setKsrId(region.getId());
+        //regiao.setKsrId(region.getId());
         return regioes.save(regiao);
     }
     

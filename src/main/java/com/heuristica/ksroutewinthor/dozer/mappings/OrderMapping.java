@@ -14,9 +14,9 @@ public class OrderMapping extends BeanMappingBuilder {
                 .fields("vlatend", "amount")
                 .fields("totpeso", "weight")
                 .fields("totvolume", "volume")
-                .fields("ksrId", "id")
-                .fields("filial.ksrId", "branchId")
-                .fields("cliente.ksrId", "customerId");
+                .fields("record.remoteId", "id")
+                .fields("filial.record.remoteId", "branchId")
+                .fields("cliente.record.remoteId", "customerId");
     }
 
 }

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -18,8 +19,7 @@ public class Praca implements Serializable {
 
     @Id
     private Long codpraca;
-    private String praca;
-    private Long ksrId;   
+    private String praca; 
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numregiao")
@@ -27,9 +27,9 @@ public class Praca implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
-    private Rota rota; 
-
-    @Column(insertable = false, updatable = false)
-    private String oraRowscn;
-
+    private Rota rota;
+    
+    @Transient
+    private Record record;
+    
 }

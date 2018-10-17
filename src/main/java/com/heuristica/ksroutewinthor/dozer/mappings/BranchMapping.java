@@ -11,7 +11,7 @@ public class BranchMapping extends BeanMappingBuilder {
         mapping(Filial.class, Branch.class)
                 .fields("codigo", "erpId")
                 .fields("razaosocial", "description")
-                .fields("ksrId", "id");
+                .fields("record.remoteId", "id");
     }
 
 }
