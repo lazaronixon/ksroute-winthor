@@ -27,6 +27,8 @@ public class Record implements Serializable {
     private String recordableId;
     private String recordableType;
     private Long remoteId;
+    private String requestId;
+    private String etag; 
     
     @CreatedDate
     private LocalDateTime createdAt;

@@ -3,7 +3,7 @@ package com.heuristica.ksroutewinthor.apis;
 import lombok.Data;
 
 @Data
-public class Branch implements RecordableApi {
+public class Branch implements Recordable {
     
     private Long id;
     private String description;

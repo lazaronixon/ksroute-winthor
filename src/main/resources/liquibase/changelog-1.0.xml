@@ -67,6 +67,8 @@
             <column name="recordable_id" type="varchar(10)" />
             <column name="recordable_type" type="varchar(45)" />
             <column name="remote_id" type="bigint"/>
+            <column name="request_id" type="varchar(40)" />
+            <column name="etag" type="varchar(40)" />
             <column name="created_at" type="datetime" />
             <column name="updated_at" type="datetime" />
         </createTable>
