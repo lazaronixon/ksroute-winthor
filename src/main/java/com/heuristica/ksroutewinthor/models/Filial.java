@@ -16,12 +16,9 @@ public class Filial implements Recordable, Serializable {
     private String codigo;
     private String razaosocial;
     
-    @Transient
-    private Record record;
-
     @Override
-    public String getRecordId() {
-        return codigo;
-    }
+    public String getRecordableId() { return codigo; }
     
+    @Transient
+    private Record record;    
 }

@@ -18,7 +18,7 @@ public class RecordService {
     @Autowired private RecordRepository records;         
     
     public Optional<Record> findByRecordable(Recordable recordable) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordId(), recordable.getClass().getSimpleName());
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getClass().getSimpleName());
     }
     
     public Record findByEvent(Event event) {
