@@ -1,13 +1,11 @@
 package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Data;
 
 
@@ -22,8 +20,6 @@ public class Event implements Serializable {
     private String eventableId;
     private String eventableType;   
     private String persistAction;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
     
 }
