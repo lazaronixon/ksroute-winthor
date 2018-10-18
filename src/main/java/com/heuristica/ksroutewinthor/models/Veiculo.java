@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcveicul")
-public class Veiculo implements Serializable {
+public class Veiculo implements Recordable, Serializable {
     
     @Id
     private Long codveiculo;
@@ -24,7 +24,12 @@ public class Veiculo implements Serializable {
     @Transient
     private String vehicleTypeId;
     
+    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
-    private Record record;    
+    private Record record;
+    
+    @Override
+    public String getRecordableId() { return String.valueOf(codveiculo); }
+    // </editor-fold>    
     
 }

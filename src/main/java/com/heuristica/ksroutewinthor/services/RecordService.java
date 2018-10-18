@@ -2,7 +2,7 @@ package com.heuristica.ksroutewinthor.services;
 
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Record;
-import com.heuristica.ksroutewinthor.models.RecordRepository;
+import com.heuristica.ksroutewinthor.models.repositories.RecordRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

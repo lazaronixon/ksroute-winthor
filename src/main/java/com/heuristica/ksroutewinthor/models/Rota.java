@@ -10,13 +10,18 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcrotaexp")
-public class Rota implements Serializable {    
+public class Rota implements Recordable, Serializable {    
     
     @Id
     private Long codrota;
     private String descricao;
     
+    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
-    private Record record;    
+    private Record record;
+    
+    @Override
+    public String getRecordableId() { return String.valueOf(codrota); }
+    // </editor-fold>          
 
 }

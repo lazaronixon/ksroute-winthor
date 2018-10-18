@@ -3,7 +3,7 @@ package com.heuristica.ksroutewinthor.services;
 import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Pedido;
-import com.heuristica.ksroutewinthor.models.PedidoRepository;
+import com.heuristica.ksroutewinthor.models.repositories.PedidoRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

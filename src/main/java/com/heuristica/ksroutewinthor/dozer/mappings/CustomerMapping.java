@@ -9,7 +9,7 @@ public class CustomerMapping extends BeanMappingBuilder {
 
     @Override
     protected void configure() {
-        mapping(Cliente.class, Customer.class, TypeMappingOptions.mapNull(false))
+        mapping(Cliente.class, Customer.class)
                 .fields("codcli", "erpId")
                 .fields("cliente", "name")
                 .fields("fantasia", "trade")

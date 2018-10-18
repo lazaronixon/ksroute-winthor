@@ -3,7 +3,7 @@ package com.heuristica.ksroutewinthor.services;
 import com.heuristica.ksroutewinthor.apis.Subregion;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Praca;
-import com.heuristica.ksroutewinthor.models.PracaRepository;
+import com.heuristica.ksroutewinthor.models.repositories.PracaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

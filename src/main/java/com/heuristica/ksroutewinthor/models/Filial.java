@@ -14,11 +14,13 @@ public class Filial implements Recordable, Serializable {
     
     @Id
     private String codigo;
-    private String razaosocial;
+    private String razaosocial;    
+
+    // <editor-fold defaultstate="collapsed" desc="Recordable">   
+    @Transient
+    private Record record;
     
     @Override
     public String getRecordableId() { return codigo; }
-    
-    @Transient
-    private Record record;    
+    // </editor-fold> 
 }

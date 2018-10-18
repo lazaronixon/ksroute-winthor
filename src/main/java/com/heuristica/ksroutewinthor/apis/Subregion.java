@@ -4,14 +4,18 @@ import lombok.Data;
 
 
 @Data
-public class Subregion {
+public class Subregion implements RecordableApi {
     
     private Long id;
     private String description;
     private String erpId;
-    private Boolean active = true;
     
     private Long regionId;    
     private Long lineId;
     
+    @Override
+    public String getRecordableType() {
+        return Subregion.class.getSimpleName();
+    }
+
 }

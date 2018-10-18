@@ -1,10 +1,11 @@
 package com.heuristica.ksroutewinthor.apis;
 
+import com.heuristica.ksroutewinthor.models.Pedido;
 import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Order {
+public class Order implements RecordableApi  {
     private Long id;
     private Double amount;
     private Double weight;
@@ -14,4 +15,9 @@ public class Order {
     
     private Long branchId;
     private Long customerId;
+    
+    @Override
+    public String getRecordableType() {
+        return Pedido.class.getSimpleName();
+    } 
 }

@@ -1,8 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -15,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcpraca")
-public class Praca implements Serializable {
+public class Praca implements Recordable, Serializable {
 
     @Id
     private Long codpraca;
@@ -29,7 +27,12 @@ public class Praca implements Serializable {
     @JoinColumn(name = "rota", referencedColumnName = "codrota")
     private Rota rota;
     
+    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
     private Record record;
+    
+    @Override
+    public String getRecordableId() { return String.valueOf(codpraca); }
+    // </editor-fold> 
     
 }

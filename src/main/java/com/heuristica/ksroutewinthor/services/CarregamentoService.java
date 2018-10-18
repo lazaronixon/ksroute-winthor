@@ -5,7 +5,7 @@ import com.heuristica.ksroutewinthor.apis.Activity;
 import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.apis.Route;
 import com.heuristica.ksroutewinthor.models.Carregamento;
-import com.heuristica.ksroutewinthor.models.CarregamentoRepository;
+import com.heuristica.ksroutewinthor.models.repositories.CarregamentoRepository;
 import com.heuristica.ksroutewinthor.models.Rota;
 import com.roadnet.roadnetwinthor.model.dto.CarregPedidoSum;
 import java.time.LocalDate;
