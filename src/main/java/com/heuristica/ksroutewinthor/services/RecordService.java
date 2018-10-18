@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.heuristica.ksroutewinthor.apis.RecordableApi;
+import com.heuristica.ksroutewinthor.models.Recordable;
 import java.util.Map;
 
 @Service
@@ -16,20 +17,24 @@ public class RecordService {
 
     @Autowired private RecordRepository records;         
     
-    public Optional<Record> findByRecordable(String recordableId, String recordableType) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordableId, recordableType);
-    }      
+    public Optional<Record> findByRecordable(Recordable recordable) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordId(), recordable.getClass().getSimpleName());
+    }
+    
+    public Optional<Record> findByRecordableApi(RecordableApi recordable) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getErpId(), recordable.getRecordableType());
+    }
     
     public Record findByEvent(Event event) {
-        return findByRecordable(event.getEventableId(), event.getEventableType()).orElse(null);
+        return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
     }
         
     public Record saveResponse(RecordableApi recordable, Map<String, String> headers) {
-        Optional<Record> optionalRecord = findByRecordable(recordable.getErpId(), recordable.getEntityName());
+        Optional<Record> optionalRecord = findByRecordableApi(recordable);
         
         Record record = optionalRecord.orElse(new Record());
         record.setRecordableId(recordable.getErpId());
-        record.setRecordableType(recordable.getEntityName());
+        record.setRecordableType(recordable.getRecordableType());
         record.setRemoteId(recordable.getId());
         record.setRequestId(headers.get("X-Request-Id"));
         record.setEtag(headers.get("Etag"));

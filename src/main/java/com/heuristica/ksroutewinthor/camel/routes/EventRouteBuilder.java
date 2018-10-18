@@ -12,7 +12,7 @@ public class EventRouteBuilder extends RouteBuilder  {
     public void configure() throws Exception {
         from("jpa:" + Event.class.getName() + "?delay=15s&maximumResults=50&namedQuery=newEvents").routeId("process-events")
                 .log("Processando ${body}")
-                .toD("direct:EVENT-${body.persistAction}-${body.eventableType}");
+                .toD("direct:Event-${body.persistAction}-${body.eventableType}");
     }
     
 }

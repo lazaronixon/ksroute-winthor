@@ -10,7 +10,7 @@ public class Branch implements RecordableApi {
     private String erpId;    
 
     @Override
-    public String getEntityName() {
+    public String getRecordableType() {
         return "Filial";
     }
     

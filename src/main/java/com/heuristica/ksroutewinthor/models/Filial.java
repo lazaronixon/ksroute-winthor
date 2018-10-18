@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcfilial")
-public class Filial implements Serializable {
+public class Filial implements Recordable, Serializable {
     
     @Id
     private String codigo;
@@ -18,5 +18,10 @@ public class Filial implements Serializable {
     
     @Transient
     private Record record;
+
+    @Override
+    public String getRecordId() {
+        return codigo;
+    }
     
 }

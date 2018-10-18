@@ -6,6 +6,6 @@ public interface RecordableApi {
     
     public Long getId();
     public String getErpId();
-    public String getEntityName();
+    public String getRecordableType();
     
 }
