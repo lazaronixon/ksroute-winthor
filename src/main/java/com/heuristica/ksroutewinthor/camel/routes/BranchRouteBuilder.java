@@ -18,14 +18,23 @@ class BranchRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:EVENT-SAVE-PCFILIAL").routeId("EVENT-SAVE-PCFILIAL")
-                .bean(FilialService.class, "findByEvent").filter(isNotNull(body()))
+        
+        from("direct:EVENT-INSERT-PCFILIAL").routeId("EVENT-INSERT-PCFILIAL")
+                .bean(FilialService.class, "findByEvent")
+                .filter(isNotNull(body()))
+                .filter(isNull(simple("body.record")))
+                .to("direct:post-branch");        
+        
+        from("direct:EVENT-UPDATE-PCFILIAL").routeId("EVENT-UPDATE-PCFILIAL")
+                .bean(FilialService.class, "findByEvent")
+                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         
         from("direct:EVENT-DELETE-PCFILIAL").routeId("EVENT-DELETE-PCFILIAL")
                 .bean(RecordService.class, "findByEvent")
-                .filter(isNotNull(body())).to("direct:delete-branch");
+                .filter(isNotNull(body()))
+                .to("direct:delete-branch");
         
         from("direct:post-branch").routeId("post-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
