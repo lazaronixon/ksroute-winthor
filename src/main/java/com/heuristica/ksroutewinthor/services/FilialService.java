@@ -17,22 +17,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FilialService {
 
+    private static final String TABLE_NAME = "PCFILIAL";
+    
     @Autowired private FilialRepository filiais;
     @Autowired private RecordService recordService;
     
-    public Filial findByEvent(Event event) {
-        Record record = recordService.findByEvent(event);        
-        return findByIdAndSetRecord(event.getEventableId(), record);
+    public Filial findByEvent(Event event) {           
+        return findByIdAndFetchRecord(event.getEventableId());
     }
     
     public Filial saveResponse(@Body Branch branch, @Headers Map headers) {
-        Record record = recordService.saveResponse(branch, headers);        
-        return findByIdAndSetRecord(branch.getErpId(), record);
+        recordService.saveResponse(branch, headers);        
+        return findByIdAndFetchRecord(branch.getErpId());
     }
     
-    private Filial findByIdAndSetRecord(String id, Record record) {
+    public Filial fetchRecord(Filial filial) {
+        Record record = recordService.findByRecordable(filial.getCodigo(), TABLE_NAME).orElse(null);
+        filial.setRecord(record);
+        return filial;
+    }
+    
+    private Filial findByIdAndFetchRecord(String id) {
+        Record record = recordService.findByRecordable(id, TABLE_NAME).orElse(null);
+        
         Optional<Filial> filial = filiais.findById(id);
-        filial.ifPresent(f -> f.setRecord(record)) ;
-        return filial.orElse(null);        
+        filial.ifPresent(f -> f.setRecord(record));
+        return filial.orElse(null); 
     }
 }

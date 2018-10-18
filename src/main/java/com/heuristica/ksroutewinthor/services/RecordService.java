@@ -14,12 +14,16 @@ import java.util.Map;
 @Transactional
 public class RecordService {
 
-    @Autowired private RecordRepository records;    
+    @Autowired private RecordRepository records;         
+    
+    public Optional<Record> findByRecordable(String recordableId, String recordableType) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordableId, recordableType);
+    }      
     
     public Record findByEvent(Event event) {
         return findByRecordable(event.getEventableId(), event.getEventableType()).orElse(null);
-    }   
-    
+    }
+        
     public Record saveResponse(Recordable recordable, Map<String, String> headers) {
         Optional<Record> optionalRecord = findByRecordable(recordable.getErpId(), recordable.getTableName());
         
@@ -34,9 +38,5 @@ public class RecordService {
     
     public void delete(Record record) {
         records.delete(record);
-    }
-    
-    private Optional<Record> findByRecordable(String recordableId, String recordableType) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordableId, recordableType);
-    }       
+    }        
 }

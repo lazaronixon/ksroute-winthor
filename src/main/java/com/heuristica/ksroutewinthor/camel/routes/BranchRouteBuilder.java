@@ -62,6 +62,9 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setBody(constant(null)).to("direct:ksroute-api");    
         
         from("direct:enrich-branch").routeId("enrich-branch")
-                .transform(simple("body.filial")).to("direct:post-branch");         
+                .transform(simple("body.filial"))
+                .bean(FilialService.class, "fetchRecord")
+                .filter(isNull(simple("body.record")))
+                .to("direct:post-branch");         
     }
 }
