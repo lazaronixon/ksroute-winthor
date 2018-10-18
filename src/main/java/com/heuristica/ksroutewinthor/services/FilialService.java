@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FilialService {
 
-    private static final String TABLE_NAME = "PCFILIAL";
+    private static final String ENTITY_NAME = "Filial";
     
     @Autowired private FilialRepository filiais;
     @Autowired private RecordService recordService;
@@ -32,7 +32,7 @@ public class FilialService {
     }
     
     public Filial fetchRecord(Filial filial) {
-        Record record = recordService.findByRecordable(filial.getCodigo(), TABLE_NAME).orElse(null);
+        Record record = recordService.findByRecordable(filial.getCodigo(), ENTITY_NAME).orElse(null);
         filial.setRecord(record);
         return filial;
     }

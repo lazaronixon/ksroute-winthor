@@ -3,15 +3,15 @@ package com.heuristica.ksroutewinthor.apis;
 import lombok.Data;
 
 @Data
-public class Branch implements Recordable {
+public class Branch implements RecordableApi {
     
     private Long id;
     private String description;
     private String erpId;    
 
     @Override
-    public String getTableName() {
-        return "PCFILIAL";
+    public String getEntityName() {
+        return "Filial";
     }
     
 }

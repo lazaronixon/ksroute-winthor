@@ -2,10 +2,10 @@
 package com.heuristica.ksroutewinthor.apis;
 
 
-public interface Recordable {
+public interface RecordableApi {
     
     public Long getId();
     public String getErpId();
-    public String getTableName();
+    public String getEntityName();
     
 }

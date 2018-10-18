@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.heuristica.ksroutewinthor.apis.Recordable;
+import com.heuristica.ksroutewinthor.apis.RecordableApi;
 import java.util.Map;
 
 @Service
@@ -24,12 +24,12 @@ public class RecordService {
         return findByRecordable(event.getEventableId(), event.getEventableType()).orElse(null);
     }
         
-    public Record saveResponse(Recordable recordable, Map<String, String> headers) {
-        Optional<Record> optionalRecord = findByRecordable(recordable.getErpId(), recordable.getTableName());
+    public Record saveResponse(RecordableApi recordable, Map<String, String> headers) {
+        Optional<Record> optionalRecord = findByRecordable(recordable.getErpId(), recordable.getEntityName());
         
         Record record = optionalRecord.orElse(new Record());
         record.setRecordableId(recordable.getErpId());
-        record.setRecordableType(recordable.getTableName());
+        record.setRecordableType(recordable.getEntityName());
         record.setRemoteId(recordable.getId());
         record.setRequestId(headers.get("X-Request-Id"));
         record.setEtag(headers.get("Etag"));
