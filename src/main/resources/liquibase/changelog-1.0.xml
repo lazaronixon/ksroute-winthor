@@ -4,71 +4,28 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
-                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">   
     
     <changeSet id="1" author="Nixon">
-        <addColumn tableName="pcclient">
-            <column name="ksr_id" type="bigint"/>
-        </addColumn>
-    </changeSet> 
-    
-    <changeSet id="2" author="Nixon">
-        <addColumn tableName="pcpedc">
-            <column name="ksr_id" type="bigint"/>
-            <column name="ksr_processed_at" type="datetime" />
-        </addColumn>
-    </changeSet> 
-    
-    <changeSet id="3" author="Nixon">
-        <addColumn tableName="pcpraca">
-            <column name="ksr_id" type="bigint"/>
-        </addColumn>
-    </changeSet>  
-    
-    <changeSet id="4" author="Nixon">
-        <addColumn tableName="pcregiao">
-            <column name="ksr_id" type="bigint"/>
-        </addColumn>
-    </changeSet> 
-    
-    <changeSet id="5" author="Nixon">
-        <addColumn tableName="pcrotaexp">
-            <column name="ksr_id" type="bigint"/>
-        </addColumn>
-    </changeSet>  
-    
-    <changeSet id="6" author="Nixon">
-        <addColumn tableName="pcfilial">
-            <column name="ksr_id" type="bigint"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="7" author="Nixon">
-        <addColumn tableName="pcveicul">
-            <column name="ksr_id" type="bigint"/>
-            <column name="ksr_processed_at" type="datetime" />
-        </addColumn>
-    </changeSet>
-    
-    <changeSet id="8" author="Nixon">
         <createTable tableName="ksr_event">
             <column name="id" type="bigint"/>         
-            <column name="eventable_id" type="varchar(10)" />
-            <column name="eventable_type" type="varchar(45)" />
-            <column name="persist_action" type="varchar(45)" />
+            <column name="eventable_id" type="varchar(255)" />
+            <column name="eventable_type" type="varchar(255)" />
+            <column name="persist_action" type="varchar(255)" />
+            <column name="priority" type="integer" />
             <column name="created_at" type="datetime" />                        
         </createTable>
         <createSequence sequenceName="ksr_event_seq" startValue="1" incrementBy="1" ordered="true" />
     </changeSet> 
     
-    <changeSet id="9" author="Nixon">
+    <changeSet id="2" author="Nixon">
         <createTable tableName="ksr_record">
             <column name="id" type="bigint"/>                        
-            <column name="recordable_id" type="varchar(10)" />
-            <column name="recordable_type" type="varchar(45)" />
+            <column name="recordable_id" type="varchar(255)" />
+            <column name="recordable_type" type="varchar(255)" />
             <column name="remote_id" type="bigint"/>
-            <column name="request_id" type="varchar(40)" />
-            <column name="etag" type="varchar(40)" />
+            <column name="request_id" type="varchar(255)" />
+            <column name="etag" type="varchar(255)" />
             <column name="created_at" type="datetime" />
             <column name="updated_at" type="datetime" />
         </createTable>

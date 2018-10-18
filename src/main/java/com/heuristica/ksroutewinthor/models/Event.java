@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "ksr_event")
-@NamedQuery(name = "newEvents", query = "SELECT p FROM Event p ORDER BY p.id")
+@NamedQuery(name = "newEvents", query = "SELECT p FROM Event p ORDER BY p.priority, p.id")
 public class Event implements Serializable {
     
     @Id
@@ -20,6 +20,7 @@ public class Event implements Serializable {
     private String eventableId;
     private String eventableType;   
     private String persistAction;
+    private Integer priority;
     private LocalDateTime createdAt;
     
 }
