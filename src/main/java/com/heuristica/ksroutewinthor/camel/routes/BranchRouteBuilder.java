@@ -19,8 +19,7 @@ class BranchRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:EVENT-SAVE-PCFILIAL").routeId("EVENT-SAVE-PCFILIAL")
-                .bean(FilialService.class, "findByEvent")
-                .filter(isNotNull(body()))
+                .bean(FilialService.class, "findByEvent").filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");
         
