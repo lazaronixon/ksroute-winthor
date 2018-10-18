@@ -14,8 +14,7 @@ import org.springframework.stereotype.Component;
 class BranchRouteBuilder extends RouteBuilder {
 
     private static final String BRANCHES_URL = "https://{{ksroute.api.url}}/branches.json";
-    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${body.record.remoteId}.json";
-    private static final String BRANCH_REMOVE_URL = "https://{{ksroute.api.url}}/branches/${body.remoteId}.json";
+    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${header.resourceId}.json";
 
     @Override
     public void configure() {
@@ -39,6 +38,7 @@ class BranchRouteBuilder extends RouteBuilder {
 
         from("direct:put-branch").routeId("put-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .setHeader("resourceId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
@@ -47,10 +47,11 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .setHeader("resourceId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                .setHeader(Exchange.HTTP_URI, simple(BRANCH_REMOVE_URL))
-                .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "delete");    
+                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                .bean(RecordService.class, "delete")
+                .setBody(constant(null)).to("direct:ksroute-api");    
         
         from("direct:enrich-branch").routeId("enrich-branch")
                 .transform(simple("body.filial")).to("direct:post-branch");         
