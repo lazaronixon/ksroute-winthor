@@ -2,7 +2,7 @@ package com.heuristica.ksroutewinthor.services;
 
 import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.models.Cliente;
-import com.heuristica.ksroutewinthor.models.repositories.ClienteRepository;
+import com.heuristica.ksroutewinthor.repositories.ClienteRepository;
 import com.heuristica.ksroutewinthor.models.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

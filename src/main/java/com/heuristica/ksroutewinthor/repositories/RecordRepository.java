@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor.models.repositories;
+package com.heuristica.ksroutewinthor.repositories;
 
 import com.heuristica.ksroutewinthor.models.Record;
 import java.util.Optional;

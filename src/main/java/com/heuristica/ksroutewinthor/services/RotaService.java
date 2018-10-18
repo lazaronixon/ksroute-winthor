@@ -4,7 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Line;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Record;
 import com.heuristica.ksroutewinthor.models.Rota;
-import com.heuristica.ksroutewinthor.models.repositories.RotaRepository;
+import com.heuristica.ksroutewinthor.repositories.RotaRepository;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.Body;
