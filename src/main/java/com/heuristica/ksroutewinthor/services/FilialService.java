@@ -38,10 +38,8 @@ public class FilialService {
     }
     
     private Filial findByIdAndFetchRecord(String id) {
-        Record record = recordService.findByRecordable(id, TABLE_NAME).orElse(null);
-        
         Optional<Filial> filial = filiais.findById(id);
-        filial.ifPresent(f -> f.setRecord(record));
+        filial.ifPresent(f -> fetchRecord(f));
         return filial.orElse(null); 
     }
 }
