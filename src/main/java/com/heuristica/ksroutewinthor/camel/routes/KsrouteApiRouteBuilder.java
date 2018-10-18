@@ -14,11 +14,10 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {        
-        onException(HttpOperationFailedException.class).handled(true)                
-            .log(LoggingLevel.WARN, "Erro no servidor: ${exception.message}")
-            .log(LoggingLevel.WARN, "Menssagem: ${body}")
+        onException(HttpOperationFailedException.class).handled(true)
+            .log(LoggingLevel.WARN, "Erro no servidor: ${exception.message}, detalhe: ${body}")
             .filter(header(Exchange.HTTP_METHOD).isEqualTo(constant("POST")))
-            .throwException(new RuntimeException("Erro ao criar recurso"));
+            .throwException(RuntimeException.class, "Erro ao criar registro.");
 
         from("direct:ksroute-api").routeId("ksroute-api")
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
