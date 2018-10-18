@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.apis;
 
+import com.heuristica.ksroutewinthor.models.Filial;
 import lombok.Data;
 
 @Data
@@ -11,7 +12,7 @@ public class Branch implements RecordableApi {
 
     @Override
     public String getRecordableType() {
-        return "Filial";
+        return Filial.class.getSimpleName();
     }
     
 }

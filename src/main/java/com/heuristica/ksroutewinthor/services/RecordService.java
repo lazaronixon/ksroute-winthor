@@ -21,10 +21,6 @@ public class RecordService {
         return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordId(), recordable.getClass().getSimpleName());
     }
     
-    public Optional<Record> findByRecordableApi(RecordableApi recordable) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordable.getErpId(), recordable.getRecordableType());
-    }
-    
     public Record findByEvent(Event event) {
         return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
     }
@@ -43,5 +39,9 @@ public class RecordService {
     
     public void delete(Record record) {
         records.delete(record);
-    }        
+    }
+    
+    private Optional<Record> findByRecordableApi(RecordableApi recordable) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getErpId(), recordable.getRecordableType());
+    }    
 }
