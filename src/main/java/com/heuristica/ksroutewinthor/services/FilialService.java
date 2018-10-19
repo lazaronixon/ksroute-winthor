@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Filial;
 import com.heuristica.ksroutewinthor.repositories.FilialRepository;
-import com.heuristica.ksroutewinthor.models.Record;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.Body;

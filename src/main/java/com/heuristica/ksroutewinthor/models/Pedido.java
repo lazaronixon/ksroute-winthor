@@ -20,7 +20,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcpedc")
-public class Pedido implements Serializable {
+public class Pedido implements Recordable, Serializable {
 
     @Id
     private Long numped;
@@ -54,7 +54,12 @@ public class Pedido implements Serializable {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItem> pedidoItemList = new ArrayList(); 
     
+    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
     private Record record;
+    
+    @Override
+    public String getRecordableId() { return String.valueOf(numped); }
+    // </editor-fold> 
     
 }
