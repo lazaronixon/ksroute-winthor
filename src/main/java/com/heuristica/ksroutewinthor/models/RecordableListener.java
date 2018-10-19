@@ -1,0 +1,15 @@
+package com.heuristica.ksroutewinthor.models;
+
+import com.heuristica.ksroutewinthor.ApplicationContextHolder;
+import com.heuristica.ksroutewinthor.services.RecordService;
+import javax.persistence.PostLoad;
+
+public class RecordableListener {
+    
+    @PostLoad
+    public void fetchRecord(Recordable recordable) {
+        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
+        recordable.setRecord(recordService.findByRecordable(recordable).orElse(null));
+    }       
+    
+}

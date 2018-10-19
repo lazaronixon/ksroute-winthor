@@ -1,9 +1,10 @@
 package com.heuristica.ksroutewinthor.models;
 
 import com.heuristica.ksroutewinthor.ApplicationContextHolder;
-import com.heuristica.ksroutewinthor.services.RecordService;
+import com.heuristica.ksroutewinthor.services.VeiculoService;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcveicul")
+@EntityListeners( RecordableListener.class )
 public class Veiculo implements Recordable, Serializable {
     
     @Id
@@ -26,8 +28,7 @@ public class Veiculo implements Recordable, Serializable {
     
     @Transient
     private String vehicleTypeId;
-    
-    // <editor-fold defaultstate="collapsed" desc="Recordable">   
+      
     @Transient
     private Record record;
     
@@ -38,10 +39,9 @@ public class Veiculo implements Recordable, Serializable {
     public String getRecordableType() { return Veiculo.class.getSimpleName(); }
     
     @PostLoad
-    private void fetchRecord() {
-        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
-        this.record = recordService.findByRecordable(this).orElse(null);
-    }      
-    // </editor-fold>    
+    private void postLoadCallback() {
+        VeiculoService veiculoService = ApplicationContextHolder.getBean(VeiculoService.class);
+        veiculoService.setFromEnviromentValues(this);
+    } 
     
 }

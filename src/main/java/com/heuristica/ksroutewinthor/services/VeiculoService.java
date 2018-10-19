@@ -3,7 +3,7 @@ package com.heuristica.ksroutewinthor.services;
 import com.heuristica.ksroutewinthor.apis.Vehicle;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Veiculo;
-import com.heuristica.ksroutewinthor.models.VeiculoRepository;
+import com.heuristica.ksroutewinthor.repositories.VeiculoRepository;
 import java.util.Map;
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
@@ -28,31 +28,29 @@ public class VeiculoService {
     public Veiculo saveResponse(@Body Vehicle vehicle, @Headers Map headers) {
         recordService.saveResponse(vehicle, headers);        
         return veiculos.findById(Long.parseLong(vehicle.getErpId())).orElse(null);
-    }
+    }    
     
-    private void setFromEnviromentValues(Veiculo veiculo) {
-        if (veiculo != null) {
-            veiculo.setStartAddressId(env.getProperty("ksroute.veiculo.startAddressId"));
-
-            String vehicleTypeId;
-            switch (String.valueOf(veiculo.getTipoveiculo())) {
-                case "L":
-                    vehicleTypeId = env.getProperty("ksroute.veiculo.leve.vehicleTypeId");
-                    break;
-                case "M":
-                    vehicleTypeId = env.getProperty("ksroute.veiculo.medio.vehicleTypeId");
-                    break;
-                case "P":
-                    vehicleTypeId = env.getProperty("ksroute.veiculo.pesado.vehicleTypeId");
-                    break;
-                case "E":
-                    vehicleTypeId = env.getProperty("ksroute.veiculo.extrapesado.vehicleTypeId");
-                    break;
-                default:
-                    vehicleTypeId = env.getProperty("ksroute.veiculo.leve.vehicleTypeId");
-            }
-            veiculo.setVehicleTypeId(vehicleTypeId);
+    public void setFromEnviromentValues(Veiculo veiculo) {
+        String vehicleTypeId;
+        switch (String.valueOf(veiculo.getTipoveiculo())) {
+            case "L":
+                vehicleTypeId = env.getProperty("ksroute.veiculo.leve.vehicleTypeId");
+                break;
+            case "M":
+                vehicleTypeId = env.getProperty("ksroute.veiculo.medio.vehicleTypeId");
+                break;
+            case "P":
+                vehicleTypeId = env.getProperty("ksroute.veiculo.pesado.vehicleTypeId");
+                break;
+            case "E":
+                vehicleTypeId = env.getProperty("ksroute.veiculo.extrapesado.vehicleTypeId");
+                break;
+            default:
+                vehicleTypeId = env.getProperty("ksroute.veiculo.leve.vehicleTypeId");
         }
+        
+        veiculo.setStartAddressId(env.getProperty("ksroute.veiculo.startAddressId"));
+        veiculo.setVehicleTypeId(vehicleTypeId);
     }
     
 }

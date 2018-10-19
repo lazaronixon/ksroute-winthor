@@ -1,11 +1,9 @@
 package com.heuristica.ksroutewinthor.models;
 
-import com.heuristica.ksroutewinthor.ApplicationContextHolder;
-import com.heuristica.ksroutewinthor.services.RecordService;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Data;
@@ -13,6 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcregiao")
+@EntityListeners( RecordableListener.class )
 public class Regiao implements Recordable, Serializable {
 
     @Id
@@ -20,7 +19,6 @@ public class Regiao implements Recordable, Serializable {
     private String regiao;
     private String uf; 
     
-    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
     private Record record;
     
@@ -28,13 +26,6 @@ public class Regiao implements Recordable, Serializable {
     public String getRecordableId() { return String.valueOf(numregiao); }
     
     @Override
-    public String getRecordableType() { return Regiao.class.getSimpleName(); }
-    
-    @PostLoad
-    private void fetchRecord() {
-        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
-        this.record = recordService.findByRecordable(this).orElse(null);
-    }      
-    // </editor-fold>   
+    public String getRecordableType() { return Regiao.class.getSimpleName(); }       
     
 }

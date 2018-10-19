@@ -1,11 +1,9 @@
 package com.heuristica.ksroutewinthor.models;
 
-import com.heuristica.ksroutewinthor.ApplicationContextHolder;
-import com.heuristica.ksroutewinthor.services.RecordService;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Data;
@@ -13,13 +11,13 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcrotaexp")
+@EntityListeners( RecordableListener.class )
 public class Rota implements Recordable, Serializable {    
     
     @Id
     private Long codrota;
     private String descricao;
-    
-    // <editor-fold defaultstate="collapsed" desc="Recordable">   
+      
     @Transient
     private Record record;
     
@@ -27,13 +25,6 @@ public class Rota implements Recordable, Serializable {
     public String getRecordableId() { return String.valueOf(codrota); }
     
     @Override
-    public String getRecordableType() { return Rota.class.getSimpleName(); } 
-
-    @PostLoad
-    private void fetchRecord() {
-        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
-        this.record = recordService.findByRecordable(this).orElse(null);
-    }      
-    // </editor-fold>          
+    public String getRecordableType() { return Rota.class.getSimpleName(); }     
 
 }

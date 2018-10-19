@@ -1,19 +1,17 @@
 package com.heuristica.ksroutewinthor.models;
 
-import com.heuristica.ksroutewinthor.ApplicationContextHolder;
-import com.heuristica.ksroutewinthor.services.RecordService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,6 +21,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pcpedc")
+@EntityListeners( RecordableListener.class )
 public class Pedido implements Recordable, Serializable {
 
     @Id
@@ -57,7 +56,6 @@ public class Pedido implements Recordable, Serializable {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItem> pedidoItemList = new ArrayList(); 
     
-    // <editor-fold defaultstate="collapsed" desc="Recordable">   
     @Transient
     private Record record;
     
@@ -65,13 +63,6 @@ public class Pedido implements Recordable, Serializable {
     public String getRecordableId() { return String.valueOf(numped); }
     
     @Override
-    public String getRecordableType() { return Pedido.class.getSimpleName(); }  
-
-    @PostLoad
-    private void fetchRecord() {
-        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
-        this.record = recordService.findByRecordable(this).orElse(null);
-    }    
-    // </editor-fold> 
+    public String getRecordableType() { return Pedido.class.getSimpleName(); }
     
 }
