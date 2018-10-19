@@ -16,15 +16,11 @@ import org.apache.camel.Header;
 @Transactional
 public class RecordService {
 
-    @Autowired private RecordRepository records;         
-    
-    public Record findByEvent(Event event) {
-        return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
-    }
+    @Autowired private RecordRepository records;    
 
     public Optional<Record> findByRecordable(Recordable recordable) {
         return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
-    }    
+    }
     
     public void saveResponse(RecordableApi recordable, Map<String, String> headers) {
         Optional<Record> optionalRecord = findByRecordableApi(recordable);

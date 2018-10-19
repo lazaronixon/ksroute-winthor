@@ -26,7 +26,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-vehicle");
         
         from("direct:Event-Delete-Veiculo").routeId("Event-Delete-Veiculo")
-                .bean(RecordService.class, "findByEvent")
+                .transform(simple("body.record"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-vehicle");
         

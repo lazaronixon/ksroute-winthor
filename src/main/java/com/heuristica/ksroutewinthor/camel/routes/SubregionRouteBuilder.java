@@ -29,7 +29,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-subregion");
         
         from("direct:Event-Delete-Praca").routeId("Event-Delete-Praca")
-                .bean(RecordService.class, "findByEvent")
+                .transform(simple("body.record"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-subregion");
         

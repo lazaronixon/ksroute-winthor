@@ -22,10 +22,10 @@ class BranchRouteBuilder extends RouteBuilder {
                 .bean(FilialService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-branch")
-                .otherwise().to("direct:put-branch");
+                .otherwise().to("direct:put-branch");   
         
         from("direct:Event-Delete-Filial").routeId("Event-Delete-Filial")
-                .bean(RecordService.class, "findByEvent")
+                .transform(simple("body.record"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-branch");
         
@@ -49,7 +49,7 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveResponse");  
+                .bean(FilialService.class, "saveResponse");
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -58,6 +58,6 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");        
+                .bean(RecordService.class, "deleteByRecordId");    
     }
 }

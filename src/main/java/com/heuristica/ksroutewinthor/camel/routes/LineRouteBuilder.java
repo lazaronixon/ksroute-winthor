@@ -25,7 +25,7 @@ class LineRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-line");
         
         from("direct:Event-Delete-Rota").routeId("Event-Delete-Rota")
-                .bean(RecordService.class, "findByEvent")
+                .transform(simple("body.record"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-line");
         
