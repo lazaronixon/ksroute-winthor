@@ -22,13 +22,7 @@ class OrderRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {        
-        from("direct:Event-Insert-Pedido").routeId("Event-Insert-Pedido")
-                .bean(PedidoService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-order");        
-        
-        from("direct:Event-Update-Pedido").routeId("Event-Update-Pedido")
+        from("direct:Event-Save-Pedido").routeId("Event-Save-Pedido")
                 .bean(PedidoService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-order")

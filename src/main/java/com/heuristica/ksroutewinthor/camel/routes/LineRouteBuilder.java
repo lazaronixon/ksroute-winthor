@@ -18,13 +18,7 @@ class LineRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:Event-Insert-Rota").routeId("Event-Insert-Rota")
-                .bean(RotaService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-line");        
-        
-        from("direct:Event-Update-Rota").routeId("Event-Update-Rota")
+        from("direct:Event-Save-Rota").routeId("Event-Save-Rota")
                 .bean(RotaService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-line")

@@ -22,13 +22,7 @@ class SubregionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:Event-Insert-Praca").routeId("Event-Insert-Praca")
-                .bean(PracaService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-subregion");        
-        
-        from("direct:Event-Update-Praca").routeId("Event-Update-Praca")
+        from("direct:Event-Save-Praca").routeId("Event-Save-Praca")
                 .bean(PracaService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-subregion")

@@ -19,13 +19,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
     
     @Override
     public void configure() {  
-        from("direct:Event-Insert-Veiculo").routeId("Event-Insert-Veiculo")
-                .bean(FilialService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-vehicle");        
-        
-        from("direct:Event-Update-Veiculo").routeId("Event-Update-Veiculo")
+        from("direct:Event-Save-Veiculo").routeId("Event-Save-Veiculo")
                 .bean(FilialService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-vehicle")

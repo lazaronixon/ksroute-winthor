@@ -18,13 +18,7 @@ class RegionRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() {
-        from("direct:Event-Insert-Regiao").routeId("Event-Insert-Regiao")
-                .bean(RegiaoService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-region");        
-        
-        from("direct:Event-Update-Regiao").routeId("Event-Update-Regiao")
+        from("direct:Event-Save-Regiao").routeId("Event-Save-Regiao")
                 .bean(RegiaoService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-region")

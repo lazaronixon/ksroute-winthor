@@ -20,14 +20,8 @@ class CustomerRouteBuilder extends RouteBuilder {
     private static final String CUSTOMER_URL = "https://{{ksroute.api.url}}/customers/${header.remoteId}.json"; 
 
     @Override
-    public void configure() {
-        from("direct:Event-Insert-Cliente").routeId("Event-Insert-Cliente")
-                .bean(ClienteService.class, "findByEvent")
-                .filter(isNotNull(body()))
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-customer");        
-        
-        from("direct:Event-Update-Cliente").routeId("Event-Update-Cliente")
+    public void configure() {    
+        from("direct:Event-Save-Cliente").routeId("Event-Save-Cliente")
                 .bean(ClienteService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-customer")
