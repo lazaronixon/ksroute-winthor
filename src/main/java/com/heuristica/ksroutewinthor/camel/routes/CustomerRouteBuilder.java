@@ -41,7 +41,7 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveResponse");
 
-        from("direct:put-branch").routeId("put-branch")
+        from("direct:put-customer").routeId("put-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
