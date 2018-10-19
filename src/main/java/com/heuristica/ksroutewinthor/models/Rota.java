@@ -22,6 +22,9 @@ public class Rota implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(codrota); }
+    
+    @Override
+    public String getRecordableType() { return Rota.class.getSimpleName(); }     
     // </editor-fold>          
 
 }

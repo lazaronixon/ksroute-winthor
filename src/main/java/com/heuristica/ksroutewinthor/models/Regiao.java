@@ -23,6 +23,9 @@ public class Regiao implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(numregiao); }
+    
+    @Override
+    public String getRecordableType() { return Regiao.class.getSimpleName(); }      
     // </editor-fold>   
     
 }

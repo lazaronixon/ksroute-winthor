@@ -60,6 +60,9 @@ public class Pedido implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(numped); }
+    
+    @Override
+    public String getRecordableType() { return Pedido.class.getSimpleName(); }      
     // </editor-fold> 
     
 }

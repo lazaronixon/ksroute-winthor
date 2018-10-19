@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.apis;
 
+import com.heuristica.ksroutewinthor.models.Praca;
 import lombok.Data;
 
 
@@ -15,7 +16,7 @@ public class Subregion implements RecordableApi {
     
     @Override
     public String getRecordableType() {
-        return Subregion.class.getSimpleName();
+        return Praca.class.getSimpleName();
     }
 
 }

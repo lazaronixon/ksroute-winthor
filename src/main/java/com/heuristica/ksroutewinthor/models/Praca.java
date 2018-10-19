@@ -33,6 +33,9 @@ public class Praca implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(codpraca); }
+    
+    @Override
+    public String getRecordableType() { return Praca.class.getSimpleName(); }      
     // </editor-fold> 
     
 }

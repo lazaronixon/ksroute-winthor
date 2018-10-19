@@ -22,5 +22,8 @@ public class Filial implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return codigo; }
+    
+    @Override
+    public String getRecordableType() { return Filial.class.getSimpleName(); }      
     // </editor-fold> 
 }

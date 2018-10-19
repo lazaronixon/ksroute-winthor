@@ -70,7 +70,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .bean(RecordService.class, "deleteByRecordId");    
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
-                .transform(simple("body.subregiao"))
+                .transform(simple("body.praca"))
                 .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-subregion");     

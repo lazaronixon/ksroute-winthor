@@ -37,6 +37,9 @@ public class Cliente implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(codcli); }
+    
+    @Override
+    public String getRecordableType() { return Cliente.class.getSimpleName(); }    
     // </editor-fold>     
 
 }

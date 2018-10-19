@@ -1,5 +1,6 @@
 package com.heuristica.ksroutewinthor.apis;
 
+import com.heuristica.ksroutewinthor.models.Veiculo;
 import lombok.Data;
     
 @Data
@@ -14,7 +15,7 @@ public class Vehicle implements RecordableApi {
     
     @Override
     public String getRecordableType() {
-        return Subregion.class.getSimpleName();
+        return Veiculo.class.getSimpleName();
     }    
     
 }

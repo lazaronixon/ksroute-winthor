@@ -45,7 +45,7 @@ public class RecordService {
     }
     
     private Optional<Record> findByRecordable(Recordable recordable) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getClass().getSimpleName());
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
     }    
     
     private Optional<Record> findByRecordableApi(RecordableApi recordable) {

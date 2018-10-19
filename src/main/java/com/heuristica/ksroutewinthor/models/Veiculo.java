@@ -30,6 +30,9 @@ public class Veiculo implements Recordable, Serializable {
     
     @Override
     public String getRecordableId() { return String.valueOf(codveiculo); }
+    
+    @Override
+    public String getRecordableType() { return Veiculo.class.getSimpleName(); }      
     // </editor-fold>    
     
 }
