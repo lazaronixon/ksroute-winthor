@@ -20,21 +20,15 @@ public class PedidoService {
     @Autowired private RecordService recordService;
     
     public Pedido findByEvent(Event event) {       
-        return findByIdAndFetchRecord(Long.parseLong(event.getEventableId()));
+        return pedidos.findById(Long.parseLong(event.getEventableId())).orElse(null);
     }
     
-    public Optional<Pedido> findPedidoById(Long id) {
+    public Optional<Pedido> findById(Long id) {
         return pedidos.findById(id);
-    }    
+    }
     
     public Pedido saveResponse(@Body Order order, @Headers Map headers) {
         recordService.saveResponse(order, headers);        
-        return findByIdAndFetchRecord(Long.parseLong(order.getErpId()));
-    }
-    
-    private Pedido findByIdAndFetchRecord(Long id) {
-        Optional<Pedido> pedido = pedidos.findById(id);
-        pedido.ifPresent(p -> recordService.fetchRecord(p));
-        return pedido.orElse(null); 
+        return pedidos.findById(Long.parseLong(order.getErpId())).orElse(null);
     }
 }

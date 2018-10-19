@@ -5,7 +5,6 @@ import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.repositories.PracaRepository;
 import java.util.Map;
-import java.util.Optional;
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +19,12 @@ public class PracaService {
     @Autowired private RecordService recordService;
     
     public Praca findByEvent(Event event) {       
-        return findByIdAndFetchRecord(Long.parseLong(event.getEventableId()));
+        return pracas.findById(Long.parseLong(event.getEventableId())).orElse(null);
     }
     
     public Praca saveResponse(@Body Subregion subregion, @Headers Map headers) {
         recordService.saveResponse(subregion, headers);        
-        return findByIdAndFetchRecord(Long.parseLong(subregion.getErpId()));
-    }
-    
-    private Praca findByIdAndFetchRecord(Long id) {
-        Optional<Praca> praca = pracas.findById(id);
-        praca.ifPresent(p -> recordService.fetchRecord(p));
-        return praca.orElse(null); 
+        return pracas.findById(Long.parseLong(subregion.getErpId())).orElse(null);
     }
 
 }

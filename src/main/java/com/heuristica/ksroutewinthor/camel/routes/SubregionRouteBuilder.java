@@ -35,7 +35,6 @@ class SubregionRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
                 .transform(simple("body.praca"))
-                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-subregion");  
         

@@ -58,7 +58,7 @@ public class CarregamentoService {
         
         orders.forEach(order -> {
             try {
-                pedidoService.findPedidoById(Long.parseLong(order.getErpId())).ifPresent(pedido -> {
+                pedidoService.findById(Long.parseLong(order.getErpId())).ifPresent(pedido -> {
                     int index = seqIndex.getAndIncrement();
                     pedido.setNumseqmontagem(index + 1);
                     pedido.setNumseqentrega(Long.valueOf(index + 1));

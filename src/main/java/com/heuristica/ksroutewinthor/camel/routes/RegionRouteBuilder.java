@@ -31,7 +31,6 @@ class RegionRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-region").routeId("enrich-region")
                 .transform(simple("body.regiao"))
-                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-region");   
         

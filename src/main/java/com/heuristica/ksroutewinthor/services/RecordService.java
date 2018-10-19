@@ -21,12 +21,10 @@ public class RecordService {
     public Record findByEvent(Event event) {
         return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
     }
-    
-    public Recordable fetchRecord(Recordable recordable) {
-        Record record = findByRecordable(recordable).orElse(null);
-        recordable.setRecord(record);
-        return recordable;
-    }
+
+    public Optional<Record> findByRecordable(Recordable recordable) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
+    }    
     
     public void saveResponse(RecordableApi recordable, Map<String, String> headers) {
         Optional<Record> optionalRecord = findByRecordableApi(recordable);
@@ -42,10 +40,6 @@ public class RecordService {
     
     public void deleteByRecordId(@Header("recordId") Long id) {
         records.deleteById(id);
-    }
-    
-    private Optional<Record> findByRecordable(Recordable recordable) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
     }    
     
     private Optional<Record> findByRecordableApi(RecordableApi recordable) {

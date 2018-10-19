@@ -31,9 +31,8 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-branch").routeId("enrich-branch")
                 .transform(simple("body.filial"))
-                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
-                .to("direct:post-branch");         
+                .to("direct:post-branch");    
         
         from("direct:post-branch").routeId("post-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")

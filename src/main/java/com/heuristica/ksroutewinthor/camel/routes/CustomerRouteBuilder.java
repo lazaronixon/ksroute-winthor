@@ -34,7 +34,6 @@ class CustomerRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-customer").routeId("enrich-customer")
                 .transform(simple("body.cliente"))
-                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-customer");           
         

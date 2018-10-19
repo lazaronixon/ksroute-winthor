@@ -31,7 +31,6 @@ class LineRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-line").routeId("enrich-line")
                 .transform(simple("body.rota"))
-                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-line");
         

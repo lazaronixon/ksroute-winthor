@@ -5,7 +5,6 @@ import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.repositories.ClienteRepository;
 import com.heuristica.ksroutewinthor.models.Event;
 import java.util.Map;
-import java.util.Optional;
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +19,11 @@ public class ClienteService {
     @Autowired private RecordService recordService;
     
     public Cliente findByEvent(Event event) {       
-        return findByIdAndFetchRecord(Long.parseLong(event.getEventableId()));
+        return clientes.findById(Long.parseLong(event.getEventableId())).orElse(null);
     }
     
     public Cliente saveResponse(@Body Customer customer, @Headers Map headers) {
         recordService.saveResponse(customer, headers);        
-        return findByIdAndFetchRecord(Long.parseLong(customer.getErpId()));
+        return clientes.findById(Long.parseLong(customer.getErpId())).orElse(null);
     }
-    
-    private Cliente findByIdAndFetchRecord(Long id) {
-        Optional<Cliente> cliente = clientes.findById(id);
-        cliente.ifPresent(c -> recordService.fetchRecord(c));
-        return cliente.orElse(null); 
-    }
-
 }

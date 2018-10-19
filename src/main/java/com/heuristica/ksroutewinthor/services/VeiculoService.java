@@ -5,7 +5,6 @@ import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Veiculo;
 import com.heuristica.ksroutewinthor.models.VeiculoRepository;
 import java.util.Map;
-import java.util.Optional;
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +22,12 @@ public class VeiculoService {
     @Autowired private RecordService recordService;
 
     public Veiculo findByEvent(Event event) {           
-        return findByIdAndFetchRecord(Long.parseLong(event.getEventableId()));
+        return veiculos.findById(Long.parseLong(event.getEventableId())).orElse(null);
     }
     
     public Veiculo saveResponse(@Body Vehicle vehicle, @Headers Map headers) {
         recordService.saveResponse(vehicle, headers);        
-        return findByIdAndFetchRecord(Long.parseLong(vehicle.getErpId()));
-    }
-    
-    private Veiculo findByIdAndFetchRecord(Long id) {
-        Optional<Veiculo> veiculo = veiculos.findById(id);
-        veiculo.ifPresent(r -> recordService.fetchRecord(r));
-        return veiculo.orElse(null); 
+        return veiculos.findById(Long.parseLong(vehicle.getErpId())).orElse(null);
     }
     
     private void setFromEnviromentValues(Veiculo veiculo) {

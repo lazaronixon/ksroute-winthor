@@ -1,5 +1,7 @@
 package com.heuristica.ksroutewinthor.models;
 
+import com.heuristica.ksroutewinthor.ApplicationContextHolder;
+import com.heuristica.ksroutewinthor.services.RecordService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,7 +65,13 @@ public class Pedido implements Recordable, Serializable {
     public String getRecordableId() { return String.valueOf(numped); }
     
     @Override
-    public String getRecordableType() { return Pedido.class.getSimpleName(); }      
+    public String getRecordableType() { return Pedido.class.getSimpleName(); }  
+
+    @PostLoad
+    public void fetchRecord() {
+        RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
+        this.record = recordService.findByRecordable(this).orElse(null);
+    }    
     // </editor-fold> 
     
 }
