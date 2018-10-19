@@ -1,7 +1,6 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.apis.Vehicle;
-import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import com.heuristica.ksroutewinthor.services.VeiculoService;
 import org.apache.camel.Exchange;
@@ -20,7 +19,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {  
         from("direct:Event-Save-Veiculo").routeId("Event-Save-Veiculo")
-                .bean(FilialService.class, "findByEvent")
+                .bean(VeiculoService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-vehicle")
                 .otherwise().to("direct:put-vehicle");
