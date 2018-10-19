@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.heuristica.ksroutewinthor.apis.RecordableApi;
 import com.heuristica.ksroutewinthor.models.Recordable;
 import java.util.Map;
+import org.apache.camel.Header;
 
 @Service
 @Transactional
@@ -17,15 +18,17 @@ public class RecordService {
 
     @Autowired private RecordRepository records;         
     
-    public Optional<Record> findByRecordable(Recordable recordable) {
-        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getClass().getSimpleName());
-    }
-    
     public Record findByEvent(Event event) {
         return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
     }
-        
-    public Record saveResponse(RecordableApi recordable, Map<String, String> headers) {
+    
+    public Recordable fetchRecord(Recordable recordable) {
+        Record record = findByRecordable(recordable).orElse(null);
+        recordable.setRecord(record);
+        return recordable;
+    }    
+    
+    public void saveResponse(RecordableApi recordable, Map<String, String> headers) {
         Optional<Record> optionalRecord = findByRecordableApi(recordable);
         
         Record record = optionalRecord.orElse(new Record());
@@ -34,12 +37,16 @@ public class RecordService {
         record.setRemoteId(recordable.getId());
         record.setRequestId(headers.get("X-Request-Id"));
         record.setEtag(headers.get("Etag"));
-        return records.save(record);
+        records.save(record);
+    }    
+    
+    public void deleteByRecordId(@Header("recordId") Long id) {
+        records.deleteById(id);
     }
     
-    public void delete(Record record) {
-        records.delete(record);
-    }
+    private Optional<Record> findByRecordable(Recordable recordable) {
+        return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getClass().getSimpleName());
+    }    
     
     private Optional<Record> findByRecordableApi(RecordableApi recordable) {
         return records.findOptionalByRecordableIdAndRecordableType(recordable.getErpId(), recordable.getRecordableType());

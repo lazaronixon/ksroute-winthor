@@ -14,11 +14,10 @@ import org.springframework.stereotype.Component;
 class BranchRouteBuilder extends RouteBuilder {
 
     private static final String BRANCHES_URL = "https://{{ksroute.api.url}}/branches.json";
-    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${header.resourceId}.json";
+    private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${header.remoteId}.json";
 
     @Override
     public void configure() {
-        
         from("direct:Event-Insert-Filial").routeId("Event-Insert-Filial")
                 .bean(FilialService.class, "findByEvent")
                 .filter(isNotNull(body()))
@@ -46,7 +45,7 @@ class BranchRouteBuilder extends RouteBuilder {
 
         from("direct:put-branch").routeId("put-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("resourceId", simple("body.record.remoteId"))
+                .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
@@ -55,15 +54,16 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("resourceId", simple("body.remoteId"))
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                .bean(RecordService.class, "delete")
-                .setBody(constant(null)).to("direct:ksroute-api");    
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");    
         
         from("direct:enrich-branch").routeId("enrich-branch")
                 .transform(simple("body.filial"))
-                .bean(FilialService.class, "fetchRecord")
+                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-branch");         
     }

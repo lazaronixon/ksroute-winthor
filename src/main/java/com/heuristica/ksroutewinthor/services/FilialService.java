@@ -20,7 +20,7 @@ public class FilialService {
     @Autowired private FilialRepository filiais;
     @Autowired private RecordService recordService;
     
-    public Filial findByEvent(Event event) {           
+    public Filial findByEvent(Event event) {       
         return findByIdAndFetchRecord(event.getEventableId());
     }
     
@@ -29,15 +29,9 @@ public class FilialService {
         return findByIdAndFetchRecord(branch.getErpId());
     }
     
-    public Filial fetchRecord(Filial filial) {
-        Record record = recordService.findByRecordable(filial).orElse(null);
-        filial.setRecord(record);
-        return filial;
-    }
-    
     private Filial findByIdAndFetchRecord(String id) {
         Optional<Filial> filial = filiais.findById(id);
-        filial.ifPresent(f -> fetchRecord(f));
+        filial.ifPresent(f -> recordService.fetchRecord(f));
         return filial.orElse(null); 
     }
 }

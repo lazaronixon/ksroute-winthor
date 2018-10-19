@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 class LineRouteBuilder extends RouteBuilder {
     
     private static final String LINES_URL = "https://{{ksroute.api.url}}/lines.json";
-    private static final String LINE_URL = "https://{{ksroute.api.url}}/lines/${header.resourceId}.json"; 
+    private static final String LINE_URL = "https://{{ksroute.api.url}}/lines/${header.remoteId}.json"; 
 
     @Override
     public void configure() {
@@ -45,7 +45,7 @@ class LineRouteBuilder extends RouteBuilder {
 
         from("direct:put-line").routeId("put-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("resourceId", simple("body.record.remoteId"))
+                .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
@@ -54,15 +54,16 @@ class LineRouteBuilder extends RouteBuilder {
         
         from("direct:delete-line").routeId("delete-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("resourceId", simple("body.remoteId"))
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
-                .bean(RecordService.class, "delete")
-                .setBody(constant(null)).to("direct:ksroute-api");    
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");    
         
         from("direct:enrich-line").routeId("enrich-line")
                 .transform(simple("body.rota"))
-                .bean(RotaService.class, "fetchRecord")
+                .bean(RecordService.class, "fetchRecord")
                 .filter(isNull(simple("body.record")))
                 .to("direct:post-line");   
     }

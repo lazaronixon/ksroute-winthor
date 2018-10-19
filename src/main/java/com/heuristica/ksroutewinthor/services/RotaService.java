@@ -29,15 +29,9 @@ public class RotaService {
         return findByIdAndFetchRecord(Long.parseLong(line.getErpId()));
     }
     
-    public Rota fetchRecord(Rota rota) {
-        Record record = recordService.findByRecordable(rota).orElse(null);
-        rota.setRecord(record);
-        return rota;
-    }
-    
     private Rota findByIdAndFetchRecord(Long id) {
         Optional<Rota> rota = rotas.findById(id);
-        rota.ifPresent(f -> fetchRecord(f));
+        rota.ifPresent(r -> recordService.fetchRecord(r));
         return rota.orElse(null); 
     }
 

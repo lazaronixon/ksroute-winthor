@@ -4,6 +4,8 @@ package com.heuristica.ksroutewinthor.models;
 public interface Recordable {
     
     public String getRecordableId();
-    public Record getRecord();  
+    
+    public void setRecord(Record record);
+    public Record getRecord();
     
 }
