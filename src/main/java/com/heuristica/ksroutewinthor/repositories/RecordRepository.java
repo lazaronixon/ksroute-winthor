@@ -8,6 +8,4 @@ public interface RecordRepository extends CrudRepository<Record, Long>  {
     
     Optional<Record> findOptionalByRecordableIdAndRecordableType(String recordableId, String recordableType);
     
-    boolean existsByRecordableIdAndRecordableType(String recordableId, String recordableType);
-           
 }

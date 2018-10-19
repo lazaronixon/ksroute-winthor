@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.not;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
@@ -32,7 +31,8 @@ class BranchRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-branch").routeId("enrich-branch")
                 .transform(simple("body.filial"))
-                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .bean(RecordService.class, "fetchRecord")
+                .filter(isNull(simple("body.record")))
                 .to("direct:post-branch");         
         
         from("direct:post-branch").routeId("post-branch")

@@ -22,13 +22,10 @@ public class RecordService {
         return records.findOptionalByRecordableIdAndRecordableType(event.getEventableId(), event.getEventableType()).orElse(null);
     }
     
-    public void fetchRecord(Recordable recordable) {
+    public Recordable fetchRecord(Recordable recordable) {
         Record record = findByRecordable(recordable).orElse(null);
         recordable.setRecord(record);
-    }
-    
-    public boolean existisByRecordable(Recordable recordable) {
-        return records.existsByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
+        return recordable;
     }
     
     public void saveResponse(RecordableApi recordable, Map<String, String> headers) {

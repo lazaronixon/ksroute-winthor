@@ -9,7 +9,6 @@ import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import static org.apache.camel.builder.PredicateBuilder.not;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -36,7 +35,8 @@ class SubregionRouteBuilder extends RouteBuilder {
         
         from("direct:enrich-subregion").routeId("enrich-subregion")
                 .transform(simple("body.praca"))
-                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .bean(RecordService.class, "fetchRecord")
+                .filter(isNull(simple("body.record")))
                 .to("direct:post-subregion");  
         
         from("direct:post-subregion").routeId("post-subregion")
