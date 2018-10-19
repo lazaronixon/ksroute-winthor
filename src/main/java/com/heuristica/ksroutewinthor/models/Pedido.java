@@ -68,7 +68,7 @@ public class Pedido implements Recordable, Serializable {
     public String getRecordableType() { return Pedido.class.getSimpleName(); }  
 
     @PostLoad
-    public void fetchRecord() {
+    private void fetchRecord() {
         RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
         this.record = recordService.findByRecordable(this).orElse(null);
     }    

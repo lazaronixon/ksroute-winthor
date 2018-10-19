@@ -45,7 +45,7 @@ public class Cliente implements Recordable, Serializable {
     public String getRecordableType() { return Cliente.class.getSimpleName(); }
 
     @PostLoad
-    public void fetchRecord() {
+    private void fetchRecord() {
         RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
         this.record = recordService.findByRecordable(this).orElse(null);
     }      
