@@ -9,6 +9,7 @@ import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
+import static org.apache.camel.builder.PredicateBuilder.not;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -32,6 +33,11 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .bean(RecordService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .to("direct:delete-subregion");
+        
+        from("direct:enrich-subregion").routeId("enrich-subregion")
+                .transform(simple("body.praca"))
+                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .to("direct:post-subregion");  
         
         from("direct:post-subregion").routeId("post-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -61,13 +67,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
-        
-        from("direct:enrich-subregion").routeId("enrich-subregion")
-                .transform(simple("body.praca"))
-                .bean(RecordService.class, "fetchRecord")
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-subregion");     
+                .bean(RecordService.class, "deleteByRecordId");   
     }
 
     public class LineEnricher {

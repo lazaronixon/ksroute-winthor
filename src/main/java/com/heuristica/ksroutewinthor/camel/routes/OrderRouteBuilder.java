@@ -61,13 +61,7 @@ class OrderRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
-        
-        from("direct:enrich-order").routeId("enrich-order")
-                .transform(simple("body.pedido"))
-                .bean(RecordService.class, "fetchRecord")
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-order");               
+                .bean(RecordService.class, "deleteByRecordId");             
     }
 
     public class OrderEnricher {

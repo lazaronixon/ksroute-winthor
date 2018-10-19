@@ -8,6 +8,7 @@ import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
+import static org.apache.camel.builder.PredicateBuilder.not;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -31,6 +32,11 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .bean(RecordService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .to("direct:delete-customer");
+        
+        from("direct:enrich-customer").routeId("enrich-customer")
+                .transform(simple("body.cliente"))
+                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .to("direct:post-customer");           
         
         from("direct:post-customer").routeId("post-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -58,13 +64,7 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
-        
-        from("direct:enrich-customer").routeId("enrich-customer")
-                .transform(simple("body.cliente"))
-                .bean(RecordService.class, "fetchRecord")
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-customer");         
+                .bean(RecordService.class, "deleteByRecordId");      
     }
 
     public class CustomerEnricher {

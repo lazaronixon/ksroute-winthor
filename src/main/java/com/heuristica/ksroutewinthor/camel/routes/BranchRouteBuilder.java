@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
+import static org.apache.camel.builder.PredicateBuilder.not;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
@@ -29,6 +30,11 @@ class BranchRouteBuilder extends RouteBuilder {
                 .filter(isNotNull(body()))
                 .to("direct:delete-branch");
         
+        from("direct:enrich-branch").routeId("enrich-branch")
+                .transform(simple("body.filial"))
+                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .to("direct:post-branch");         
+        
         from("direct:post-branch").routeId("post-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -53,12 +59,6 @@ class BranchRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
-        
-        from("direct:enrich-branch").routeId("enrich-branch")
-                .transform(simple("body.filial"))
-                .bean(RecordService.class, "fetchRecord")
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-branch");         
+                .bean(RecordService.class, "deleteByRecordId");        
     }
 }

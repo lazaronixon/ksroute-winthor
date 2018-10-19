@@ -6,6 +6,7 @@ import com.heuristica.ksroutewinthor.services.RotaService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
+import static org.apache.camel.builder.PredicateBuilder.not;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,11 @@ class LineRouteBuilder extends RouteBuilder {
                 .bean(RecordService.class, "findByEvent")
                 .filter(isNotNull(body()))
                 .to("direct:delete-line");
+        
+        from("direct:enrich-line").routeId("enrich-line")
+                .transform(simple("body.rota"))
+                .filter(not(method(RecordService.class, "existisByRecordable")))
+                .to("direct:post-line");
         
         from("direct:post-line").routeId("post-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -53,13 +59,7 @@ class LineRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
-        
-        from("direct:enrich-line").routeId("enrich-line")
-                .transform(simple("body.rota"))
-                .bean(RecordService.class, "fetchRecord")
-                .filter(isNull(simple("body.record")))
-                .to("direct:post-line");   
+                .bean(RecordService.class, "deleteByRecordId"); 
     }
 
 }
