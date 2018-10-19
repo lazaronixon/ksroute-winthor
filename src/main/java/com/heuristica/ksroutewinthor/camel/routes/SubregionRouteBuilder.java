@@ -40,21 +40,21 @@ class SubregionRouteBuilder extends RouteBuilder {
         
         from("direct:post-subregion").routeId("post-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))                 
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGIONS_URL))
-                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota")) 
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveResponse");
 
         from("direct:put-subregion").routeId("put-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))                
                 .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                 .bean(PracaService.class, "saveResponse");  

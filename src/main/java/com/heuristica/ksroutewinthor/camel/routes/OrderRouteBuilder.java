@@ -35,21 +35,21 @@ class OrderRouteBuilder extends RouteBuilder {
         
         from("direct:post-order").routeId("post-order")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .setHeader(Exchange.HTTP_URI, simple(ORDERS_URL))
                 .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
-                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))                
+                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))                  
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDERS_URL))              
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
                 .bean(PedidoService.class, "saveResponse");
 
         from("direct:put-order").routeId("put-order")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
+                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))                 
                 .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
-                .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
-                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente")) 
                 .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
                 .bean(PedidoService.class, "saveResponse");  
@@ -65,7 +65,7 @@ class OrderRouteBuilder extends RouteBuilder {
     }
 
     public class OrderEnricher {
-
+ 
         public Pedido setFilial(Pedido pedido, Filial filial) {
             pedido.setFilial(filial);
             return pedido;

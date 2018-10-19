@@ -39,19 +39,19 @@ class CustomerRouteBuilder extends RouteBuilder {
         
         from("direct:post-customer").routeId("post-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))                
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMERS_URL))
-                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveResponse");
 
         from("direct:put-customer").routeId("put-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
+                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))                
                 .setHeader("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                 .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                 .bean(ClienteService.class, "saveResponse");  
