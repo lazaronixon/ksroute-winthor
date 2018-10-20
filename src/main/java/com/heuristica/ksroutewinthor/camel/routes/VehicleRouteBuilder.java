@@ -25,7 +25,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-vehicle");
         
         from("direct:Event-Delete-Veiculo").routeId("Event-Delete-Veiculo")
-                .transform(simple("body.record"))
+                .transform(simple("body.deletedRecord"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-vehicle");
         

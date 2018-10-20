@@ -3,20 +3,20 @@ package com.heuristica.ksroutewinthor.models;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import lombok.Data;
 
 
 @Data
 @Entity
 @Table(name = "ksr_event")
-@EntityListeners( RecordableListener.class )
 @NamedQuery(name = "newEvents", query = "SELECT p FROM Event p ORDER BY p.priority, p.id")
-public class Event implements Recordable, Serializable {
+public class Event implements Serializable {
     
     @Id
     private Long id; 
@@ -26,12 +26,8 @@ public class Event implements Recordable, Serializable {
     private Integer priority;
     private LocalDateTime createdAt;
      
-    @Transient
-    private Record record;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deleted_record_id")
+    private Record deletedRecord;
     
-    @Override
-    public String getRecordableId() { return eventableId; }
-    
-    @Override
-    public String getRecordableType() { return eventableType; }
 }

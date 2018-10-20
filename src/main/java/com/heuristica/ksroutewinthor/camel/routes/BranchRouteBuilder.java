@@ -25,7 +25,7 @@ class BranchRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-branch");   
         
         from("direct:Event-Delete-Filial").routeId("Event-Delete-Filial")
-                .transform(simple("body.record"))
+                .transform(simple("body.deletedRecord"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-branch");
         

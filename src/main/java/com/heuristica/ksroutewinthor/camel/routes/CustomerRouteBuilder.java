@@ -28,7 +28,7 @@ class CustomerRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-customer");
         
         from("direct:Event-Delete-Cliente").routeId("Event-Delete-Cliente")
-                .transform(simple("body.record"))
+                .transform(simple("body.deletedRecord"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-customer");
         

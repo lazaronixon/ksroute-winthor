@@ -25,7 +25,7 @@ class RegionRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-region");
         
         from("direct:Event-Delete-Regiao").routeId("Event-Delete-Regiao")
-                .transform(simple("body.record"))
+                .transform(simple("body.deletedRecord"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-region");
         

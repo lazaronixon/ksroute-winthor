@@ -29,7 +29,7 @@ class OrderRouteBuilder extends RouteBuilder {
                 .otherwise().to("direct:put-order");
         
         from("direct:Event-Delete-Pedido").routeId("Event-Delete-Pedido")
-                .transform(simple("body.record"))
+                .transform(simple("body.deletedRecord"))
                 .filter(isNotNull(body()))
                 .to("direct:delete-order");
         
