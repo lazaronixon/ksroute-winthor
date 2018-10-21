@@ -1,6 +1,5 @@
 package com.heuristica.ksroutewinthor.services;
 
-import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Record;
 import com.heuristica.ksroutewinthor.repositories.RecordRepository;
 import java.util.Optional;

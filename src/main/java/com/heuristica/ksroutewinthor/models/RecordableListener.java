@@ -9,7 +9,8 @@ public class RecordableListener {
     @PostLoad
     public void fetchRecord(Recordable recordable) {
         RecordService recordService = ApplicationContextHolder.getBean(RecordService.class);
-        recordable.setRecord(recordService.findByRecordable(recordable).orElse(null));
-    }       
+        Record record = recordService.findByRecordable(recordable).orElse(null);
+        recordable.setRecord(record);
+    }   
     
 }

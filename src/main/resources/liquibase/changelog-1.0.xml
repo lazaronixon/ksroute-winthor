@@ -12,7 +12,7 @@
             <column name="eventable_id" type="varchar(255)" />
             <column name="eventable_type" type="varchar(255)" />
             <column name="persist_action" type="varchar(255)" />
-            <column name="deleted_recrod_id" type="bigint" />
+            <column name="deleted_record_id" type="bigint" />
             <column name="priority" type="integer" />
             <column name="created_at" type="datetime" />                        
         </createTable>
