@@ -6,9 +6,11 @@ import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.services.ClienteService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
@@ -48,22 +50,30 @@ class CustomerRouteBuilder extends RouteBuilder {
 
         from("direct:put-customer").routeId("put-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))                
-                .setHeader("remoteId", simple("body.record.remoteId"))
-                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
-                .bean(ClienteService.class, "saveResponse");  
+                 .doTry()
+                    .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))                
+                    .setHeader("remoteId", simple("body.record.remoteId"))
+                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                    .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
+                    .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
+                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
+                    .bean(ClienteService.class, "saveResponse")
+                .doCatch(HttpOperationFailedException.class)
+                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
+                .end();
         
         from("direct:delete-customer").routeId("delete-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
-                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
-                .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");      
+                .doTry()
+                    .setHeader("recordId", simple("body.id"))
+                    .setHeader("remoteId", simple("body.remoteId"))
+                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                    .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
+                    .setBody(constant(null)).to("direct:ksroute-api")
+                    .bean(RecordService.class, "deleteByRecordId")
+                .doCatch(HttpOperationFailedException.class)
+                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
+                .end();
     }
 
     public class CustomerEnricher {

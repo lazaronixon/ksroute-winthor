@@ -1,8 +1,6 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,11 +10,7 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
     protected static final Integer TIME_PERIOD_MILLIS = 10000;
 
     @Override
-    public void configure() {        
-        onException(HttpOperationFailedException.class).handled(true)
-            .setBody(constant(null))
-            .log(LoggingLevel.WARN, "Erro no servidor: ${exception.message}, detalhe: ${body}");
-
+    public void configure() {
         from("direct:ksroute-api").routeId("ksroute-api")
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS)

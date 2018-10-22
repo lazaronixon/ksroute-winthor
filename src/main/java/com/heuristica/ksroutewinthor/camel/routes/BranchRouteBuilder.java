@@ -4,9 +4,11 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -44,20 +46,28 @@ class BranchRouteBuilder extends RouteBuilder {
 
         from("direct:put-branch").routeId("put-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("remoteId", simple("body.record.remoteId"))
-                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                .bean(FilialService.class, "saveResponse");
+                .doTry()
+                    .setHeader("remoteId", simple("body.record.remoteId"))
+                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                    .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                    .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
+                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                    .bean(FilialService.class, "saveResponse")
+                .doCatch(HttpOperationFailedException.class)
+                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
+                .end();
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
-                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                .setBody(constant(null)).to("direct:ksroute-api")
-                .bean(RecordService.class, "deleteByRecordId");    
+                .doTry()
+                    .setHeader("recordId", simple("body.id"))
+                    .setHeader("remoteId", simple("body.remoteId"))
+                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                    .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                    .setBody(constant(null)).to("direct:ksroute-api")
+                    .bean(RecordService.class, "deleteByRecordId")
+                .doCatch(HttpOperationFailedException.class)
+                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
+                .end();
     }
 }
