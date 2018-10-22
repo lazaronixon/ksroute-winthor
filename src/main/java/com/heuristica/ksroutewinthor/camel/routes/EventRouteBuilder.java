@@ -10,9 +10,11 @@ public class EventRouteBuilder extends RouteBuilder  {
 
     @Override
     public void configure() throws Exception {
-        from("jpa:" + Event.class.getName() + "?delay=15s&maximumResults=50&namedQuery=newEvents").routeId("process-events")
-                .log("Processando ${body}")
-                .toD("direct:Event-${body.persistAction}-${body.eventableType}");
+        from("jpa:" + Event.class.getName() + "?delay=15s&maximumResults=50&namedQuery=newEvents").routeId("process-events").to("seda:process-events-seda");
+        
+        from("seda:process-events-seda?concurrentConsumers=5").routeId("process-events-seda")
+            .log("Processando ${body}")
+            .toD("direct:Event-${body.persistAction}-${body.eventableType}");
     }
     
 }
