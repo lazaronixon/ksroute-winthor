@@ -19,7 +19,7 @@ public class RecordService {
 
     public Optional<Record> findByRecordable(Recordable recordable) {
         return records.findOptionalByRecordableIdAndRecordableType(recordable.getRecordableId(), recordable.getRecordableType());
-    }
+    }   
     
     public void saveResponse(RecordableApi recordable, Map<String, String> headers) {
         Optional<Record> optionalRecord = findByRecordableApi(recordable);

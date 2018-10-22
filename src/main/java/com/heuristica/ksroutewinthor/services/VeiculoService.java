@@ -4,6 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Vehicle;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Veiculo;
 import com.heuristica.ksroutewinthor.repositories.VeiculoRepository;
+import java.util.List;
 import java.util.Map;
 import org.apache.camel.Body;
 import org.apache.camel.Headers;
@@ -20,6 +21,7 @@ public class VeiculoService {
     
     @Autowired private VeiculoRepository veiculos;
     @Autowired private RecordService recordService;
+    @Autowired private EventService eventService;    
 
     public Veiculo findByEvent(Event event) {           
         return veiculos.findById(Long.parseLong(event.getEventableId())).orElse(null);
@@ -29,6 +31,11 @@ public class VeiculoService {
         recordService.saveResponse(vehicle, headers);        
         return veiculos.findById(Long.parseLong(vehicle.getErpId())).orElse(null);
     }    
+    
+    public void loadEvents() {
+        List<Veiculo> result = veiculos.findAllActive();
+        result.forEach(v -> eventService.insertRecordable(v));        
+    }
     
     public void setFromEnviromentValues(Veiculo veiculo) {
         String vehicleTypeId;
