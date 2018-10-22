@@ -3,7 +3,6 @@
 import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.models.Cliente;
 import org.dozer.loader.api.BeanMappingBuilder;
-import org.dozer.loader.api.TypeMappingOptions;
 
 public class CustomerMapping extends BeanMappingBuilder {
 
