@@ -56,9 +56,7 @@ class OrderRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
                     .bean(PedidoService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-order").routeId("delete-order")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -69,9 +67,7 @@ class OrderRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 
     public class OrderEnricher {

@@ -48,9 +48,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Vehicle.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Vehicle.class)
                     .bean(VeiculoService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-vehicle").routeId("delete-vehicle")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -61,9 +59,7 @@ public class VehicleRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(VEHICLE_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
     
 }

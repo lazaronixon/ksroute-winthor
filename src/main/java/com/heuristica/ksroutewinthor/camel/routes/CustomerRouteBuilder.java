@@ -58,9 +58,7 @@ class CustomerRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Customer.class)
                     .bean(ClienteService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-customer").routeId("delete-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -71,9 +69,7 @@ class CustomerRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 
     public class CustomerEnricher {

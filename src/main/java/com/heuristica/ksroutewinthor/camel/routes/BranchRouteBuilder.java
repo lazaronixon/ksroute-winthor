@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
@@ -53,9 +52,7 @@ class BranchRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
                     .bean(FilialService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -66,8 +63,6 @@ class BranchRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 }

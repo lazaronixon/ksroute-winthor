@@ -53,9 +53,7 @@ class LineRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Line.class)
                     .bean(RotaService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-line").routeId("delete-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -66,9 +64,7 @@ class LineRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 
 }

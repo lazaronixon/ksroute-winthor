@@ -61,9 +61,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
                     .bean(PracaService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-subregion").routeId("delete-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -74,9 +72,7 @@ class SubregionRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 
     public class LineEnricher {

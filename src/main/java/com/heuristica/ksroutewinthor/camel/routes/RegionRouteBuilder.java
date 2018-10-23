@@ -53,9 +53,7 @@ class RegionRouteBuilder extends RouteBuilder {
                     .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
                     .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
                     .bean(RegiaoService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao alterar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
         
         from("direct:delete-region").routeId("delete-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
@@ -66,8 +64,6 @@ class RegionRouteBuilder extends RouteBuilder {
                     .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                     .setBody(constant(null)).to("direct:ksroute-api")
                     .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class)
-                    .log(LoggingLevel.WARN, "Erro ao apagar: ${body}")
-                .end();
+                .doCatch(HttpOperationFailedException.class).end();
     }
 }

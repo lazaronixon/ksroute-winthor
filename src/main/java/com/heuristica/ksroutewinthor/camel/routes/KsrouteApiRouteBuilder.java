@@ -10,7 +10,9 @@ class KsrouteApiRouteBuilder extends RouteBuilder {
     protected static final Integer TIME_PERIOD_MILLIS = 10000;
 
     @Override
-    public void configure() {
+    public void configure() {      
+        errorHandler(defaultErrorHandler().logStackTrace(false).logExhaustedMessageHistory(false));
+        
         from("direct:ksroute-api").routeId("ksroute-api")
                 .setHeader("X-User-Token", constant("{{ksroute.api.token}}"))
                 .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS)
