@@ -37,7 +37,7 @@ public class CarregamentoService {
     @Autowired private PedidoService pedidoService;
     @Autowired private CarregamentoRepository carregamentos;     
                 
-    public void saveRoute(Route route) {
+    public Route saveRoute(Route route) {
         Carregamento carregamento = new Carregamento();
         carregamento.setNumcar(consumService.getNextSequence("proxnumcar"));
         carregamento.setCodfuncmon(Long.parseLong(env.getProperty("ksroute.codfuncmon")));
@@ -88,6 +88,7 @@ public class CarregamentoService {
             carregamento.setQtitens(pedidoSum.getQtitens());
             carregamentos.save(carregamento);  
         }
+        return route;
     }
     
     private Rota findRodaPrinc(Carregamento carregamento) {
