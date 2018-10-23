@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Region;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import com.heuristica.ksroutewinthor.services.RegiaoService;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;

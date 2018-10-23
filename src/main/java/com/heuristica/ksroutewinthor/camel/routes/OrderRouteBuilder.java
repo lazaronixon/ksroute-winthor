@@ -7,7 +7,6 @@ import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.services.PedidoService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
