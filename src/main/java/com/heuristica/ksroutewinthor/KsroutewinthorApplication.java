@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.heuristica.ksroutewinthor.dozer.mappings.BranchMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.CustomerMapping;
@@ -55,21 +54,21 @@ public class KsroutewinthorApplication {
     @Bean
     public DozerTypeConverterLoader dozerConverterLoader(CamelContext camelContext, DozerBeanMapperConfiguration dozerConfig) {
         return new DozerTypeConverterLoader(camelContext, dozerConfig);
-    }        
-        
+    }
+
     @Bean(name = "PROPAGATION_REQUIRED")
     public SpringTransactionPolicy propagationRequired(PlatformTransactionManager transactionManager) {
         SpringTransactionPolicy policy = new SpringTransactionPolicy();
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return policy;
-}
-    
+    }
+
     @Bean(name = "PROPAGATION_REQUIRES_NEW")
     public SpringTransactionPolicy propagationRequiresNew(PlatformTransactionManager transactionManager) {
         SpringTransactionPolicy policy = new SpringTransactionPolicy();
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return policy;
-    } 
+    }
 }

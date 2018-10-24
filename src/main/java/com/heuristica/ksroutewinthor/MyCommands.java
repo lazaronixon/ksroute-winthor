@@ -27,6 +27,10 @@ public class MyCommands {
     @ShellMethod("Carregar pedidos.")
     public void loadOrders() {
         pedidoService.loadEvents();
-    }    
+    }
     
+    @ShellMethod("ActiveMQ URL.")
+    public String activemqMonitor() {
+        return "ActiveMQ URL --> http://localhost:8161";
+    }
 }
