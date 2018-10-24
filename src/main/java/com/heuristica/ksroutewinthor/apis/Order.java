@@ -1,7 +1,7 @@
 package com.heuristica.ksroutewinthor.apis;
 
 import com.heuristica.ksroutewinthor.models.Pedido;
-import java.util.Date;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -11,7 +11,7 @@ public class Order implements RecordableApi  {
     private Double weight;
     private Double volume;
     private String erpId;
-    private Date issuedAt;    
+    private LocalDate issuedAt;    
     
     private Long branchId;
     private Long customerId;

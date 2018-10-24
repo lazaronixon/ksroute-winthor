@@ -1,8 +1,8 @@
 package com.heuristica.ksroutewinthor.models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import lombok.Data;
 
@@ -38,8 +36,7 @@ public class Pedido implements Recordable, Serializable {
     private Integer numordemcarga;    
     private Long numseqentrega;
     
-    @Temporal(TemporalType.DATE)
-    private Date data;  
+    private LocalDate data;  
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codfilial", referencedColumnName = "codigo")
