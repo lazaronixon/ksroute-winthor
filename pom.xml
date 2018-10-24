@@ -32,19 +32,7 @@
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell-starter</artifactId>
             <version>2.0.1.RELEASE</version>
-        </dependency>
-        
-        <!-- ACTIVEMQ -->     
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-activemq</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.activemq</groupId>
-                    <artifactId>activemq-broker</artifactId>
-                </exclusion>
-            </exclusions>            
-        </dependency>                       
+        </dependency>                      
                              
         <!-- PERSISTENCE -->
         <dependency>
@@ -86,7 +74,7 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-http4-starter</artifactId>
             <version>${camel.version}</version>
-        </dependency>        
+        </dependency>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-camel</artifactId>
@@ -135,11 +123,11 @@
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
             <url>https://repo.spring.io/milestone</url>
-        </repository>
+        </repository>               
         <repository>
             <id>git-lazaronixon</id>
             <url>https://github.com/lazaronixon/ojdbc7/raw/master/</url>
-        </repository>        
+        </repository>                      
     </repositories>
 
     <pluginRepositories>
