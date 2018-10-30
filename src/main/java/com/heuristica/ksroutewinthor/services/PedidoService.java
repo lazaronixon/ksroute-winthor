@@ -18,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PedidoService {
 
     @Autowired private PedidoRepository pedidos;
-    @Autowired private RecordService recordService;
-    @Autowired private EventService eventService; 
+    @Autowired private RecordService recordService; 
     
     public Pedido findByEvent(Event event) {       
         return pedidos.findById(Long.parseLong(event.getEventableId())).orElse(null);
@@ -27,12 +26,7 @@ public class PedidoService {
     
     public Optional<Pedido> findById(Long id) {
         return pedidos.findById(id);
-    }
-    
-    public void loadEvents() {
-        List<Pedido> result = pedidos.findAllDisponible();
-        result.forEach(p -> eventService.insertRecordable(p));        
-    }   
+    } 
     
     public Pedido saveResponse(@Body Order order, @Headers Map headers) {
         recordService.saveResponse(order, headers);        
