@@ -13,14 +13,10 @@ import com.heuristica.ksroutewinthor.dozer.mappings.RegionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.SubregionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.VehicleMapping;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.RedeliveryPolicy;
 import org.apache.camel.CamelContext;
 import org.apache.camel.converter.dozer.DozerBeanMapperConfiguration;
 import org.apache.camel.converter.dozer.DozerTypeConverterLoader;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +26,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @SpringBootApplication
 @EnableJpaAuditing
 public class KsroutewinthorApplication {
-    
-    @Value("${spring.activemq.broker-url}")
-    public String ACTIVEMQ_URL;
 
     public static void main(String[] args) {
         SpringApplication.run(KsroutewinthorApplication.class, args);
@@ -77,21 +70,5 @@ public class KsroutewinthorApplication {
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return policy;
-    }
-    
-    @Bean
-    public ActiveMQConnectionFactory activeMQConnectionFactory() {        
-        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(ACTIVEMQ_URL);
-        activeMQConnectionFactory.setRedeliveryPolicy(defaultRedeliveryPolicy());
-        return activeMQConnectionFactory;
-    }
-    
-    private RedeliveryPolicy defaultRedeliveryPolicy() {
-        RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
-        redeliveryPolicy.setUseExponentialBackOff(true);
-        redeliveryPolicy.setBackOffMultiplier(1.6);
-        redeliveryPolicy.setMaximumRedeliveries(25);
-        redeliveryPolicy.setRedeliveryDelay(TimeUnit.SECONDS.toMillis(25));
-        return redeliveryPolicy;
     }
 }
