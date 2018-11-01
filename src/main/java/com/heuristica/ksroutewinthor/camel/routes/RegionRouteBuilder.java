@@ -7,18 +7,19 @@ import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 @Component
-class RegionRouteBuilder extends RouteBuilder {
+class RegionRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String REGIONS_URL = "https://{{ksroute.api.url}}/regions.json";
     private static final String REGION_URL = "https://{{ksroute.api.url}}/regions/${header.remoteId}.json";
 
     @Override
-    public void configure() {
+    public void configure() throws Exception {
+        super.configure();
+        
         from("direct:Event-Save-Regiao").routeId("Event-Save-Regiao")
                 .bean(RegiaoService.class, "findByEvent")
                 .filter(isNotNull(body()))
@@ -45,24 +46,20 @@ class RegionRouteBuilder extends RouteBuilder {
 
         from("direct:put-region").routeId("put-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("remoteId", simple("body.record.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                    .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
-                    .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
-                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
-                    .bean(RegiaoService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
+                .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Region.class)
+                .bean(RegiaoService.class, "saveResponse");
         
         from("direct:delete-region").routeId("delete-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("recordId", simple("body.id"))
-                    .setHeader("remoteId", simple("body.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                    .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
-                    .setBody(constant(null)).to("direct:ksroute-api")
-                    .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");
     }
 }

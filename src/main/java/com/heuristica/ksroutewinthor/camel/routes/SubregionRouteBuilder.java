@@ -10,19 +10,20 @@ import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
-class SubregionRouteBuilder extends RouteBuilder {
+class SubregionRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String SUBREGIONS_URL = "https://{{ksroute.api.url}}/subregions.json";
     private static final String SUBREGION_URL = "https://{{ksroute.api.url}}/subregions/${header.remoteId}.json"; 
 
     @Override
-    public void configure() {
+    public void configure() throws Exception {
+        super.configure();
+        
         from("direct:Event-Save-Praca").routeId("Event-Save-Praca")
                 .bean(PracaService.class, "findByEvent")
                 .filter(isNotNull(body()))
@@ -51,27 +52,23 @@ class SubregionRouteBuilder extends RouteBuilder {
 
         from("direct:put-subregion").routeId("put-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
-                    .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))                
-                    .setHeader("remoteId", simple("body.record.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                    .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                    .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
-                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
-                    .bean(PracaService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class).end();
+                .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
+                .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))
+                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
+                .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Subregion.class)
+                .bean(PracaService.class, "saveResponse");
         
         from("direct:delete-subregion").routeId("delete-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("recordId", simple("body.id"))
-                    .setHeader("remoteId", simple("body.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                    .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
-                    .setBody(constant(null)).to("direct:ksroute-api")
-                    .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");
     }
 
     public class LineEnricher {

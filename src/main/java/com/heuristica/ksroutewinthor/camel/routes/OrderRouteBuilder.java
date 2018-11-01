@@ -10,19 +10,20 @@ import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
 
 @Component
-class OrderRouteBuilder extends RouteBuilder {
+class OrderRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String ORDERS_URL = "https://{{ksroute.api.url}}/orders.json";
     private static final String ORDER_URL = "https://{{ksroute.api.url}}/orders/${header.remoteId}.json";
 
     @Override
-    public void configure() {        
+    public void configure() throws Exception {     
+        super.configure();
+        
         from("direct:Event-Save-Pedido").routeId("Event-Save-Pedido")
                 .bean(PedidoService.class, "findByEvent")
                 .filter(isNotNull(body()))
@@ -46,27 +47,23 @@ class OrderRouteBuilder extends RouteBuilder {
 
         from("direct:put-order").routeId("put-order")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
-                    .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))                 
-                    .setHeader("remoteId", simple("body.record.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                    .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
-                    .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
-                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
-                    .bean(PedidoService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class).end();
+                .enrich("direct:enrich-branch", AggregationStrategies.bean(OrderEnricher.class, "setFilial"))
+                .enrich("direct:enrich-customer", AggregationStrategies.bean(OrderEnricher.class, "setCliente"))
+                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
+                .convertBodyTo(Order.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Order.class)
+                .bean(PedidoService.class, "saveResponse");
         
         from("direct:delete-order").routeId("delete-order")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("recordId", simple("body.id"))
-                    .setHeader("remoteId", simple("body.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                    .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
-                    .setBody(constant(null)).to("direct:ksroute-api")
-                    .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(ORDER_URL))
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");
     }
 
     public class OrderEnricher {

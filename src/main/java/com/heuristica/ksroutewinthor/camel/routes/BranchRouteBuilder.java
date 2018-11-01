@@ -6,19 +6,19 @@ import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
 import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
 @Component
-class BranchRouteBuilder extends RouteBuilder {
+class BranchRouteBuilder extends ApplicationRouteBuilder {
 
     private static final String BRANCHES_URL = "https://{{ksroute.api.url}}/branches.json";
     private static final String BRANCH_URL = "https://{{ksroute.api.url}}/branches/${header.remoteId}.json";
 
     @Override
-    public void configure() {
+    public void configure() throws Exception {
+        super.configure();
+        
         from("direct:Event-Save-Filial").routeId("Event-Save-Filial")
                 .bean(FilialService.class, "findByEvent")
                 .filter(isNotNull(body()))
@@ -45,24 +45,20 @@ class BranchRouteBuilder extends RouteBuilder {
 
         from("direct:put-branch").routeId("put-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("remoteId", simple("body.record.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                    .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                    .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
-                    .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
-                    .bean(FilialService.class, "saveResponse")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
+                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                .convertBodyTo(Branch.class).marshal().json(JsonLibrary.Jackson)
+                .to("direct:ksroute-api").unmarshal().json(JsonLibrary.Jackson, Branch.class)
+                .bean(FilialService.class, "saveResponse");
         
         from("direct:delete-branch").routeId("delete-branch")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .doTry()
-                    .setHeader("recordId", simple("body.id"))
-                    .setHeader("remoteId", simple("body.remoteId"))
-                    .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                    .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
-                    .setBody(constant(null)).to("direct:ksroute-api")
-                    .bean(RecordService.class, "deleteByRecordId")
-                .doCatch(HttpOperationFailedException.class).end();
+                .setHeader("recordId", simple("body.id"))
+                .setHeader("remoteId", simple("body.remoteId"))
+                .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
+                .setHeader(Exchange.HTTP_URI, simple(BRANCH_URL))
+                .setBody(constant(null)).to("direct:ksroute-api")
+                .bean(RecordService.class, "deleteByRecordId");
     }
 }

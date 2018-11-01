@@ -25,7 +25,7 @@
         <camel.version>2.22.1</camel.version>
     </properties>       
 
-    <dependencies>    
+    <dependencies>           
         <!-- ACTIVEMQ -->     
         <dependency>
             <groupId>org.springframework.boot</groupId>
