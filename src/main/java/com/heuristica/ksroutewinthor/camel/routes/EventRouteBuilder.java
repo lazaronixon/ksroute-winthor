@@ -12,9 +12,9 @@ public class EventRouteBuilder extends ApplicationRouteBuilder  {
         super.configure();
         
         from("jpa:" + Event.class.getName() + "?delay=15s&namedQuery=newEvents").routeId("process-events")                
-                .marshal().json(JsonLibrary.Jackson).to("activemq:ksroute-events");
+                .marshal().json(JsonLibrary.Jackson).to("activemq:default");
 
-        from("activemq:ksroute-events?concurrentConsumers=5&acknowledgementModeName=CLIENT_ACKNOWLEDGE").routeId("process-event")
+        from("activemq:default?concurrentConsumers=5&acknowledgementModeName=CLIENT_ACKNOWLEDGE").routeId("process-event")
                 .transacted("PROPAGATION_REQUIRED")
                 .unmarshal().json(JsonLibrary.Jackson, Event.class)
                 .log("Processando ${body}")
