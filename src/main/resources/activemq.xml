@@ -73,7 +73,7 @@
                         <defaultEntry>
                             <!-- the fallback policy for all other destinations -->
                             <redeliveryPolicy maximumRedeliveries="25"
-                                              redeliveryDelay="45000"
+                                              redeliveryDelay="30000"
                                               backOffMultiplier="1.5"
                                               useExponentialBackOff="true"/>
                         </defaultEntry>
