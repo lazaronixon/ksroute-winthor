@@ -18,7 +18,7 @@ public class EventRouteBuilder extends ApplicationRouteBuilder  {
                 .transacted("PROPAGATION_REQUIRED")
                 .unmarshal().json(JsonLibrary.Jackson, Event.class)
                 .log("Processando ${body}")
-                .toD("direct:Event-${body.persistAction}-${body.eventableType}");
+                .toD("${body.route}");
     }
     
 }

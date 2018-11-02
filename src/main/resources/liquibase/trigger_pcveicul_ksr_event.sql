@@ -4,8 +4,8 @@ ON PCVEICUL
 FOR EACH ROW
 BEGIN 
     IF INSERTING OR UPDATING THEN
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codveicul, 'Veiculo', 'Save', null, 1, sysdate);      
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codveiculo, 'Veiculo', 'save', null, 1, sysdate);      
     ELSE
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codveicul, 'Veiculo', 'Delete', ksr_fetch_record(:old.codveicul, 'Veiculo'), 1, sysdate);
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codveiculo, 'Veiculo', 'delete', ksr_fetch_record(:old.codveiculo, 'Veiculo'), 1, sysdate);
     END IF;
 END;

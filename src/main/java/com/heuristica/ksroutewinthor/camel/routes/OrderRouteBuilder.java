@@ -7,9 +7,7 @@ import com.heuristica.ksroutewinthor.models.Cliente;
 import com.heuristica.ksroutewinthor.services.PedidoService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
@@ -24,15 +22,13 @@ class OrderRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {     
         super.configure();
         
-        from("direct:Event-Save-Pedido").routeId("Event-Save-Pedido")
+        from("direct:event-save-pedido").routeId("event-save-pedido")
                 .bean(PedidoService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-order")
                 .otherwise().to("direct:put-order");
         
-        from("direct:Event-Delete-Pedido").routeId("Event-Delete-Pedido")
+        from("direct:event-delete-pedido").routeId("event-delete-pedido")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-order");
         
         from("direct:post-order").routeId("post-order")

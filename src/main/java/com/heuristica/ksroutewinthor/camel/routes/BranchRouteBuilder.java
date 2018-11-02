@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Branch;
 import com.heuristica.ksroutewinthor.services.FilialService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -19,15 +18,13 @@ class BranchRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {
         super.configure();
         
-        from("direct:Event-Save-Filial").routeId("Event-Save-Filial")
+        from("direct:event-save-filial").routeId("event-save-filial")
                 .bean(FilialService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-branch")
                 .otherwise().to("direct:put-branch");   
         
-        from("direct:Event-Delete-Filial").routeId("Event-Delete-Filial")
+        from("direct:event-delete-filial").routeId("event-delete-filial")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-branch");
         
         from("direct:enrich-branch").routeId("enrich-branch")

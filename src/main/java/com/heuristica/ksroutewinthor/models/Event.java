@@ -38,5 +38,9 @@ public class Event implements Serializable {
     private Record deletedRecord;
     
     @CreatedDate
-    private LocalDateTime createdAt;        
+    private LocalDateTime createdAt;   
+    
+    public String getRoute() {
+        return ("direct:event-" + persistAction + "-" + eventableType).toLowerCase();
+    }
 }

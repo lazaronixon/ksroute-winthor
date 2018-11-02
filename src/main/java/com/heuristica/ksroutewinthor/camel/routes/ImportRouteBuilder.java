@@ -23,7 +23,7 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
                 .split(body()).to("direct:import-route");
         
         from("direct:import-route").routeId("import-route")
-                .transacted("PROPAGATION_REQUIRES_NEW")
+                .transacted("PROPAGATION_REQUIRED")
                 .log("Importando rota ${body.id}")
                 .bean(CarregamentoService.class, "saveRoute")
                 .setHeader("id", simple("body.id"))

@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Vehicle;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import com.heuristica.ksroutewinthor.services.VeiculoService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -19,15 +18,13 @@ public class VehicleRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {  
         super.configure();
         
-        from("direct:Event-Save-Veiculo").routeId("Event-Save-Veiculo")
+        from("direct:event-save-veiculo").routeId("event-save-veiculo")
                 .bean(VeiculoService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-vehicle")
                 .otherwise().to("direct:put-vehicle");
         
-        from("direct:Event-Delete-Veiculo").routeId("Event-Delete-Veiculo")
+        from("direct:event-delete-veiculo").routeId("event-delete-veiculo")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-vehicle");
         
         from("direct:post-vehicle").routeId("post-vehicle")

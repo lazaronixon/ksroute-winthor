@@ -4,8 +4,8 @@ ON PCCLIENT
 FOR EACH ROW
 BEGIN 
     IF INSERTING OR UPDATING THEN
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codcli, 'Cliente', 'Save', null, 1, sysdate);      
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codcli, 'Cliente', 'save', null, 1, sysdate);      
     ELSE
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codcli, 'Cliente', 'Delete', ksr_fetch_record(:old.codcli, 'Cliente'), 1, sysdate);
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codcli, 'Cliente', 'delete', ksr_fetch_record(:old.codcli, 'Cliente'), 1, sysdate);
     END IF;
 END;

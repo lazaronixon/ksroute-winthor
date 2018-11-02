@@ -7,9 +7,7 @@ import com.heuristica.ksroutewinthor.models.Rota;
 import com.heuristica.ksroutewinthor.services.PracaService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
 import org.springframework.stereotype.Component;
@@ -24,15 +22,13 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {
         super.configure();
         
-        from("direct:Event-Save-Praca").routeId("Event-Save-Praca")
+        from("direct:event-save-praca").routeId("event-save-praca")
                 .bean(PracaService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-subregion")
                 .otherwise().to("direct:put-subregion");
         
-        from("direct:Event-Delete-Praca").routeId("Event-Delete-Praca")
+        from("direct:event-delete-praca").routeId("event-delete-praca")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-subregion");
         
         from("direct:enrich-subregion").routeId("enrich-subregion")

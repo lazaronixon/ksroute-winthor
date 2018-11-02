@@ -4,9 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Region;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import com.heuristica.ksroutewinthor.services.RegiaoService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +18,13 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {
         super.configure();
         
-        from("direct:Event-Save-Regiao").routeId("Event-Save-Regiao")
+        from("direct:event-save-regiao").routeId("event-save-regiao")
                 .bean(RegiaoService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-region")
                 .otherwise().to("direct:put-region");
         
-        from("direct:Event-Delete-Regiao").routeId("Event-Delete-Regiao")
+        from("direct:event-delete-regiao").routeId("event-delete-regiao")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-region");
         
         from("direct:enrich-region").routeId("enrich-region")

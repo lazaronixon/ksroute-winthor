@@ -4,8 +4,8 @@ ON PCROTAEXP
 FOR EACH ROW
 BEGIN 
     IF INSERTING OR UPDATING THEN
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codrota, 'Rota', 'Save', null, 1, sysdate);      
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :new.codrota, 'Rota', 'save', null, 1, sysdate);      
     ELSE
-        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codrota, 'Rota', 'Delete', ksr_fetch_record(:old.codrota, 'Rota'), 1, sysdate);
+        INSERT INTO ksr_event VALUES (ksr_event_seq.nextval, :old.codrota, 'Rota', 'delete', ksr_fetch_record(:old.codrota, 'Rota'), 1, sysdate);
     END IF;
 END;

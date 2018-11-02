@@ -4,9 +4,7 @@ import com.heuristica.ksroutewinthor.apis.Line;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import com.heuristica.ksroutewinthor.services.RotaService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +18,13 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {
         super.configure();
         
-        from("direct:Event-Save-Rota").routeId("Event-Save-Rota")
+        from("direct:event-save-rota").routeId("event-save-rota")
                 .bean(RotaService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-line")
                 .otherwise().to("direct:put-line");
         
-        from("direct:Event-Delete-Rota").routeId("Event-Delete-Rota")
+        from("direct:event-delete-rota").routeId("event-delete-rota")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-line");
         
         from("direct:enrich-line").routeId("enrich-line")

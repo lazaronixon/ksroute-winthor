@@ -6,7 +6,6 @@ import com.heuristica.ksroutewinthor.models.Praca;
 import com.heuristica.ksroutewinthor.services.ClienteService;
 import com.heuristica.ksroutewinthor.services.RecordService;
 import org.apache.camel.Exchange;
-import static org.apache.camel.builder.PredicateBuilder.isNotNull;
 import static org.apache.camel.builder.PredicateBuilder.isNull;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.util.toolbox.AggregationStrategies;
@@ -22,15 +21,13 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
     public void configure() throws Exception {   
         super.configure();
         
-        from("direct:Event-Save-Cliente").routeId("Event-Save-Cliente")
+        from("direct:event-save-cliente").routeId("event-save-cliente")
                 .bean(ClienteService.class, "findByEvent")
-                .filter(isNotNull(body()))
                 .choice().when(isNull(simple("body.record"))).to("direct:post-customer")
                 .otherwise().to("direct:put-customer");
         
-        from("direct:Event-Delete-Cliente").routeId("Event-Delete-Cliente")
+        from("direct:event-delete-cliente").routeId("event-delete-cliente")
                 .transform(simple("body.deletedRecord"))
-                .filter(isNotNull(body()))
                 .to("direct:delete-customer");
         
         from("direct:enrich-customer").routeId("enrich-customer")
