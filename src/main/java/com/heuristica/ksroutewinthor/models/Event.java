@@ -41,6 +41,6 @@ public class Event implements Serializable {
     private LocalDateTime createdAt;   
     
     public String getRoute() {
-        return ("direct:event-" + persistAction + "-" + eventableType).toLowerCase();
+        return ("event-" + persistAction + "-" + eventableType).toLowerCase();
     }
 }
