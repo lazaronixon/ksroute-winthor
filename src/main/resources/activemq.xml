@@ -57,6 +57,7 @@
                     </policyEntry>                    
                     <policyEntry queue="default" >
                         <deadLetterStrategy>
+                            <!-- one month -->
                             <sharedDeadLetterStrategy expiration="15780000"/>
                         </deadLetterStrategy>                         
                     </policyEntry>                                                                   
@@ -71,9 +72,9 @@
                     <redeliveryPolicyMap>                         
                         <defaultEntry>
                             <!-- the fallback policy for all other destinations -->
-                            <redeliveryPolicy maximumRedeliveries="1"
-                                              redeliveryDelay="25000"
-                                              backOffMultiplier="1.6"
+                            <redeliveryPolicy maximumRedeliveries="25"
+                                              redeliveryDelay="45000"
+                                              backOffMultiplier="1.5"
                                               useExponentialBackOff="true"/>
                         </defaultEntry>
                     </redeliveryPolicyMap>
