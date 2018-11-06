@@ -57,7 +57,7 @@
                     </policyEntry>                    
                     <policyEntry queue="default" >
                         <deadLetterStrategy>
-                            <sharedDeadLetterStrategy expiration="1296000000"/>
+                            <sharedDeadLetterStrategy expiration="2160000000"/>
                         </deadLetterStrategy>                         
                     </policyEntry>                                                                  
                 </policyEntries>
