@@ -53,13 +53,13 @@
                         -->
                         <pendingMessageLimitStrategy>
                             <constantPendingMessageLimitStrategy limit="1000"/>
-                        </pendingMessageLimitStrategy>
-                        <policyEntry queue="default" >
-                            <deadLetterStrategy>
-                                <sharedDeadLetterStrategy expiration="1296000000"/>
-                            </deadLetterStrategy>                         
-                        </policyEntry>                                                              
-                    </policyEntry>                                                                
+                        </pendingMessageLimitStrategy>                                                            
+                    </policyEntry>                    
+                    <policyEntry queue="default" >
+                        <deadLetterStrategy>
+                            <sharedDeadLetterStrategy expiration="1296000000"/>
+                        </deadLetterStrategy>                         
+                    </policyEntry>                                                                  
                 </policyEntries>
             </policyMap>
         </destinationPolicy>
