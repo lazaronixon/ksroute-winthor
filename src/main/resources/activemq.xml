@@ -54,11 +54,6 @@
                         <pendingMessageLimitStrategy>
                             <constantPendingMessageLimitStrategy limit="1000"/>
                         </pendingMessageLimitStrategy>                                      
-                    </policyEntry>                    
-                    <policyEntry queue="default" >
-                        <deadLetterStrategy>
-                            <sharedDeadLetterStrategy expiration="15780000"/>
-                        </deadLetterStrategy>                         
                     </policyEntry>                                                                   
                 </policyEntries>
             </policyMap>
@@ -69,11 +64,7 @@
                 <redeliveryPolicyMap>
                     <redeliveryPolicyMap>                         
                         <defaultEntry>
-                            <!-- the fallback policy for all other destinations -->
-                            <redeliveryPolicy maximumRedeliveries="25"
-                                              redeliveryDelay="30000"
-                                              backOffMultiplier="1.5"
-                                              useExponentialBackOff="true"/>
+                            <redeliveryPolicy maximumRedeliveries="25" redeliveryDelay="30000" backOffMultiplier="1.5" useExponentialBackOff="true"/>
                         </defaultEntry>
                     </redeliveryPolicyMap>
                 </redeliveryPolicyMap>
