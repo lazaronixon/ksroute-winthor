@@ -1,7 +1,6 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
 import com.heuristica.ksroutewinthor.models.Event;
-import org.apache.camel.component.direct.DirectConsumerNotAvailableException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +10,6 @@ public class EventRouteBuilder extends ApplicationRouteBuilder  {
     @Override
     public void configure() throws Exception { 
         super.configure();
-        
-        onException(DirectConsumerNotAvailableException.class).continued(true);
         
         from("jpa:" + Event.class.getName() + "?delay=15s&namedQuery=newEvents").routeId("process-events")                
                 .marshal().json(JsonLibrary.Jackson).to("activemq:default");
