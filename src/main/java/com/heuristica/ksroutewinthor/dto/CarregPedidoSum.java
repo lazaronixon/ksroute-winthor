@@ -1,4 +1,4 @@
-package com.roadnet.roadnetwinthor.model.dto;
+package com.heuristica.ksroutewinthor.dto;
 
 import lombok.Data;
 

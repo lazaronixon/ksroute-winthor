@@ -25,8 +25,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class KsroutewinthorApplication {
-
+public class KsroutewinthorApplication {    
+    
     public static void main(String[] args) {
         SpringApplication.run(KsroutewinthorApplication.class, args);
     }
@@ -70,5 +70,5 @@ public class KsroutewinthorApplication {
         policy.setTransactionManager(transactionManager);
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return policy;
-    }
+    }    
 }

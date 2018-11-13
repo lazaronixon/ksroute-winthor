@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor.models;
 
-import com.heuristica.ksroutewinthor.ApplicationContextHolder;
+import com.heuristica.ksroutewinthor.utils.ApplicationContextHolder;
 import com.heuristica.ksroutewinthor.services.VeiculoService;
 import java.io.Serializable;
 import javax.persistence.Entity;

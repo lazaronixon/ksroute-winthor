@@ -1,4 +1,4 @@
-package com.heuristica.ksroutewinthor;
+package com.heuristica.ksroutewinthor.utils;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

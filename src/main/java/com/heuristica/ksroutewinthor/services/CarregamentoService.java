@@ -7,7 +7,7 @@ import com.heuristica.ksroutewinthor.apis.Route;
 import com.heuristica.ksroutewinthor.models.Carregamento;
 import com.heuristica.ksroutewinthor.repositories.CarregamentoRepository;
 import com.heuristica.ksroutewinthor.models.Rota;
-import com.roadnet.roadnetwinthor.model.dto.CarregPedidoSum;
+import com.heuristica.ksroutewinthor.dto.CarregPedidoSum;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import static java.util.Comparator.comparing;
@@ -105,7 +105,7 @@ public class CarregamentoService {
     
     private CarregPedidoSum sumByCarreg(Carregamento carregamento) {
         TypedQuery<CarregPedidoSum> query = entityManager.createQuery(
-                "SELECT NEW com.roadnet.roadnetwinthor.model.dto.CarregPedidoSum( "
+                "SELECT NEW com.heuristica.ksroutewinthor.dto.CarregPedidoSum( "
                 + "SUM(o.vlatend), "
                 + "SUM(o.totpeso), "
                 + "SUM(o.totvolume), "                        
