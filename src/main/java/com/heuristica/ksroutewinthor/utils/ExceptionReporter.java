@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 public class ExceptionReporter { 
     
     @Value("${ksroute.sentry.dns}")
-    private String SENTRY_DNS;    
+    private String SENTRY_DNS;
+    
     private static final String JMS_MESSAGE_ID = "JMSMessageID";
     
     @EventListener(ApplicationReadyEvent.class)
@@ -21,11 +22,12 @@ public class ExceptionReporter {
 
     public void report(Exchange exchange) {
         Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
+        Sentry.clearContext();
+        
         Sentry.getContext().addExtra("messageId", exchange.getIn().getHeader(JMS_MESSAGE_ID, String.class));
         Sentry.getContext().addExtra("endpoint", exchange.getProperty(Exchange.FAILURE_ENDPOINT, String.class));
         Sentry.getContext().addExtra("routeId", exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class));
         Sentry.getContext().addExtra("body", exchange.getIn().getBody(String.class));
-        Sentry.capture(cause);
-        Sentry.clearContext();
+        Sentry.capture(cause);        
     }
 }
