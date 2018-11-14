@@ -1,5 +1,7 @@
 package com.heuristica.ksroutewinthor.camel.routes;
 
+import com.heuristica.ksroutewinthor.utils.HttpApplicationException;
+import com.heuristica.ksroutewinthor.utils.HttpNotFoundException;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +21,12 @@ class KsrouteApiRouteBuilder extends ApplicationRouteBuilder {
                     .throttle(MAXIMUM_REQUEST_COUNT).timePeriodMillis(TIME_PERIOD_MILLIS)
                     .to("https4:ksroute-api-request")
                 .endDoTry().doCatch(HttpOperationFailedException.class)
-                    .choice().when(simple("${exception.statusCode} == 404")).to("bean:exceptionReporter")
-                    .otherwise().throwException(RuntimeException.class, "HTTP Server Error").endChoice()
+                    .choice()
+                        .when(simple("${exception.statusCode} == 404"))
+                            .throwException(HttpNotFoundException.class, simple("${exception.message}").getText())
+                        .otherwise()
+                            .throwException(HttpApplicationException.class, simple("${exception.message}").getText())
+                    .endChoice()
                 .end();
     }      
 }
