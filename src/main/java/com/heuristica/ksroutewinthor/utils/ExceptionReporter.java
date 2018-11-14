@@ -23,5 +23,6 @@ public class ExceptionReporter {
         Sentry.getContext().addExtra("routeId", exchange.getProperty(Exchange.FAILURE_ROUTE_ID, String.class));
         Sentry.getContext().addExtra("body", exchange.getIn().getBody(String.class));
         Sentry.capture(cause);
+        Sentry.clearContext();
     }
 }
