@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 class LineRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String LINES_URL = "https://{{ksroute.api.url}}/lines.json";
-    private static final String LINE_URL = "https://{{ksroute.api.url}}/lines/${header.remoteId}.json"; 
+    private static final String LINE_URL = "https://{{ksroute.api.url}}/lines/${property.remoteId}.json"; 
 
     @Override
     public void configure() throws Exception {
@@ -42,7 +42,7 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:put-line").routeId("put-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setProperty("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .convertBodyTo(Line.class).marshal().json(JsonLibrary.Jackson)
@@ -51,8 +51,8 @@ class LineRouteBuilder extends ApplicationRouteBuilder {
         
         from("direct:delete-line").routeId("delete-line")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
+                .setProperty("recordId", simple("body.id"))
+                .setProperty("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(LINE_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")

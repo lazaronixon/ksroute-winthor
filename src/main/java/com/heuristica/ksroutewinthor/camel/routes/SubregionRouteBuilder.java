@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 class SubregionRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String SUBREGIONS_URL = "https://{{ksroute.api.url}}/subregions.json";
-    private static final String SUBREGION_URL = "https://{{ksroute.api.url}}/subregions/${header.remoteId}.json"; 
+    private static final String SUBREGION_URL = "https://{{ksroute.api.url}}/subregions/${property.remoteId}.json"; 
 
     @Override
     public void configure() throws Exception {
@@ -50,7 +50,7 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .enrich("direct:enrich-region", AggregationStrategies.bean(LineEnricher.class, "setRegiao"))
                 .enrich("direct:enrich-line", AggregationStrategies.bean(LineEnricher.class, "setRota"))
-                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setProperty("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .convertBodyTo(Subregion.class).marshal().json(JsonLibrary.Jackson)
@@ -59,8 +59,8 @@ class SubregionRouteBuilder extends ApplicationRouteBuilder {
         
         from("direct:delete-subregion").routeId("delete-subregion")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
+                .setProperty("recordId", simple("body.id"))
+                .setProperty("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(SUBREGION_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")

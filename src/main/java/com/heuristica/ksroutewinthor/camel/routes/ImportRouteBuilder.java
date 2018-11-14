@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class ImportRouteBuilder extends ApplicationRouteBuilder {
 
     private static final String GET_URL = "https://{{ksroute.api.url}}/plannings/routes.json?q[mounted_at_null]=0&q[imported_at_null]=1";
-    private static final String POST_URL = "https://{{ksroute.api.url}}/plannings/${header.planningId}/solutions/${header.solutionId}/routes/${header.id}/import.json";
+    private static final String POST_URL = "https://{{ksroute.api.url}}/plannings/${property.planningId}/solutions/${property.solutionId}/routes/${property.id}/import.json";
 
     @Override
     public void configure() throws Exception {
@@ -26,9 +26,9 @@ public class ImportRouteBuilder extends ApplicationRouteBuilder {
                 .transacted("PROPAGATION_REQUIRED")
                 .log("Importando rota ${body.id}")
                 .bean(CarregamentoService.class, "saveRoute")
-                .setHeader("id", simple("body.id"))
-                .setHeader("solutionId", simple("body.solution.id"))
-                .setHeader("planningId", simple("body.solution.planning.id"))               
+                .setProperty("id", simple("body.id"))
+                .setProperty("solutionId", simple("body.solution.id"))
+                .setProperty("planningId", simple("body.solution.planning.id"))               
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.HTTP_URI, simple(POST_URL))               
                 .setBody(constant(null)).to("direct:ksroute-api");      

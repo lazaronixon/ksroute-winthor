@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 class RegionRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String REGIONS_URL = "https://{{ksroute.api.url}}/regions.json";
-    private static final String REGION_URL = "https://{{ksroute.api.url}}/regions/${header.remoteId}.json";
+    private static final String REGION_URL = "https://{{ksroute.api.url}}/regions/${property.remoteId}.json";
 
     @Override
     public void configure() throws Exception {
@@ -42,7 +42,7 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
 
         from("direct:put-region").routeId("put-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setProperty("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                 .convertBodyTo(Region.class).marshal().json(JsonLibrary.Jackson)
@@ -51,8 +51,8 @@ class RegionRouteBuilder extends ApplicationRouteBuilder {
         
         from("direct:delete-region").routeId("delete-region")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
+                .setProperty("recordId", simple("body.id"))
+                .setProperty("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(REGION_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")

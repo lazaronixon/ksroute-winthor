@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 class CustomerRouteBuilder extends ApplicationRouteBuilder {
     
     private static final String CUSTOMERS_URL = "https://{{ksroute.api.url}}/customers.json";
-    private static final String CUSTOMER_URL = "https://{{ksroute.api.url}}/customers/${header.remoteId}.json"; 
+    private static final String CUSTOMER_URL = "https://{{ksroute.api.url}}/customers/${property.remoteId}.json"; 
 
     @Override
     public void configure() throws Exception {   
@@ -47,7 +47,7 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         from("direct:put-customer").routeId("put-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
                 .enrich("direct:enrich-subregion", AggregationStrategies.bean(CustomerEnricher.class, "setPraca"))                
-                .setHeader("remoteId", simple("body.record.remoteId"))
+                .setProperty("remoteId", simple("body.record.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .convertBodyTo(Customer.class).marshal().json(JsonLibrary.Jackson)
@@ -56,8 +56,8 @@ class CustomerRouteBuilder extends ApplicationRouteBuilder {
         
         from("direct:delete-customer").routeId("delete-customer")
                 .transacted("PROPAGATION_REQUIRES_NEW")
-                .setHeader("recordId", simple("body.id"))
-                .setHeader("remoteId", simple("body.remoteId"))
+                .setProperty("recordId", simple("body.id"))
+                .setProperty("remoteId", simple("body.remoteId"))
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
                 .setHeader(Exchange.HTTP_URI, simple(CUSTOMER_URL))
                 .setBody(constant(null)).to("direct:ksroute-api")

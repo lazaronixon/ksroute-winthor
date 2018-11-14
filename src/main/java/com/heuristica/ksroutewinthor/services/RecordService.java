@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.heuristica.ksroutewinthor.apis.RecordableApi;
 import com.heuristica.ksroutewinthor.models.Recordable;
 import java.util.Map;
-import org.apache.camel.Header;
+import org.apache.camel.ExchangeProperty;
 
 @Service
 @Transactional
@@ -33,7 +33,7 @@ public class RecordService {
         records.save(record);
     }    
     
-    public void deleteByRecordId(@Header("recordId") Long id) {
+    public void deleteByRecordId(@ExchangeProperty("recordId") Long id) {
         records.deleteById(id);
     }    
     
