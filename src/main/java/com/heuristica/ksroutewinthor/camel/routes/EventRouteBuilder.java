@@ -15,7 +15,6 @@ public class EventRouteBuilder extends ApplicationRouteBuilder  {
                 .marshal().json(JsonLibrary.Jackson).to("activemq:default");
 
         from("activemq:default?concurrentConsumers=5&transacted=true").routeId("process-event")
-                .transacted("PROPAGATION_REQUIRED")
                 .unmarshal().json(JsonLibrary.Jackson, Event.class)                
                 .log("Processando ${body}").toD("direct:${body.route}");
     }
