@@ -71,9 +71,9 @@
                     <redeliveryPolicyMap>                         
                         <defaultEntry>
                             <!-- 3 days -->
-                            <redeliveryPolicy maximumRedeliveries="20"
-                                              initialRedeliveryDelay="30000"
-                                              backOffMultiplier="1.6" 
+                            <redeliveryPolicy maximumRedeliveries="15"
+                                              initialRedeliveryDelay="15000"
+                                              backOffMultiplier="2" 
                                               useExponentialBackOff="true"/>
                         </defaultEntry>
                     </redeliveryPolicyMap>
