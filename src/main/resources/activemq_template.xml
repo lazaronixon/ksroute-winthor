@@ -58,8 +58,8 @@
                     <policyEntry queue=">">
                         <deadLetterStrategy>
                             <!-- 15 days -->
-                            <sharedDeadLetterStrategy expiration="1296000000"/>
-                        </deadLetterStrategy>                         
+                            <sharedDeadLetterStrategy expiration="1296000000" />
+                        </deadLetterStrategy>                                                
                     </policyEntry>                                                                                     
                 </policyEntries>
             </policyMap>
@@ -70,10 +70,9 @@
                 <redeliveryPolicyMap>
                     <redeliveryPolicyMap>                         
                         <defaultEntry>
-                            <!-- 2 days -->
+                            <!-- 3 days -->
                             <redeliveryPolicy maximumRedeliveries="20"
-                                              initialRedeliveryDelay="30000" 
-                                              redeliveryDelay="30000" 
+                                              initialRedeliveryDelay="30000"
                                               backOffMultiplier="1.6" 
                                               useExponentialBackOff="true"/>
                         </defaultEntry>
