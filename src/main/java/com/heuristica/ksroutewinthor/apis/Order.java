@@ -6,10 +6,14 @@ import lombok.Data;
 
 @Data
 public class Order implements RecordableApi  {
+    
+    public static enum Status { available, blocked, mounted, billed }     
+    
     private Long id;
     private Double amount;
     private Double weight;
     private Double volume;
+    private Status status;
     private String erpId;
     private LocalDate issuedAt;    
     

@@ -17,6 +17,7 @@ public class Customer implements RecordableApi {
     private Float latitude;
     private Float longitude;
     private String erpId;
+    private Boolean active;
     
     private Long subregionId;
     

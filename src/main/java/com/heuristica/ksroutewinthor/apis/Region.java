@@ -10,6 +10,7 @@ public class Region implements RecordableApi {
     private String description;
     private String state;
     private String erpId;
+    private Boolean active;
     
     @Override
     public String getRecordableType() {

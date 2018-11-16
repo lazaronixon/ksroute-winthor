@@ -10,6 +10,7 @@ public class Subregion implements RecordableApi {
     private Long id;
     private String description;
     private String erpId;
+    private Boolean active;
     
     private Long regionId;    
     private Long lineId;

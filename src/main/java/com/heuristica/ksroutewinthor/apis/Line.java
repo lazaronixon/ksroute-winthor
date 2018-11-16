@@ -9,6 +9,7 @@ public class Line implements RecordableApi {
     private Long id;
     private String description;
     private String erpId;
+    private Boolean active;
     
     @Override
     public String getRecordableType() {

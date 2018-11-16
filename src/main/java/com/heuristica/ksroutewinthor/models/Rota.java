@@ -17,6 +17,7 @@ public class Rota implements Recordable, Serializable {
     @Id
     private Long codrota;
     private String descricao;
+    private String situacao;
       
     @Transient
     private Record record;

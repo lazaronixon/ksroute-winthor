@@ -17,7 +17,8 @@ public class Regiao implements Recordable, Serializable {
     @Id
     private Long numregiao;
     private String regiao;
-    private String uf; 
+    private String uf;
+    private String status;
     
     @Transient
     private Record record;

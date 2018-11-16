@@ -28,6 +28,7 @@ public class Cliente implements Recordable, Serializable {
     private String cepent;
     private String latitude;
     private String longitude;
+    private String bloqueio;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codpraca")

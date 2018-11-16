@@ -19,7 +19,8 @@ public class Praca implements Recordable, Serializable {
 
     @Id
     private Long codpraca;
-    private String praca; 
+    private String praca;
+    private String situacao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "numregiao")

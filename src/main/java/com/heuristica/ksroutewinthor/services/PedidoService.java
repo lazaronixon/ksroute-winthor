@@ -4,7 +4,6 @@ import com.heuristica.ksroutewinthor.apis.Order;
 import com.heuristica.ksroutewinthor.models.Event;
 import com.heuristica.ksroutewinthor.models.Pedido;
 import com.heuristica.ksroutewinthor.repositories.PedidoRepository;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.Body;
