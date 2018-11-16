@@ -85,11 +85,7 @@ public class KsroutewinthorApplication {
     
     private RedeliveryPolicy defaultRedeliveryPolicy() {
         RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
-        redeliveryPolicy.setUseExponentialBackOff(true);
-        redeliveryPolicy.setBackOffMultiplier(1.5);
-        redeliveryPolicy.setInitialRedeliveryDelay(30000);
-        redeliveryPolicy.setRedeliveryDelay(30000);
-        redeliveryPolicy.setMaximumRedeliveries(3);
+        redeliveryPolicy.setMaximumRedeliveries(0);
         return redeliveryPolicy;
     }
 }
