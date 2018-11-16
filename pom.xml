@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <camel.version>2.22.1</camel.version>
+        <camel.version>2.22.2</camel.version>
     </properties>       
 
     <dependencies>                                  
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry</artifactId>
-            <version>1.7.10</version>
+            <version>1.7.14</version>
         </dependency>                          
         
         <!-- UTILS -->
