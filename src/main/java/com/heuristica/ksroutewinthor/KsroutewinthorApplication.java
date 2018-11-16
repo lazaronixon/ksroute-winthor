@@ -13,6 +13,8 @@ import com.heuristica.ksroutewinthor.dozer.mappings.RegionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.SubregionMapping;
 import com.heuristica.ksroutewinthor.dozer.mappings.VehicleMapping;
 import java.util.Arrays;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.RedeliveryPolicy;
 import org.apache.camel.CamelContext;
 import org.apache.camel.converter.dozer.DozerBeanMapperConfiguration;
 import org.apache.camel.converter.dozer.DozerTypeConverterLoader;
@@ -25,7 +27,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class KsroutewinthorApplication {    
+public class KsroutewinthorApplication {   
+    
+    private static final String ACTIVEMQ_URL = "tcp://localhost:61616";    
     
     public static void main(String[] args) {
         SpringApplication.run(KsroutewinthorApplication.class, args);
@@ -71,4 +75,17 @@ public class KsroutewinthorApplication {
         policy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return policy;
     }    
+    
+    @Bean
+    public ActiveMQConnectionFactory activeMQConnectionFactory() {        
+        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(ACTIVEMQ_URL);
+        activeMQConnectionFactory.setRedeliveryPolicy(defaultRedeliveryPolicy());
+        return activeMQConnectionFactory;
+    }
+    
+    private RedeliveryPolicy defaultRedeliveryPolicy() {
+        RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
+        redeliveryPolicy.setMaximumRedeliveries(0);
+        return redeliveryPolicy;
+    }
 }
