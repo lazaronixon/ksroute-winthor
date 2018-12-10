@@ -3,8 +3,8 @@
 import com.heuristica.ksroutewinthor.apis.Customer;
 import com.heuristica.ksroutewinthor.dozer.converters.StringBooleanConverter;
 import com.heuristica.ksroutewinthor.models.Cliente;
-import org.dozer.loader.api.BeanMappingBuilder;
-import static org.dozer.loader.api.FieldsMappingOptions.customConverter;
+import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
+import static com.github.dozermapper.core.loader.api.FieldsMappingOptions.customConverter;
 
 public class CustomerMapping extends BeanMappingBuilder {
 
@@ -21,7 +21,7 @@ public class CustomerMapping extends BeanMappingBuilder {
                 .fields("cepent", "zipcode")
                 .fields("record.remoteId", "id")
                 .fields("praca.record.remoteId", "subregionId")
-                .fields("bloqueio", "active", customConverter(StringBooleanConverter.class));
+                .fields("bloqueio", "active", customConverter(StringBooleanConverter.class.getName()));
     }
 
 }

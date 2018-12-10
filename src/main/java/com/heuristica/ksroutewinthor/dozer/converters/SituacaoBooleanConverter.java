@@ -1,6 +1,6 @@
 package com.heuristica.ksroutewinthor.dozer.converters;
 
-import org.dozer.DozerConverter;
+import com.github.dozermapper.core.DozerConverter;
 
 public class SituacaoBooleanConverter extends DozerConverter<String, Boolean> {
 

@@ -1,7 +1,7 @@
 package com.heuristica.ksroutewinthor.dozer.converters;
 
 import com.heuristica.ksroutewinthor.apis.Vehicle;
-import org.dozer.DozerConverter;
+import com.github.dozermapper.core.DozerConverter;
 
 public class VeiculoStatusConverter extends DozerConverter<String, Vehicle.Status> {
     
